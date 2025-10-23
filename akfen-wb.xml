@@ -1,0 +1,174 @@
+<rcfeed>
+  <version>1.0</version>
+  <objects>
+    <RCSchema>
+      <ExternalId>4757878</ExternalId>
+      <Name>ЖК Sun City</Name>
+      <Description>Жилой комплекс «SUN CITY» – это современное пространство для жизни, где гармонично сочетаются комфорт, безопасность и развитая инфраструктура. Три корпуса по 15 этажей, выполненные в элегантном стиле, формируют выразительный архитектурный ансамбль. Фасады привлекают внимание лаконичным дизайном, а панорамные окна наполняют квартиры светом, открывая живописные виды на город.
+Комплекс рассчитан на 285 квартир, что создает атмосферу добрососедства и уюта. Здесь каждый сможет найти идеальное планировочное решение, отвечающее индивидуальным потребностям и образу жизни.
+Разнообразие планировок: от уютных студий до просторных семейных квартир
+В «SUN CITY» представлены однокомнатные квартиры площадью от 45,6 кв. м, идеально подходящие для молодых специалистов, а также просторные многокомнатные квартиры до 116,9 кв. м для больших семей. Каждая планировка отличается продуманностью и функциональностью: просторные кухни-гостиные, вместительные гардеробные и эргономичные ванные комнаты созданы для вашего удобства. Квартиры предлагаются с качественной отделкой в сером ключе, что позволит вам реализовать собственные дизайнерские идеи.
+Для автовладельцев предусмотрен современный подземный паркинг, где ваш автомобиль будет защищен от любых погодных условий. Это не только экономит ваше время, но и добавляет комфорта в повседневную жизнь.
+Инфраструктура в шаговой доступности
+Жилой комплекс «SUN CITY» создан с заботой о вашем комфорте. На его территории расположен торговый центр, где можно приобрести все необходимое, не покидая пределов комплекса. В непосредственной близости находятся детские сады, школы, поликлиники, фитнес-центры и торговые центры, что делает жизнь в районе Сельма максимально удобной.
+Безопасность и современные технологии
+В «SUN CITY» реализованы передовые системы безопасности: видеонаблюдение и контроль доступа гарантируют ваш покой. Современные инженерные решения, такие как энергоэффективные материалы, двухконтурный газовый котел и автономное отопление, обеспечивают экономию и комфорт.
+Для семей с детьми
+Для маленьких жителей предусмотрены безопасные детские площадки с современным оборудованием. В шаговой доступности находятся детские сады и школы с отличной репутацией, что создает благоприятные условия для гармоничного развития ваших детей.
+</Description>
+      <Buildings>
+        <BuildingsSchema>
+          <ExternalId>9204137</ExternalId>
+          <Name>Дом №47А</Name>
+          <Class>comfort</Class>
+          <MaterialType>monolith</MaterialType>
+          <FloorsCount>15</FloorsCount>
+          <PassengerLiftsCount>1</PassengerLiftsCount>
+          <CargoLiftsCount>1</CargoLiftsCount>
+          <Address>Калининград, Елизаветинская улица, 47А</Address>
+          <Coordinates>
+            <Lat>54.746966</Lat>
+            <Lng>20.484724</Lng>
+          </Coordinates>
+          <Parking>
+            <Type>underground</Type>
+          </Parking>
+          <Deadline>
+            <Quarter>first</Quarter>
+            <Year>2026</Year>
+            <IsComplete>false</IsComplete>
+          </Deadline>
+        </BuildingsSchema>
+
+        <BuildingsSchema>
+          <ExternalId>9796162</ExternalId>
+          <Name>Дом №47Б</Name>
+          <Class>comfort</Class>
+          <MaterialType>monolith</MaterialType>
+          <FloorsCount>15</FloorsCount>
+          <PassengerLiftsCount>1</PassengerLiftsCount>
+          <CargoLiftsCount>1</CargoLiftsCount>
+          <Address>Калининград, Елизаветинская улица, 47Б</Address>
+          <Coordinates>
+            <Lat>54.746966</Lat>
+            <Lng>20.484724</Lng>
+          </Coordinates>
+          <Parking>
+            <Type>underground</Type>
+          </Parking>
+          <Deadline>
+            <Quarter>first</Quarter>
+            <Year>2026</Year>
+            <IsComplete>false</IsComplete>
+          </Deadline>
+        </BuildingsSchema>
+        <BuildingsSchema>
+          <ExternalId>9796163</ExternalId>
+          <Name>Дом №47В</Name>
+          <Class>comfort</Class>
+          <MaterialType>monolith</MaterialType>
+          <FloorsCount>15</FloorsCount>
+          <PassengerLiftsCount>1</PassengerLiftsCount>
+          <CargoLiftsCount>1</CargoLiftsCount>
+          <Address>Калининград, Елизаветинская улица, 47В</Address>
+          <Coordinates>
+            <Lat>54.746966</Lat>
+            <Lng>20.484724</Lng>
+          </Coordinates>
+          <Parking>
+            <Type>underground</Type>
+          </Parking>
+          <Deadline>
+            <Quarter>first</Quarter>
+            <Year>2026</Year>
+            <IsComplete>false</IsComplete>
+          </Deadline>
+        </BuildingsSchema>
+      </Buildings>
+      <Photos>
+        <PhotoSchema>
+          <FullUrl>https://akfen39.ru/imgs/rc/9.jpg</FullUrl>
+          <IsDefault>true</IsDefault>
+        </PhotoSchema>
+        <PhotoSchema>
+          <FullUrl>https://akfen39.ru/imgs/rc/12.jpg</FullUrl>
+          <IsDefault>false</IsDefault>
+        </PhotoSchema>
+        <PhotoSchema>
+          <FullUrl>https://akfen39.ru/imgs/rc/11.jpg</FullUrl>
+          <IsDefault>false</IsDefault>
+        </PhotoSchema>
+        <PhotoSchema>
+          <FullUrl>https://akfen39.ru/imgs/rc/19.jpg</FullUrl>
+          <IsDefault>false</IsDefault>
+        </PhotoSchema>
+        <PhotoSchema>
+          <FullUrl>https://akfen39.ru/imgs/rc/14.jpg</FullUrl>
+          <IsDefault>false</IsDefault>
+        </PhotoSchema>
+      </Photos>
+    </RCSchema>
+    <RCSchema>
+      <ExternalId>41618</ExternalId>
+      <Name>ЖК Калининград-Сити</Name>
+      <Description>«Калининград-сити» – это не просто жилье, это новый формат жизни, воплощенный в уникальном архитектурном облике вертикального города. Расположенный по адресу: улица Гайдара, 90, комплекс стал современной доминантой Калининграда, предлагая своим жителям просторные квартиры с панорамными окнами и захватывающими видами на городские пейзажи, расстилающиеся в лучах заката. Поднимитесь выше облаков – навстречу своей мечте!
+Почему «Калининград-сити» – ваш лучший выбор?
+Автономный комфорт и независимость.
+Забудьте о сезонных отключениях и перепадах температур! Каждая квартира оборудована индивидуальной системой отопления, обеспечивающей комфортную температуру круглый год. Энергоэффективные технологии позволяют оптимизировать расходы на коммунальные платежи, а современные стеклопакеты гарантируют тишину и теплоизоляцию.
+Идеальное расположение в сердце Калининграда.
+Микрорайон Сельма – это эпицентр городской жизни. В непосредственной близости от комплекса расположены:
+Престижные школы № 38, 40 и детские сады для ваших детей. Торговые центры «Экватор», «Виктория» и рынок «Сельма» для комфортных покупок. Современные фитнес-клубы, кинотеатр, разнообразные рестораны и медицинские учреждения для вашего здоровья и отдыха. Железнодорожная станция «Сельма», откуда можно добраться до моря всего за 25 минут на электричке! Быстрый доступ к центру города (5 минут на автомобиле) и окружной дороге. 25 этажей – это 1000 возможностей для новой жизни!
+Развитая инфраструктура для вашего комфорта.
+Подземный и наземный паркинги (354 места) для удобства автовладельцев. Безопасные детские и спортивные площадки для активного отдыха. Магазины и уютные кафе на первых этажах здания. Круглосуточное видеонаблюдение для вашей безопасности.
+Современные и функциональные планировки.
+Продуманные планировки квартир площадью от 41,8 до 87 кв. м. с изолированными комнатами, двумя санузлами и возможностью реализации индивидуальных дизайнерских решений. Например, двухкомнатная квартира на 15-м этаже с лоджией и видом на северо-восток станет вашим личным пространством для отдыха и вдохновения.
+</Description>
+      <Buildings>
+        <BuildingsSchema>
+          <ExternalId>94360</ExternalId>
+          <Name>Дом 3</Name>
+          <Class>comfort</Class>
+          <MaterialType>monolith</MaterialType>
+          <FloorsCount>25</FloorsCount>
+          <PassengerLiftsCount>0</PassengerLiftsCount>
+          <CargoLiftsCount>3</CargoLiftsCount>
+          <Address>Калининград, улица Генерала Челнокова</Address>
+          <Coordinates>
+            <Lat>54.738302</Lat>
+            <Lng>20.491497</Lng>
+          </Coordinates>
+          <Parking>
+            <Type>underground</Type>
+          </Parking>
+          <Deadline>
+            <Quarter>fourth</Quarter>
+            <Year>2027</Year>
+            <IsComplete>false</IsComplete>
+          </Deadline>
+        </BuildingsSchema>
+      </Buildings>
+      <Photos>
+        <PhotoSchema>
+          <FullUrl>https://akfen39.ru/imgs/rc/1.jpg</FullUrl>
+          <IsDefault>true</IsDefault>
+        </PhotoSchema>
+        <PhotoSchema>
+          <FullUrl>https://akfen39.ru/imgs/rc/2.jpg</FullUrl>
+          <IsDefault>false</IsDefault>
+        </PhotoSchema>
+        <PhotoSchema>
+          <FullUrl>https://akfen39.ru/imgs/rc/3.jpg</FullUrl>
+          <IsDefault>false</IsDefault>
+        </PhotoSchema>
+        <PhotoSchema>
+          <FullUrl>https://akfen39.ru/imgs/rc/4.jpg</FullUrl>
+          <IsDefault>false</IsDefault>
+        </PhotoSchema>
+        <PhotoSchema>
+          <FullUrl>https://akfen39.ru/imgs/rc/3.1.jpg</FullUrl>
+          <IsDefault>false</IsDefault>
+        </PhotoSchema>
+      </Photos>
+    </RCSchema>
+  </objects>
+</rcfeed>

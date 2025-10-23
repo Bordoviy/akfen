@@ -1,0 +1,126 @@
+#app {
+  overflow-x: hidden;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-family);
+  position: relative;
+  @media (min-width: $desk) {
+    min-height: 100%;
+  }
+
+  &.lock {
+    overflow: hidden;
+  }
+}
+.main {
+  flex: 1 1 auto;
+  margin-top: clamp(63px, vw(73px, $desktop), 73px);
+}
+
+.container {
+  margin: 0 auto;
+  max-width: clamp(320px, vw(1400px, $desktop), 1880px);
+  padding: 0 clamp(10px, vw(30px, $desktop), 30px);
+  // width: 100%;
+
+  @media (min-width: $tab) {
+    // max-width: vw(660px, $tablet);
+    // padding: 0 vw(20px, $tablet);
+  }
+
+  @media (min-width: $desk) {
+    // position: relative;
+    // max-width: vw(1280px, $desktop);
+    // padding: 0 vw(40px, $desktop);
+  }
+}
+
+.mt-110 {
+  margin-top: clamp(60px, vw(110px, $desktop), 110px);
+}
+.default-title {
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: clamp(30px, vw(42px, $desktop), 42px);
+  line-height: 121%;
+  letter-spacing: -0.01em;
+  color: var(--100);
+  margin-bottom: clamp(20px, vw(30px, $desktop), 30px);
+}
+
+.main-title {
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: clamp(30px, vw(42px, $desktop), 42px);
+  line-height: 121%;
+  letter-spacing: -0.01em;
+  color: var(--100);
+}
+
+.swiper-top .swiper-controls {
+  display: none;
+  @media (min-width: $desk) {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: clamp(-20px, vw(-30px, $desktop), -30px);
+  }
+}
+.swiper .swiper-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: clamp(20px, vw(25px, $desktop), 25px);
+  @media (min-width: $desk) {
+    display: none;
+  }
+}
+.swiper .swiper-controls p {
+  font-weight: 400;
+  font-size: clamp(14px, vw(14px, $desktop), 14px);
+  line-height: 136%;
+  text-align: center;
+  color: var(--40);
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  border-radius: 16px;
+  position: relative;
+  color: var(--white);
+  margin-top: 0;
+  display: flex;
+  background: var(--2);
+  width: clamp(44px, vw(44px, $desktop), 44px);
+  height: clamp(44px, vw(44px, $desktop), 44px);
+}
+.swiper .swiper-controls .swiper-button-next,
+.swiper .swiper-controls .swiper-button-prev {
+  border-radius: 8px;
+  width: clamp(30px, vw(30px, $desktop), 30px);
+  height: clamp(30px, vw(30px, $desktop), 30px);
+}
+.swiper-button-next,
+.swiper-rtl .swiper-button-prev {
+  right: 0;
+  left: 0;
+}
+.swiper-button-prev,
+.swiper-rtl .swiper-button-next {
+  left: 0;
+  right: 0;
+}
+.swiper-button-next:after,
+.swiper-rtl .swiper-button-prev:after {
+  content: unset;
+}
+.swiper-button-prev:after,
+.swiper-rtl .swiper-button-next:after {
+  content: unset;
+}
+.swiper-button-next svg,
+.swiper-button-prev svg {
+  width: unset;
+  height: unset;
+}

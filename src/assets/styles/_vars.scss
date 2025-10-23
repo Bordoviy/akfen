@@ -1,0 +1,27 @@
+:root {
+  --color: #fff;
+  --1: #da1a1f;
+  --100: #212026;
+  --40: #bab9be;
+  --seryy: #f2f2f9;
+  --60: #929095;
+  --2: #3343a9;
+  --obvodka: #dadae7;
+  --80: #4a484f;
+  --font-family: 'Onest', sans-serif;
+  --second-family: 'Manrope', sans-serif;
+  --third-family: 'Inter Tight', sans-serif;
+  --font3: 'Raleway', sans-serif;
+  --font4: 'DIN Pro', sans-serif;
+}
+
+// Экраны макета VW
+$mobile: 380px;
+$tablet: 768px;
+$desktop: 1440px;
+
+// Точки перехода экранов (брекпоинты)
+$tab: 600px;
+$tab-inner: 768px;
+$desk: 992px;
+$desk-inner: 1440px;
