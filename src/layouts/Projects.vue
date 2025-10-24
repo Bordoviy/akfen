@@ -47,7 +47,7 @@ const houseCards = [
     title: 'ЖК “Sun City”',
     address: 'г. Калининград, Елизаветинская, 47',
     text: 'до центра на авто - 5 мин',
-    price: '6 000 000',
+    price: '6 732 600',
     imgs: [
       { img: '/imgs/projects/5.jpg' },
       { img: '/imgs/projects/6.jpg' },

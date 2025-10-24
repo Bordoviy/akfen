@@ -165,7 +165,7 @@ const housingCards = [
   {
     title: 'ЖК “Sun City“”',
     address: 'г. Калининград, Елизаветинская, 47',
-    price: 'от 6 000 000',
+    price: 'от 6 732 600',
     image: '/imgs/projects/5.jpg',
     id: 'sun-city',
   },
