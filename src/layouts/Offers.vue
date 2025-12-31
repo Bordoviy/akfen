@@ -43,12 +43,11 @@ onMounted(() => {
   })
 })
 
-const OffersCards = [
+const OffersCards = ref([
   {
     title: '0 % рассрочка от застройщика до конца строительства',
     text: 'ПВ 20% , остальная сумма равными платежами раз в квартал',
     img: '/imgs/offers/img1.png',
-    // href: '#',
     to: '/mortgage',
     isRouterLink: true,
   },
@@ -61,7 +60,7 @@ const OffersCards = [
   },
   {
     title: 'траншевая ипотека',
-    text: 'ПВ 20% , первый транш 100 000 р -остальная сумма в конце строительства',
+    text: 'ПВ 20% , первый транш 100 000 р - остальная сумма в конце строительства',
     img: '/imgs/offers/img3.png',
     to: '/mortgage',
     isRouterLink: true,
@@ -82,12 +81,12 @@ const OffersCards = [
   },
   {
     title: 'траншевая ипотека',
-    text: 'ПВ 20% , первый транш 100 000 р -остальная сумма в конце строительства',
+    text: 'ПВ 20% , первый транш 100 000 р - остальная сумма в конце строительства',
     img: '/imgs/offers/img3.png',
     to: '/mortgage',
     isRouterLink: true,
   },
-]
+])
 </script>
 
 <template>

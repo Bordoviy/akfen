@@ -1,42 +1,57 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Pagination from '@/components/Pagination.vue'
 import NewsCard from '@/components/NewsCard.vue'
 
+const route = useRoute()
+const router = useRouter()
+
+const validTypes = ['news', 'article']
+
+const activeFilter = ref(validTypes.includes(route.params.type) ? route.params.type : 'all')
+
+watch(
+  () => route.params.type,
+  (type) => {
+    activeFilter.value = validTypes.includes(type) ? type : 'all'
+    currentPage.value = 1
+  },
+)
 // Данные: добавил поле type: 'news' | 'article'
 const newsCards = [
   {
     title: 'Скидка 10% на квартиры ко дню матери',
-    date: 'до 14 апреля',
+    date: '26 марта 2021',
     img: '/imgs/news/img1.png',
     slug: 'skidka-10',
     type: 'news',
   },
   {
     title: 'Скидка 10% на квартиры ко дню матери',
-    date: 'до 14 апреля',
+    date: '26 марта 2021',
     img: '/imgs/news/img2.png',
     type: 'news',
     slug: 'skidka-11',
   },
   {
     title: 'Руководство: как выбрать ипотеку',
-    date: '12 апреля',
+    date: '26 марта 2021',
     img: '/imgs/news/img3.png',
     slug: 'kak-vybrat-ipoteku',
     type: 'article',
   },
   {
     title: 'Скидка 10% на квартиры ко дню матери',
-    date: 'до 14 апреля',
+    date: '26 марта 2021',
     img: '/imgs/news/img1.png',
     slug: 'skidka-12',
     type: 'news',
   },
   {
     title: 'Ремонт под ключ: плюсы и минусы',
-    date: '10 апреля',
+    date: '26 марта 2021',
     img: '/imgs/news/img2.png',
     slug: 'remont-pod-kluch',
     type: 'article',
@@ -56,7 +71,7 @@ const filterOptions = [
   { label: 'Статьи', value: 'article' },
 ]
 
-const activeFilter = ref('all')
+// const activeFilter = ref('all')
 
 // пагинация
 const currentPage = ref(1)
@@ -77,29 +92,38 @@ const paginatedItems = computed(() => {
 
 // действия
 function setFilter(value) {
-  if (activeFilter.value === value) return
-  activeFilter.value = value
-  currentPage.value = 1
+  if (value === 'all') {
+    if (route.path !== '/blog') router.push('/blog')
+  } else {
+    const path = `/blog/category/${value}`
+    if (route.path !== path) router.push(path)
+  }
 }
 </script>
 
 <template>
   <Breadcrumbs />
+
   <div class="blog">
     <div class="container">
       <div class="blog__inner">
+        <!-- Если открыта конкретная статья -->
+        <!-- <RouterView v-if="$route.params.slug" /> -->
+
+        <!-- Если просто страница блога -->
+        <!-- <template v-else> </template> -->
         <h1 class="default-title blog__title">Блог</h1>
 
         <div class="blog__filters">
-          <span
+          <RouterLink
             v-for="opt in filterOptions"
             :key="opt.value"
             class="blog__filter-item"
             :class="{ active: activeFilter === opt.value }"
-            @click="setFilter(opt.value)"
+            :to="opt.value === 'all' ? '/blog' : `/blog/category/${opt.value}`"
           >
             {{ opt.label }}
-          </span>
+          </RouterLink>
         </div>
 
         <div class="blog__wrapper">

@@ -1,13 +1,18 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import Menu from '@/components/Menu.vue'
+import Modal from '@/components/Modal.vue'
 
 const isOpen = ref()
+const isModal = ref(false)
 const isMobile = ref(window.innerWidth < 992)
 
 function handleResize() {
   isMobile.value = window.innerWidth < 992
 }
+// const handleResize = () => {
+//   isMobile.value = window.innerWidth < 992
+// }
 
 onMounted(() => {
   window.addEventListener('resize', handleResize)
@@ -23,6 +28,9 @@ watch(isOpen, (newVal) => {
 
 function toggle() {
   isOpen.value = !isOpen.value
+}
+function toggleModal() {
+  isModal.value = !isModal.value
 }
 </script>
 
@@ -248,7 +256,7 @@ function toggle() {
     }
 
     @media (min-width: $desk) {
-      display: block;
+      display: bf;
     }
   }
   &__inner.active .header__additional-tel-num {

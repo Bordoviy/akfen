@@ -2,6 +2,24 @@
 import { onMounted, ref, nextTick } from 'vue'
 import Tab from '@/components/Tab.vue'
 
+defineProps({
+  title: { type: String, default: 'Наши проекты' },
+})
+
+const openCardIndex = ref(null)
+
+const handleCardClick = (index, event) => {
+  const target = event.target
+
+  // не реагируем на клики по ссылкам/кнопкам/стрелкам
+  if (target && target.closest('a, button, .swiper-button-next, .swiper-button-prev')) return
+
+  // по желанию: только мобилка
+  if (window.innerWidth >= 1024) return
+
+  openCardIndex.value = openCardIndex.value === index ? null : index
+}
+
 const swiperContainers = ref([])
 
 onMounted(() => {
@@ -41,6 +59,14 @@ const houseCards = [
       { title: 'подземный паркинг' },
       { title: 'вид на город' },
     ],
+    lists: [
+      { title: '1-комнатная квартира', price: '6 204 550 млн' },
+      { title: '2-комнатная квартира', price: '7 200 000 млн' },
+      { title: '3-комнатная квартира', price: '9 705 150 млн' },
+    ],
+    flat: '480',
+    floor: '25',
+    date: 'IV кв. 2027',
     id: 'kaliningrad-city',
   },
   {
@@ -60,6 +86,14 @@ const houseCards = [
       { title: '0 % рассрочка' },
       { title: 'ипотека' },
     ],
+    lists: [
+      { title: '1-комнатная квартира', price: '6 855 000 млн' },
+      { title: '2-комнатная квартира', price: '9 737 600 млн' },
+      { title: '3-комнатная квартира', price: '-' },
+    ],
+    flat: '285',
+    floor: '15',
+    date: 'I кв. 2026',
     id: 'sun-city',
   },
   {
@@ -79,13 +113,21 @@ const houseCards = [
       { title: 'курортный город' },
       { title: 'новый пляж' },
     ],
+    lists: [
+      { title: '1-комнатная квартира', price: '7 120 000 млн' },
+      { title: '2-комнатная квартира', price: '10 579 200 млн' },
+      { title: '3-комнатная квартира', price: '12 247 000 млн' },
+    ],
+    flat: '85',
+    floor: '5',
+    date: 'IV кв. 2026',
     id: '',
   },
   {
     title: 'ЖК “Avrora“',
-    address: 'Гурьевск, ул Ленина',
-    text: 'до центра 2 мин пешком',
-    price: '6 000 000',
+    address: 'г. Калининград, ул. Гурьева',
+    text: 'до центра на авто - менее 15 мин',
+    price: '6 451 050',
     imgs: [
       { img: '/imgs/projects/13.jpg' },
       { img: '/imgs/projects/14.jpg' },
@@ -93,28 +135,35 @@ const houseCards = [
       { img: '/imgs/projects/16.jpg' },
     ],
     categories: [
-      { title: 'Скоро в продаже' },
-      { title: 'в центре' },
-      { title: 'у парка' },
-      { title: 'с террасой' },
+      { title: 'топовая локация' },
+      { title: ' 0 % рассрочка' },
+      { title: 'в центре Гурьевска' },
+      { title: 'рядом парк' },
     ],
-    // id: 'sun-city-47',
-    id: '',
+    lists: [
+      { title: '1-комнатная квартира', price: '5 140 080 млн' },
+      { title: '2-комнатная квартира', price: '8 638 210 млн' },
+      { title: '3-комнатная квартира', price: '13 786 150 млн' },
+    ],
+    flat: '144',
+    floor: '7',
+    date: 'III кв. 2027',
+    id: 'avrora',
   },
 ]
 </script>
 
 <template>
-  <div class="projects mt-110">
+  <div class="projects mt-110" id="mortgage">
     <div class="container">
-      <h2 class="projects__title default-title">Наши проекты</h2>
+      <h2 class="projects__title default-title">{{ title }}</h2>
       <div class="projects__inner">
-        <component
+        <div
           v-for="(item, index) in houseCards"
           :key="index"
-          :is="item.id ? 'router-link' : 'div'"
-          v-bind="item.id ? { to: `/projects/${item.id}` } : {}"
           class="projects__card"
+          :class="{ 'projects__card--open': openCardIndex === index }"
+          @click="handleCardClick(index, $event)"
         >
           <div class="projects__card-wrapper swiper" ref="swiperContainers">
             <div class="swiper-wrapper">
@@ -169,7 +218,17 @@ const houseCards = [
             </div>
           </div>
           <div class="projects__card-top">
-            <p class="projects__card-top-title">{{ item.title }}</p>
+            <router-link
+              v-if="item.id"
+              :to="`/projects/${item.id}`"
+              class="projects__card-top-title"
+            >
+              {{ item.title }}
+            </router-link>
+            <span v-else class="projects__card-top-title">
+              {{ item.title }}
+            </span>
+
             <p class="projects__card-top-price">от {{ item.price }}</p>
           </div>
           <div class="projects__card-bottom">
@@ -213,7 +272,20 @@ const houseCards = [
               {{ item.text }}
             </p>
           </div>
-        </component>
+          <div class="projects__card-inner">
+            <div class="projects__card-lists">
+              <div class="projects__card-lists--item" v-for="list in item.lists">
+                <p class="projects__card-lists--title">{{ list.title }}</p>
+                <p class="projects__card-lists--price">{{ list.price }}</p>
+              </div>
+            </div>
+            <div class="projects__card-info">
+              <p>{{ item.flat }} квартир</p>
+              <p>{{ item.floor }} этажей</p>
+              <p>{{ item.date }}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -275,10 +347,14 @@ const houseCards = [
   &__card .swiper-slide {
     width: 100% !important;
   }
-  &__card:hover .projects__card-top-title {
+  &__card-top-title:hover {
     color: var(--1);
   }
   &__card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
     ::v-deep .swiper-pagination-bullet {
       width: clamp(4px, vw(6px, $desktop), 6px);
       height: clamp(4px, vw(6px, $desktop), 6px);
@@ -294,6 +370,16 @@ const houseCards = [
   &__card-wrapper {
     position: relative;
     border-radius: 24px;
+    height: clamp(376px, vw(516px, $desktop), 516px);
+    overflow: hidden;
+    transition: height 0.25s;
+  }
+  &__card:hover .projects__card-wrapper {
+    height: clamp(305px, vw(353px, $desktop), 353px);
+  }
+
+  &__card .swiper-slide {
+    height: 100%;
   }
 
   &__card-tabs {
@@ -309,6 +395,7 @@ const houseCards = [
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
     // border-radius: 24px;
     min-height: 300px;
     max-height: 380px;
@@ -322,7 +409,9 @@ const houseCards = [
     }
   }
   &__card-top,
-  &__card-bottom {
+  &__card-bottom,
+  &__card-lists,
+  &__card-info {
     margin: 0 clamp(8px, vw(16px, $desktop), 16px);
   }
   &__card-top {
@@ -403,6 +492,58 @@ const houseCards = [
   & .swiper-controls .rc__button-next--desktop,
   & .swiper-controls .rc__button-prev--desktop {
     box-shadow: 0 4px 10px 0 rgba(33, 32, 38, 0.14);
+  }
+
+  &__card-inner {
+    margin-top: clamp(11px, vw(15px, $desktop), 15px);
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition:
+      height 0.25s,
+      opacity 0.25s;
+  }
+  &__card:hover .projects__card-inner,
+  &__card--open .projects__card-inner {
+    opacity: 1;
+    height: 150px;
+  }
+  &__card-lists {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, vw(10px, $desktop), 10px);
+    margin-bottom: clamp(16px, vw(20px, $desktop), 20px);
+  }
+  &__card-lists--item {
+    display: inherit;
+    justify-content: space-between;
+    align-items: center;
+    gap: clamp(16px, vw(20px, $desktop), 20px);
+  }
+  &__card-lists--title {
+    font-weight: 400;
+    font-size: clamp(16px, vw(18px, $desktop), 18px);
+    line-height: 146%;
+    color: var(--1);
+  }
+  &__card-lists--text {
+    font-weight: 400;
+    font-size: clamp(16px, vw(18px, $desktop), 18px);
+    line-height: 146%;
+    text-align: right;
+    color: var(--100);
+  }
+  &__card-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: clamp(35px, vw(40px, $desktop), 40px);
+  }
+  &__card-info p {
+    font-weight: 400;
+    font-size: clamp(15px, vw(16px, $desktop), 16px);
+    line-height: 146%;
+    color: var(--60);
   }
 }
 </style>

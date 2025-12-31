@@ -1,16 +1,16 @@
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
-import NewsCard from '@/components/NewsCard.vue'
+import OtherApartmentCard from '@/components/OtherApartmentsCard.vue'
 
 defineProps({
   title: { type: String, required: true },
 })
 
-const newsContainer = ref(null)
+const OtherApartContainer = ref(null)
 
 onMounted(() => {
   nextTick(() => {
-    if (!newsContainer.value) return
+    if (!OtherApartContainer.value) return
 
     const isMobile = window.innerWidth < 992
 
@@ -22,10 +22,10 @@ onMounted(() => {
       ? document.querySelector('.news__button-prev--mobile')
       : document.querySelector('.news__button-prev--desktop')
 
-    new Swiper(newsContainer.value, {
+    new Swiper(OtherApartContainer.value, {
       loop: false,
       slidesPerView: 1,
-      spaceBetween: 20,
+      spaceBetween: 18,
 
       breakpoints: {
         600: {
@@ -44,30 +44,103 @@ onMounted(() => {
   })
 })
 
-const newsCards = [
+const apartments = ref([
   {
-    title: 'Начало этапа покраски фасада ЖК “Sun City“',
-    img: '/imgs/projects/44.jpg',
-    href: '#',
+    id: 'A-205',
+    img: '/imgs/sp1.png',
+    city: 'Зеленоградск',
+    project: 'Акфиноград-Сити',
+    address: 'ул. Потемкина 15',
+    building: 'Корпус 1',
+    section: 'Секция B',
+    rooms: 2,
+    area: 66.9,
+    kitchen: 12.82,
+    living: 59.92,
+    floor: 8,
+    floorsTotal: 32,
+    price: 6785425,
+    priceSale: 5785425,
+    finishing: 'Предчистовая',
+    status: 'В продаже',
+    code: '982',
+    delivery: '2025',
+    promo: true,
   },
   {
-    title: 'ЖК “МореLife“ скоро в продаже',
-    img: '/imgs/projects/9.jpg',
-    href: '#',
+    id: 'B-313',
+    img: '/imgs/sp1.png',
+    city: 'Калининград',
+    project: 'Солнечный квартал',
+    address: 'пр-т Мира 1',
+    building: 'Корпус 2',
+    section: 'Секция C',
+    rooms: 3,
+    area: 126.9,
+    kitchen: 14.2,
+    living: 92.1,
+    floor: 12,
+    floorsTotal: 18,
+    price: 12785425,
+    priceM2: 196000,
+    finishing: 'Чистовая',
+    status: 'В продаже',
+    code: '701',
+    delivery: '2026',
+    promo: false,
   },
   {
-    title: 'ЖК “Avrora“ скоро в продаже',
-    img: '/imgs/projects/13.jpg',
-    href: '#',
+    id: 'C-118',
+    img: '/imgs/sp1.png',
+    city: 'Калининград',
+    project: 'Северный парк',
+    address: 'ул. Центральная 3',
+    building: 'Корпус 3',
+    section: 'Секция A',
+    rooms: 2,
+    area: 49.7,
+    kitchen: 9.5,
+    living: 39.2,
+    floor: 2,
+    floorsTotal: 18,
+    price: 8100000,
+    priceM2: 162000,
+    finishing: 'Предчистовая',
+    status: 'В продаже',
+    code: '320',
+    delivery: '2026',
+    promo: true,
   },
-]
+  {
+    id: 'D-101',
+    img: '/imgs/sp1.png',
+    city: 'Зеленоградск',
+    project: 'Акфиноград-Сити',
+    address: 'ул. Потемкина 15',
+    building: 'Корпус 1',
+    section: 'Секция D',
+    rooms: 1,
+    area: 36.4,
+    kitchen: 10.1,
+    living: 26.3,
+    floor: 3,
+    floorsTotal: 22,
+    price: 6200000,
+    priceM2: 170000,
+    finishing: 'Чистовая',
+    status: 'В продаже',
+    code: '982',
+    delivery: '2025',
+    promo: false,
+  },
+])
 </script>
 
 <template>
-  <div class="news mt-110">
+  <div class="other-apart mt-110">
     <div class="container">
-      <div class="news__top swiper-top">
-        <h2 class="news__title default-title">{{ title }}</h2>
+      <div class="other-apart__top swiper-top">
+        <h2 class="other-apart__title default-title">{{ title }}</h2>
         <!-- Кнопки для десктопа -->
         <div class="swiper-controls desktop-only">
           <div class="swiper-button-prev news__button-prev--desktop">
@@ -106,9 +179,9 @@ const newsCards = [
           </div>
         </div>
       </div>
-      <div class="swiper news__wrapper" ref="newsContainer">
+      <div class="swiper other-apart__wrapper" ref="OtherApartContainer">
         <div class="swiper-wrapper">
-          <NewsCard :items="newsCards" :slider="true"></NewsCard>
+          <OtherApartmentCard :items="apartments"></OtherApartmentCard>
         </div>
 
         <!-- Кнопки для мобилки -->
@@ -155,15 +228,21 @@ const newsCards = [
 </template>
 
 <style lang="scss" scoped>
-@import '../assets/styles/index';
+@import '/src/assets/styles/index.scss';
 
-.news {
-  font-family: var(--font-family);
+.other-apart {
+  & .container {
+    padding: 0;
+  }
+  background: var(--seryy);
+  border-radius: 60px;
+  padding: clamp(50px, vw(70px, $desktop), 70px) clamp(30px, vw(40px, $desktop), 40px);
   &__top {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: clamp(20px, vw(30px, $desktop), 30px);
   }
 }
 </style>

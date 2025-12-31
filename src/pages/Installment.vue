@@ -6,7 +6,7 @@ import FaqBlock from '@/layouts/mortgage-installment/FaqBlock.vue'
 import MainBlock from '@/layouts/mortgage-installment/MainBlock.vue'
 import VariationsBlock from '@/layouts/mortgage-installment/VariationsBlock.vue'
 import AdventBlock from '@/layouts/mortgage-installment/AdventBlock.vue'
-
+import CallbackBlock from '@/layouts/mortgage-installment/CallbackBlock.vue'
 import Maps from '@/components/Maps.vue'
 import Projects from '@/layouts/Projects.vue'
 
@@ -99,6 +99,7 @@ const btnText = {
   <AdventBlock :title="'Преимущества рассрочки'" :items="adventItems" />
   <FaqBlock :items="faqList" />
   <Projects></Projects>
+  <CallbackBlock :isblue="true" />
   <Maps></Maps>
 </template>
 

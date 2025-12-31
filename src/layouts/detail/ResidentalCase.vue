@@ -18,7 +18,19 @@ const allProjects = [
   {
     id: 'kaliningrad-city',
     params: {
-      src: 'https://smart-catalog.profitbase.ru/eco/catalog/projects/houses?filter=project:7253&filter=property.status:AVAILABLE',
+      src: 'https://smart-catalog.profitbase.ru/eco/catalog/house/91865#/catalog/house/91865/facades?facadeId=60537',
+      host: 'https://smart-catalog.profitbase.ru/eco',
+      pbDomain: 'profitbase.ru',
+      accountId: '3667',
+      referrer: window.location.origin,
+      pbApiKey: 'c573317dcd6ae60d94f0764d41d89462',
+      isEmbedded: true,
+    },
+  },
+  {
+    id: 'avrora',
+    params: {
+      src: 'https://smart-catalog.profitbase.ru/eco/catalog/house/147836#/catalog/house/147836/facades?facadeId=61280',
       host: 'https://smart-catalog.profitbase.ru/eco',
       pbDomain: 'profitbase.ru',
       accountId: '3667',
@@ -54,8 +66,8 @@ onMounted(() => {
 <template>
   <div class="case mt-110">
     <div class="container">
-      <div v-if="project" id="profitbase_front" style="height: 600px; width: 100%"></div>
-      <div v-else>Проект не найден</div>
+      <div v-if="project" id="profitbase_front" style="height: 900px; width: 100%"></div>
+      <div v-else></div>
     </div>
   </div>
 </template>

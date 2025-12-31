@@ -13,6 +13,9 @@
     overflow: hidden;
   }
 }
+body.lock {
+  overflow: hidden;
+}
 .main {
   flex: 1 1 auto;
   margin-top: clamp(63px, vw(73px, $desktop), 73px);
@@ -60,6 +63,7 @@
 
 .swiper-top .swiper-controls {
   display: none;
+  z-index: 1;
   @media (min-width: $desk) {
     display: flex;
     gap: 8px;

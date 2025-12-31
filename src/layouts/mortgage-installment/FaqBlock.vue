@@ -37,9 +37,9 @@ const toggle = (index) => {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <circle cx="20" cy="20" r="17" fill="#DA1A1F" />
-                <path d="M20 13V27" stroke="white" stroke-width="2" stroke-linecap="round" />
-                <path d="M13 20H27" stroke="white" stroke-width="2" stroke-linecap="round" />
+                <circle cx="20" cy="20" r="17" />
+                <path d="M20 13V27" stroke-width="2" stroke-linecap="round" />
+                <path d="M13 20H27" stroke-width="2" stroke-linecap="round" />
               </svg>
             </div>
             <div class="faq__answer" v-show="activeIndex === index">
@@ -79,6 +79,7 @@ const toggle = (index) => {
     background: var(--seryy);
     border: 1px solid transparent;
     cursor: pointer;
+    max-width: 900px;
     @media (min-width: $desk) {
       min-width: clamp(660px, vw(900px, $desktop), 900px);
     }
@@ -104,8 +105,10 @@ const toggle = (index) => {
     letter-spacing: -0.01em;
     color: var(--100);
     max-width: clamp(228px, vw(268px, $mobile), 268px);
+    overflow-wrap: break-word;
+    white-space: normal;
     @media (min-width: $tab) {
-      max-width: 100%;
+      max-width: clamp(440px, vw(830px, $desktop), 830px);
     }
   }
   &__item.active .faq__question-title {
@@ -117,19 +120,36 @@ const toggle = (index) => {
     line-height: 150%;
     color: var(--100);
   }
-  &__icon {
+  .faq__icon {
     width: clamp(28px, vw(34px, $desktop), 34px);
     height: clamp(28px, vw(34px, $desktop), 34px);
-    transition: transform 0.3s ease;
-  }
-  .faq__item.active .faq__icon {
-    transform: rotate(180deg);
-    color: #fff;
+
+    min-width: clamp(28px, vw(34px, $desktop), 34px);
+    min-height: clamp(28px, vw(34px, $desktop), 34px);
   }
 
+  /* закрыто: красный круг + белый плюс */
+  .faq__icon circle {
+    fill: #da1a1f;
+    stroke: transparent;
+  }
+  .faq__icon path {
+    stroke: #fff;
+  }
+
+  /* открыто: красный контур + красный минус */
+  .faq__item.active .faq__icon circle {
+    fill: transparent;
+    stroke: #da1a1f;
+    stroke-width: 2px;
+  }
+  .faq__item.active .faq__icon path {
+    stroke: #da1a1f;
+  }
+
+  /* убираем вертикальную палку -> минус */
   .faq__item.active .faq__icon path:first-of-type {
     opacity: 0;
-    transition: opacity 0.3s ease;
   }
 }
 </style>

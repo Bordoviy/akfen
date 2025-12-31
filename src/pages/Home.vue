@@ -19,7 +19,7 @@ import Cc from '@/layouts/Cc.vue'
   <Offers></Offers>
   <Sales :title="'Мы также продаем'"></Sales>
   <About></About>
-  <News></News>
+  <News :title="'Новости'"></News>
   <Other :title="'Радость, которую мы уже подарили'"></Other>
   <Office></Office>
 </template>

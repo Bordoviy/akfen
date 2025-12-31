@@ -4,7 +4,10 @@ import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Button from '@/components/Button.vue'
 import Finishing from '@/layouts/apartment/Finishing.vue'
 import Cc from '@/layouts/Cc.vue'
+import OtherApartment from '@/layouts/apartment/OtherApartment.vue'
+import Modal from '@/components/Modal.vue'
 
+const isModal = ref(false)
 const apartContainer = ref(null)
 
 onMounted(() => {
@@ -12,7 +15,7 @@ onMounted(() => {
     const el = apartContainer.value
     if (!el) return
     new Swiper(el, {
-      loop: true,
+      loop: false,
       navigation: {
         nextEl: el.querySelector('.ap__button-next--desktop'),
         prevEl: el.querySelector('.ap__button-prev--desktop'),
@@ -20,6 +23,10 @@ onMounted(() => {
     })
   })
 })
+
+function toggleModal() {
+  isModal.value = !isModal.value
+}
 
 const ApartCard = {
   tabs: ['С балконом', 'У моря'],
@@ -40,6 +47,8 @@ const ApartCard = {
   count: '2 комнаты',
   floor: '4 из 32 этажей',
   checkIn: 'I квартал 2025',
+  projectId: 'kaliningrad-city', // id ЖК из /projects/:id
+  projectName: 'ЖК "Калининград-Сити"', // как показывать в характеристике
 }
 </script>
 
@@ -56,8 +65,10 @@ const ApartCard = {
                 v-for="(img, imgIndex) in ApartCard.imgs"
                 :key="imgIndex"
               >
-                <img :src="img.img" loading="lazy" decoding="async" />
-                <img src="/imgs/comp.svg" alt="" />
+                <a class="fancy" :href="img.img" data-fancybox="apartment-gallery">
+                  <img :src="img.img" loading="lazy" decoding="async" />
+                </a>
+                <img class="glock" src="/imgs/comp.svg" alt="" />
               </div>
             </div>
             <div class="swiper-controls">
@@ -108,7 +119,7 @@ const ApartCard = {
                 </span>
               </div>
               <div class="apartment__body">
-                <h2 class="apartment__title">{{ ApartCard.title }}</h2>
+                <h1 class="apartment__title">{{ ApartCard.title }}</h1>
                 <p class="apartment__subtitle">{{ ApartCard.subtitle }}</p>
                 <span class="apartment__prices">
                   <p class="apartment__price-item apartment__price-new">{{ ApartCard.newPrice }}</p>
@@ -140,7 +151,8 @@ const ApartCard = {
                 </div>
               </div>
               <div class="apartment__bottom">
-                <Button>Забронировать квартиру</Button>
+                <Button @click.prevent="toggleModal">Забронировать квартиру</Button>
+                <Modal v-if="isModal" @close="toggleModal"></Modal>
                 <a
                   class="apartment__file"
                   v-if="ApartCard.file"
@@ -186,7 +198,7 @@ const ApartCard = {
           </div>
         </div>
         <div class="apartment__all mt-110">
-          <p class="apartment__all-title" id="all">Все характеристики</p>
+          <h2 class="apartment__all-title" id="all">Все характеристики</h2>
           <div class="apartment__all-inner">
             <dl>
               <dt>Площадь квартиры</dt>
@@ -230,7 +242,14 @@ const ApartCard = {
             </dl>
             <dl>
               <dt>Проект</dt>
-              <dd>{{ ApartCard.checkIn }}</dd>
+              <dd>
+                <RouterLink
+                  :to="`/projects/${ApartCard.projectId}`"
+                  class="apartment__project-link"
+                >
+                  {{ ApartCard.projectName }}
+                </RouterLink>
+              </dd>
             </dl>
             <dl>
               <dt>Спальня</dt>
@@ -267,6 +286,7 @@ const ApartCard = {
   </div>
   <Cc></Cc>
   <Finishing></Finishing>
+  <OtherApartment :title="'Другие варианты квартир'"></OtherApartment>
 </template>
 
 <style lang="scss" scoped>
@@ -381,14 +401,15 @@ const ApartCard = {
     justify-content: space-between;
     border-bottom: 1px solid var(--obvodka);
     padding-bottom: clamp(10px, vw(10px, $desktop), 10px);
-  }
-  &__dl dl:not(:last-child),
-  &__all dl:not(:last-child) {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--obvodka);
     margin-bottom: clamp(8px, vw(10px, $desktop), 10px);
   }
+  // &__dl dl:not(:last-child),
+  // &__all dl:not(:last-child) {
+  //   display: flex;
+  //   justify-content: space-between;
+  //   border-bottom: 1px solid var(--obvodka);
+  //   margin-bottom: clamp(8px, vw(10px, $desktop), 10px);
+  // }
   &__dl dt,
   &__all dt {
     font-weight: 400;
@@ -437,6 +458,8 @@ const ApartCard = {
     line-height: 117%;
     letter-spacing: -0.01em;
     color: var(--100);
+    // чтобы якорь #all не скрывался под фиксированной шапкой
+    scroll-margin-top: clamp(80px, vw(90px, $desktop), 100px);
   }
   &__all-inner {
     display: grid;
@@ -449,10 +472,19 @@ const ApartCard = {
       grid-template-columns: repeat(3, 1fr);
     }
   }
+
   & .btn-default:hover {
     border: 1px solid #161717;
   }
+  .apartment__project-link {
+    color: var(--2);
+    text-decoration: underline;
+    text-decoration-skip-ink: none;
 
+    &:hover {
+      color: var(--1);
+    }
+  }
   .swiper-wrapper {
     position: relative;
     margin-bottom: 45px;
@@ -460,16 +492,16 @@ const ApartCard = {
       margin-bottom: 0;
     }
   }
-  .swiper-wrapper img:first-child {
+  .swiper-wrapper .fancy img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     min-height: clamp(400px, vw(400px, $desktop), 400px);
     @media (min-width: $tab-inner) {
       min-height: clamp(445px, vw(445px, $desktop), 445px);
     }
   }
-  .swiper-wrapper img:last-child {
+  .swiper-wrapper .glock {
     position: absolute;
     right: 0;
     bottom: 0;
@@ -507,15 +539,16 @@ const ApartCard = {
     width: clamp(24px, vw(36px, $desktop), 36px);
     height: clamp(24px, vw(36px, $desktop), 36px);
   }
-  & .swiper .swiper-controls .swiper-button-next:hover svg path,
-  & .swiper .swiper-controls .swiper-button-prev:hover svg path {
-    stroke: #3343a9;
-  }
-  & .swiper .swiper-controls .swiper-button-next:hover {
-    background: var(--color);
-  }
-  & .swiper .swiper-controls .swiper-button-prev:hover {
-    background: var(--color);
+  // ховер – только на устройствах с мышью
+  @media (hover: hover) and (pointer: fine) {
+    & .swiper .swiper-controls .swiper-button-next:hover svg path,
+    & .swiper .swiper-controls .swiper-button-prev:hover svg path {
+      stroke: #3343a9;
+    }
+    & .swiper .swiper-controls .swiper-button-next:hover,
+    & .swiper .swiper-controls .swiper-button-prev:hover {
+      background: var(--color);
+    }
   }
 }
 </style>

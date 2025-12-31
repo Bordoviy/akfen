@@ -34,6 +34,52 @@ onMounted(() => {
 })
 
 const heroCards = [
+  // {
+  //   title: 'ЖК “Калининград City”',
+  //   text: '25 этажей высоты открывают 1000 возможностей для жизни!',
+  //   categories: [
+  //     { title: 'топовая локация' },
+  //     { title: '0 % рассрочка' },
+  //     { title: 'подземный паркинг' },
+  //     { title: 'вид на город' },
+  //   ],
+  //   img: '/imgs/hero/22.jpg',
+  //   id: 'kaliningrad-city',
+  // },
+  // {
+  //   title: 'ЖК “Sun City“',
+  //   text: 'Пространство новой жизни на Сельме',
+  //   categories: [{ title: 'сдача в 2026' }, { title: 'подземный паркинг' }],
+  //   img: '/imgs/hero/6.jpg',
+  //   id: 'sun-city',
+  // },
+  // {
+  //   title: 'ЖК “МореLife“”',
+  //   text: 'Ваша жизнь начинается у кромки Балтики',
+  //   categories: [{ title: 'у моря' }, { title: 'курортный город' }],
+  //   img: '/imgs/hero/3.jpg',
+  //   // id: 'mope-life',
+  // },
+  // {
+  //   title: 'ЖК “Avrora“',
+  //   text: 'Жизнь в гармонии с природой',
+  //   categories: [{ title: 'в центре' }, { title: 'у парка' }, { title: 'с террасой' }],
+  //   img: '/imgs/hero/7.jpg',
+  // },
+  {
+    title: 'ЖК “Sun City“',
+    text: 'Пространство новой жизни на Сельме',
+    categories: [{ title: 'сдача в 2026' }, { title: 'подземный паркинг' }],
+    img: '/imgs/hero/banner-sun.jpg',
+    id: 'sun-city',
+  },
+  {
+    title: 'ЖК “Sun City“',
+    text: 'Пространство новой жизни на Сельме',
+    categories: [{ title: 'сдача в 2026' }, { title: 'подземный паркинг' }],
+    img: '/imgs/hero/banner-sun1.jpg',
+    id: 'sun-city',
+  },
   {
     title: 'ЖК “Калининград City”',
     text: '25 этажей высоты открывают 1000 возможностей для жизни!',
@@ -43,28 +89,32 @@ const heroCards = [
       { title: 'подземный паркинг' },
       { title: 'вид на город' },
     ],
-    img: '/imgs/hero/22.jpg',
+    img: '/imgs/hero/banner-kal.jpg',
     id: 'kaliningrad-city',
   },
   {
-    title: 'ЖК “Sun City“',
-    text: 'Пространство новой жизни на Сельме',
-    categories: [{ title: 'сдача в 2026' }, { title: 'подземный паркинг' }],
-    img: '/imgs/hero/6.jpg',
-    id: 'sun-city',
-  },
-  {
-    title: 'ЖК “МореLife“”',
-    text: 'Ваша жизнь начинается у кромки Балтики',
-    categories: [{ title: 'у моря' }, { title: 'курортный город' }],
-    img: '/imgs/hero/3.jpg',
-    // id: 'mope-life',
+    title: 'ЖК “Калининград City”',
+    text: '25 этажей высоты открывают 1000 возможностей для жизни!',
+    categories: [
+      { title: 'топовая локация' },
+      { title: '0 % рассрочка' },
+      { title: 'подземный паркинг' },
+      { title: 'вид на город' },
+    ],
+    img: '/imgs/hero/banner-kal1.jpg',
+    id: 'kaliningrad-city',
   },
   {
     title: 'ЖК “Avrora“',
     text: 'Жизнь в гармонии с природой',
     categories: [{ title: 'в центре' }, { title: 'у парка' }, { title: 'с террасой' }],
-    img: '/imgs/hero/7.jpg',
+    img: '/imgs/hero/banner-av.jpg',
+  },
+  {
+    title: 'ЖК “Avrora“',
+    text: 'Жизнь в гармонии с природой',
+    categories: [{ title: 'в центре' }, { title: 'у парка' }, { title: 'с террасой' }],
+    img: '/imgs/hero/banner-av1.jpg',
   },
 ]
 </script>
@@ -78,16 +128,18 @@ const heroCards = [
             <div class="hero__img-wrap">
               <img :src="item.img" :alt="item.title" loading="lazy" decoding="async" />
             </div>
+            <!--
             <div class="hero__wrapper">
               <div class="hero__title">{{ item.title }}</div>
               <div class="hero__tabs">
-                <Tab v-for="(i, index) in item.categories" :key="index" :title="i.title" />
+               <Tab v-for="(i, index) in item.categories" :key="index" :title="i.title" />
               </div>
               <p class="hero__text">{{ item.text }}</p>
               <router-link v-if="item.id" :to="`/projects/${item.id}`">
-                <Button>Подробнее</Button>
+              <Button>Подробнее</Button>
               </router-link>
             </div>
+           -->
           </div>
         </div>
         <div class="swiper-controls">
@@ -150,15 +202,18 @@ const heroCards = [
     width: 100%;
     height: 100%;
     min-height: 320px;
-    max-height: 320px;
-    object-fit: cover;
+    max-height: 440px;
+    // max-height: 320px;
+    // object-fit: cover;
     border-radius: 30px;
     @media (min-width: $tab) {
       // Пустой медиазапрос
+      object-fit: cover;
     }
 
     @media (min-width: $desk) {
-      max-height: clamp(500px, vw(715px, $desktop), 715px);
+      // max-height: clamp(500px, vw(715px, $desktop), 715px);
+      max-height: clamp(644px, vw(844px, $desktop), 844px);
       min-height: unset;
     }
   }
@@ -268,7 +323,8 @@ const heroCards = [
       position: absolute;
       right: clamp(50px, vw(50px, $desktop), 50px);
       // bottom: clamp(50px, vw(50px, $desktop), 50px);
-      top: clamp(450px, vw(580px, $desktop), 594px);
+      // top: clamp(450px, vw(580px, $desktop), 594px);
+      top: clamp(480px, vw(705px, $desktop), 725px);
     }
   }
   & .swiper-controls p {

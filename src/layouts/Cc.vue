@@ -136,9 +136,9 @@ onMounted(() => {
 })
 </script>
 <template>
-  <section class="mortgage mt-110">
+  <section class="mortgage mt-110" id="mortgage">
     <div class="container">
-      <h2 class="default-title">Калькулятор ипотеки</h2>
+      <h2 class="default-title title-calc">Калькулятор ипотеки</h2>
       <p class="mortgage__title">
         Предоставляем выгодные условия приобретения жилья с возможностью субсидирования от
         застройщика.
@@ -557,6 +557,44 @@ onMounted(() => {
     gap: 16px;
     flex-wrap: wrap;
   }
+  & .checkbox {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 6px;
+  }
+
+  & .checkbox input[type='checkbox'] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid transparent;
+    box-shadow: 0 0 0 1px #e5e7eb;
+    cursor: pointer;
+    position: relative;
+  }
+
+  & .checkbox input[type='checkbox']:checked::after {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 4px;
+    width: 8px;
+    height: 12px;
+    border-right: 2px solid #6c6f71;
+    border-bottom: 2px solid #6c6f71;
+    transform: rotate(45deg);
+  }
+
+  & .checkbox span {
+    font-weight: 400;
+    font-size: clamp(16px, vw(18px, $desktop), 18px);
+    line-height: 146%;
+    color: var(--100);
+  }
 
   & .swiper-controls {
     display: flex;
@@ -578,6 +616,10 @@ onMounted(() => {
     @media (min-width: $desk) {
       display: none;
     }
+  }
+
+  & .title-calc {
+    margin-bottom: clamp(10px, vw(12px, $desktop), 12px);
   }
 }
 </style>

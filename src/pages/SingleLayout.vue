@@ -3,6 +3,10 @@
 // const { params } = useRoute()
 // const slug = params.slug
 import SingleTop from '@/layouts/blog/SingleTop.vue'
+import SingleContainer from '@/layouts/blog/SingleContainer.vue'
+import News from '@/layouts/News.vue'
+import OtherApartment from '@/layouts/apartment/OtherApartment.vue'
+import Projects from '@/layouts/Projects.vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 
 const SingleItems = {
@@ -15,17 +19,18 @@ const SingleItems = {
   author: 'Фамилия Имя Отчество',
   descr:
     'Чем занимается человек в компании. Например, менеджер по работе с клиентамиобсудить решение',
-  photo: '/imgs/single/frame2.png',
+  authorPhoto: '/imgs/single/frame2.png',
 }
 </script>
 
 <template>
   <Breadcrumbs />
-  <div class="single">
-    <div class="container">
-      <SingleTop :items="SingleItems"></SingleTop>
-    </div>
-  </div>
+
+  <SingleTop :items="SingleItems"></SingleTop>
+  <SingleContainer></SingleContainer>
+  <Projects :title="'Проекты, которые упоминались'"></Projects>
+  <OtherApartment :title="'Квартиры, которые упоминались'"></OtherApartment>
+  <News :title="'Похожие статьи'"></News>
 </template>
 
 <style lang="scss" scoped>

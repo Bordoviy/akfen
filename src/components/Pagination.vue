@@ -38,15 +38,17 @@ function goToPage(page) {
 <template>
   <div class="pagination" v-if="totalPages > 1">
     <div class="container">
-      <button
-        v-for="page in pages"
-        :key="page"
-        class="pagination__btn"
-        :class="{ active: page === currentPage }"
-        @click="goToPage(page)"
-      >
-        {{ page }}
-      </button>
+      <div class="pagination__inner">
+        <button
+          v-for="page in pages"
+          :key="page"
+          class="pagination__btn"
+          :class="{ active: page === currentPage }"
+          @click="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -55,16 +57,14 @@ function goToPage(page) {
 @import '../assets/styles/index';
 
 .pagination {
-  display: flex;
-  justify-content: center;
   margin-top: clamp(20px, vw(30px, $desktop), 30px);
 
-  .container {
+  &__inner {
     display: flex;
     gap: clamp(8px, vw(8px, $desktop), 8px);
   }
 
-  .pagination__btn {
+  &__btn {
     width: clamp(40px, vw(48px, $desktop), 48px);
     border-radius: 8px;
     padding: clamp(10px, vw(10px, $desktop), 10px);
@@ -79,6 +79,10 @@ function goToPage(page) {
     transition: background-color 0.2s ease;
 
     &.active {
+      background: var(--2);
+      color: var(--color);
+    }
+    &:hover {
       background: var(--2);
       color: var(--color);
     }

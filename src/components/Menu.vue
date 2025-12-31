@@ -179,9 +179,9 @@ const housingCards = [
   {
     title: 'ЖК “Avrora“',
     address: 'Гурьевск, ул Ленина',
-    price: 'от 6 000 000',
+    price: 'от 6 451 050',
     image: '/imgs/projects/13.jpg',
-    id: '',
+    id: 'avrora',
   },
 ]
 </script>

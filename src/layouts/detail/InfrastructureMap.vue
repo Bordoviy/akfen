@@ -43,7 +43,11 @@ const PROJECTS = {
     title: 'ЖК “МореLife”',
     image: '/imgs/projects/9.jpg',
   },
-  avrora: { coords: [54.775771, 20.603077], title: 'ЖК “Avrora”', image: '/imgs/projects/13.jpg' },
+  avrora: {
+    coords: [54.777055, 20.596335],
+    title: 'ЖК “Avrora”',
+    image: '/imgs/projects/13.jpg',
+  },
 }
 
 /* бейдж минут до центра */

@@ -36,13 +36,13 @@ const allProjects = [
     price: '5 700 000',
     file: '',
     imgs: [
-      '/imgs/rc/1.jpg',
-      '/imgs/rc/2.jpg',
-      '/imgs/rc/3.jpg',
+      '/imgs/rc/k1.jpg',
+      '/imgs/rc/k2.jpg',
+      '/imgs/rc/k3.jpg',
+      '/imgs/rc/k4.jpg',
+      '/imgs/rc/k5.jpg',
       '/imgs/rc/4.jpg',
       '/imgs/rc/3.1.jpg',
-      '/imgs/rc/3.2.jpg',
-      '/imgs/rc/3.3.jpg',
     ],
     // description: 'Подробное описание жилого комплекса...',
     categories: ['топовая локация', '0 % рассрочка', 'подземный паркинг', 'вид на город'],
@@ -53,7 +53,7 @@ const allProjects = [
     address: 'г. Калининград, Елизаветинская, 47',
     text: 'до центра на авто - 5 мин',
     price: '6 732 600',
-    file: '/files/sun-city.pdf',
+    file: '',
     imgs: [
       '/imgs/rc/9.jpg',
       '/imgs/rc/10.jpg',
@@ -96,10 +96,10 @@ const allProjects = [
   {
     id: 'avrora',
     title: 'ЖК “Avrora“',
-    address: 'Гурьевск, ул Ленина',
-    text: 'до центра 2 мин пешком',
-    price: '6 000 000',
-    file: '#',
+    address: 'г. Калининград, ул. Гурьева',
+    text: 'до центра на авто - менее 15 мин',
+    price: '6 451 050',
+    file: '/files/avrora_05.pdf',
     imgs: [
       '/imgs/rc/27.jpg',
       '/imgs/rc/28.jpg',
@@ -110,7 +110,7 @@ const allProjects = [
       '/imgs/rc/33.jpg',
     ],
     // description: 'Подробное описание жилого комплекса...',
-    categories: ['в центре', 'у парка', 'с террасой'],
+    categories: ['топовая локация', ' 0 % рассрочка', 'в центре Гурьевска', 'рядом парк'],
   },
 ]
 

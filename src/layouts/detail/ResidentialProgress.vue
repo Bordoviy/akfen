@@ -42,6 +42,21 @@ onMounted(() => {
 
 const progressCards = [
   {
+    title: '25 октября 2025 года',
+    img: '/imgs/detail/av1.jpg',
+    id: 'avrora',
+  },
+  {
+    title: '25 октября 2025 года',
+    img: '/imgs/detail/k2.jpg',
+    id: 'kaliningrad-city',
+  },
+  {
+    title: '25 сентября 2025 года',
+    img: '/imgs/detail/k1.jpg',
+    id: 'kaliningrad-city',
+  },
+  {
     title: '25 августа 2025 года',
     img: '/imgs/detail/1.jpg',
     id: 'kaliningrad-city',
@@ -80,6 +95,21 @@ const progressCards = [
     title: '25 января 2025 года',
     img: '/imgs/detail/8.jpg',
     id: 'kaliningrad-city',
+  },
+  {
+    title: '25 ноября 2025 года',
+    img: '/imgs/detail/s3.jpg',
+    id: 'sun-city',
+  },
+  {
+    title: '25 октября 2025 года',
+    img: '/imgs/detail/s2.jpg',
+    id: 'sun-city',
+  },
+  {
+    title: '25 сентября 2025 года',
+    img: '/imgs/detail/s1.jpg',
+    id: 'sun-city',
   },
   {
     title: '25 августа 2025 года',
@@ -130,7 +160,7 @@ const projectItems = computed(() => progressCards.filter((p) => p.id === route.p
 </script>
 
 <template>
-  <div class="progress mt-110">
+  <div class="progress mt-110" v-if="projectItems.length">
     <div class="container">
       <div class="progress__top swiper-top">
         <h2 class="progress__title default-title">Ход строительства</h2>

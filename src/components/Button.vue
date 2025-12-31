@@ -8,13 +8,17 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  href: {
+    type: String,
+    required: false,
+  },
 })
 </script>
 
 <template>
-  <button :class="['btn btn-default', { 'btn-none': none }]">
+  <a :href="href" :class="['btn btn-default', { 'btn-none': none }]">
     <slot></slot>
-  </button>
+  </a>
 </template>
 
 <style lang="scss" scoped>
@@ -31,6 +35,8 @@ defineProps({
   color: var(--color);
   border: 1px solid transparent;
   white-space: nowrap;
+  text-align: center;
+  cursor: pointer;
 }
 .btn-default:hover {
   background: #fff;
@@ -41,6 +47,7 @@ defineProps({
   background-color: transparent;
   border: 1px solid var(--100);
   color: var(--100);
+  cursor: pointer;
 }
 .btn-none:hover {
   background: var(--1);

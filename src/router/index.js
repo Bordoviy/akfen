@@ -12,6 +12,7 @@ import BaseLayout from '@/layouts/BaseLayout.vue'
 import SingleLayout from '@/pages/SingleLayout.vue'
 import Installment from '@/pages/Installment.vue'
 import Apartment from '@/pages/Apartment.vue'
+import FindApartment from '@/pages/FindApartment.vue'
 
 const routes = [
   {
@@ -25,11 +26,25 @@ const routes = [
       { path: 'mortgage', component: Mortgage, meta: { breadcrumb: 'Ипотека' } },
       { path: 'installment', component: Installment, meta: { breadcrumb: 'Рассрочка' } },
       { path: 'blog', component: Blog, meta: { breadcrumb: 'Блог' } },
+      { path: 'blog/category/:type', component: Blog, meta: { breadcrumb: 'Блог' } },
+      {
+        path: 'blog/:slug',
+        component: SingleLayout,
+        props: true,
+        meta: { breadcrumb: 'Запись блога' },
+      },
       // {
-      //   path: 'blog/:slug',
-      //   component: SingleLayout,
-      //   props: true,
-      //   meta: { breadcrumb: 'Запись блога' },
+      //   path: '/blog',
+      //   component: Blog,
+      //   meta: { breadcrumb: 'Блог' },
+      //   children: [
+      //     {
+      //       path: ':slug',
+      //       component: SingleLayout,
+      //       props: true,
+      //       meta: { breadcrumb: 'Запись блога' },
+      //     },
+      //   ],
       // },
       { path: 'projects/:id', component: ProjectDetail, meta: { breadcrumb: 'Жилой дом' } },
       { path: 'apartment', component: Apartment, meta: { breadcrumb: 'Квартира' } },
@@ -40,8 +55,20 @@ const routes = [
         component: NotFound,
         meta: { breadcrumb: 'Страница не найдена' },
       },
+      {
+        path: '/find-apartment',
+        component: FindApartment,
+        meta: { breadcrumb: 'Подобрать квартиру' },
+      },
     ],
   },
+  // {
+  //   path: '/find-apartment',
+  //   component: BaseLayout,
+  //   meta: { breadcrumb: 'Подобрать квартиру' },
+  //   children: [{ path: '', component: FindApartment, meta: { breadcrumb: 'Подобрать квартиру' } }],
+  // },
+  ,
 ]
 
 const router = createRouter({

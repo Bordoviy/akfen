@@ -7,6 +7,7 @@ import MainBlock from '@/layouts/mortgage-installment/MainBlock.vue'
 import VariationsBlock from '@/layouts/mortgage-installment/VariationsBlock.vue'
 import AdventBlock from '@/layouts/mortgage-installment/AdventBlock.vue'
 import Cc from '@/layouts/Cc.vue'
+import CallbackBlock from '@/layouts/mortgage-installment/CallbackBlock.vue'
 
 const variationsItems = [
   {
@@ -100,6 +101,7 @@ const btnText = {
   <Cc></Cc>
   <AdventBlock :title="'Преимущества ипотеки'" :items="adventItems" />
   <FaqBlock :items="faqList" />
+  <CallbackBlock />
 </template>
 
 <style lang="scss" scoped>

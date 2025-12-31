@@ -2,6 +2,15 @@
 import Button from '@/components/Button.vue'
 import { useRoute } from 'vue-router'
 import { ref, computed } from 'vue'
+import Mortgage from '@/pages/Mortgage.vue'
+import Modal from '@/components/Modal.vue'
+
+const isModal = ref(false)
+
+function toggleModal() {
+  isModal.value = !isModal.value
+}
+
 // import { onMounted, nextTick } from 'vue'
 
 defineProps({
@@ -52,27 +61,26 @@ defineProps({
 
 <template>
   <div class="m-block">
-    <div class="container">
-      <div class="m-block__inner">
-        <div class="m-block__main">
-          <div class="m-block__main-top">
-            <h1 class="m-block__main-title">{{ title }}</h1>
-            <p class="m-block__main-descr">{{ description }}</p>
-            <div class="m-block__main-btns">
-              <Button>{{ btn }}</Button>
-              <Button :none="true">Получить консультацию</Button>
-            </div>
-          </div>
-          <div class="m-block__main-split">
-            <div class="m-block__main-item" v-for="(item, i) in items" :key="i">
-              <p class="m-block__main-item-title">{{ item.title }}</p>
-              <p class="m-block__main-item-text">{{ item.text }}</p>
-            </div>
+    <div class="m-block__inner">
+      <div class="m-block__main">
+        <div class="m-block__main-top">
+          <h1 class="m-block__main-title">{{ title }}</h1>
+          <p class="m-block__main-descr">{{ description }}</p>
+          <div class="m-block__main-btns">
+            <Button :href="'#mortgage'">{{ btn }}</Button>
+            <Button :none="true" @click.prevent="toggleModal">Получить консультацию</Button>
+            <Modal v-if="isModal" @close="toggleModal"></Modal>
           </div>
         </div>
-        <div class="m-block__wrapper">
-          <img :src="img" alt="" class="m-block__img" />
+        <div class="m-block__main-split">
+          <div class="m-block__main-item" v-for="(item, i) in items" :key="i">
+            <p class="m-block__main-item-title">{{ item.title }}</p>
+            <p class="m-block__main-item-text">{{ item.text }}</p>
+          </div>
         </div>
+      </div>
+      <div class="m-block__wrapper">
+        <img :src="img" alt="" class="m-block__img" />
       </div>
     </div>
   </div>
@@ -82,6 +90,18 @@ defineProps({
 @import '/src/assets/styles/index.scss';
 
 .m-block {
+  width: 100%;
+  margin: 0 auto;
+
+  @media (min-width: $tab) {
+    max-width: clamp(320px, vw(1400px, $desktop), 1880px);
+  }
+  @media (min-width: $desk) {
+    //
+  }
+  & .container {
+    padding: 0;
+  }
   &__inner {
     border-radius: 30px;
     display: flex;
@@ -92,26 +112,29 @@ defineProps({
     }
     @media (min-width: $desk) {
       flex-direction: row;
-      background: linear-gradient(140deg, #eef1ff 0%, #5a7ce4 100%);
+      background: linear-gradient(88deg, #eef1ff 0%, #5a7ce4 100%);
     }
   }
   &__main {
+    max-width: 670px;
     padding: clamp(30px, vw(60px, $desktop), 60px);
     flex: 1;
+    margin: 0 auto;
     @media (min-width: $tab) {
     }
     @media (min-width: $desk) {
+      margin: 0;
       padding: clamp(30px, vw(60px, $desktop), 60px) 0 clamp(30px, vw(60px, $desktop), 60px)
         clamp(30px, vw(60px, $desktop), 60px);
     }
   }
   &__wrapper {
     flex: 1;
-    @media (min-width: $tab) {
-    }
-    @media (min-width: $desk) {
-      flex: 1.8;
-    }
+    // @media (min-width: $tab) {
+    // }
+    // @media (min-width: $desk) {
+    //   flex: 1.8;
+    // }
   }
   &__main-top {
     display: flex;
@@ -154,10 +177,9 @@ defineProps({
     border: 1px solid #000;
   }
   &__main-btns .btn {
-    width: 100%;
-    // @media (min-width: $tab) {
-    //   max-width: 292px;
-    // }
+    @media (min-width: $tab) {
+      width: 100%;
+    }
   }
 
   &__img {
@@ -178,6 +200,10 @@ defineProps({
     display: flex;
     gap: clamp(18px, vw(20px, $desktop), 20px);
     justify-content: space-between;
+    flex-direction: column;
+    @media (min-width: $mob) {
+      flex-direction: row;
+    }
   }
   &__main-item {
     width: 100%;
