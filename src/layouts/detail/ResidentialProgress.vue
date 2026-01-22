@@ -41,10 +41,20 @@ onMounted(() => {
 })
 
 const progressCards = [
+   {
+    title: '25 ноября 2025 года',
+    img: '/imgs/detail/av-n.jpg',
+    id: 'avrora',
+  },
   {
     title: '25 октября 2025 года',
     img: '/imgs/detail/av1.jpg',
     id: 'avrora',
+  },
+   {
+    title: '25 декабря 2025 года',
+    img: '/imgs/detail/k-d.jpg',
+    id: 'kaliningrad-city',
   },
   {
     title: '25 октября 2025 года',
@@ -95,6 +105,11 @@ const progressCards = [
     title: '25 января 2025 года',
     img: '/imgs/detail/8.jpg',
     id: 'kaliningrad-city',
+  },
+  {
+    title: '25 декабря 2025 года',
+    img: '/imgs/detail/sun-d.jpg',
+    id: 'sun-city',
   },
   {
     title: '25 ноября 2025 года',
