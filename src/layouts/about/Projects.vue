@@ -105,7 +105,7 @@ const houseCards = [
     flat: '85',
     floor: '5',
     date: 'IV кв. 2026',
-    id: '',
+    id: 'more-life',
   },
   {
     title: 'ЖК “Avrora“',

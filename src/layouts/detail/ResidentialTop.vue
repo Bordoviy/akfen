@@ -81,7 +81,7 @@ const allProjects = [
     address: 'г. Калининград, ул.Новоставского',
     text: 'до Калининграда - 30 мин',
     price: '7 120 000',
-    file: '#',
+    file: '',
     imgs: [
       '/imgs/rc/more1.jpg',
       '/imgs/rc/more2.jpg',

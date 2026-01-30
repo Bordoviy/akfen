@@ -56,7 +56,7 @@ const routes = [
         meta: { breadcrumb: 'Страница не найдена' },
       },
       {
-        path: '/find-apartment',
+        path: 'find-apartment',
         component: FindApartment,
         meta: { breadcrumb: 'Подобрать квартиру' },
       },

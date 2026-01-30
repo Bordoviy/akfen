@@ -27,7 +27,7 @@ defineProps({
 .btn-default {
   background: var(--1);
   border-radius: 16px;
-  padding: clamp(12px, vw(14px, $desktop), 14px) clamp(20px, vw(28px, $desktop), 28px);
+  padding: clamp(12px, vw(14.2px, $desktop), 14.2px) clamp(20px, vw(28px, $desktop), 28px);
   font-weight: 600;
   font-size: clamp(15px, vw(17px, $desktop), 17px);
   line-height: 146%;

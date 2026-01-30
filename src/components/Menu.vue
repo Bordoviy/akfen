@@ -174,7 +174,7 @@ const housingCards = [
     address: 'г. Пионерский, ул. Новоставского',
     price: 'от 7 000 000',
     image: '/imgs/projects/9.jpg',
-    id: '',
+    id: 'more-life',
   },
   {
     title: 'ЖК “Avrora“',
