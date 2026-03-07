@@ -8,14 +8,14 @@ defineProps({
 </script>
 
 <template>
-  <RouterLink
+  <component
+    v-for="(item, index) in items"
+    :key="item.slug || index"
+    :is="item.slug ? RouterLink : 'div'"
     class="news__card"
     :class="{ 'swiper-slide': slider }"
-    v-for="(item, index) in items"
-    :to="`/blog/${item.slug}`"
-    :key="item.slug || index"
+    v-bind="item.slug ? { to: `/blog/${item.slug}` } : {}"
   >
-    <!-- <RouterLink :to="`/blog/${item.slug}`" class="news__card-link" aria-label="Подробнее"> -->
     <div class="news__card-link" aria-label="Подробнее">
       <div class="news__card-wrap">
         <img
@@ -25,18 +25,18 @@ defineProps({
           loading="lazy"
           decoding="async"
         />
+
         <div v-if="item.type" class="news__card-badge">
           {{ item.type === 'article' ? 'Статья' : 'Новость' }}
         </div>
       </div>
+
       <div class="news__card-container">
         <p class="news__card-title">{{ item.title }}</p>
-
         <p class="news__card-date">{{ item.date }}</p>
       </div>
     </div>
-    <!-- </RouterLink> -->
-  </RouterLink>
+  </component>
 </template>
 
 <style lang="scss" scoped>
@@ -55,7 +55,7 @@ defineProps({
 .news__card-img {
   width: 100%;
   height: 100%;
-  // object-fit: cover;
+  object-fit: cover;
   // border-radius: 0 0 120px 0;
   max-height: 190px;
   @media (min-width: $tab) {

@@ -46,8 +46,8 @@ onMounted(() => {
 
 const newsCards = [
   {
-    title: 'Начало этапа покраски фасада ЖК “Sun City“',
-    img: '/imgs/projects/44.jpg',
+    title: 'Компания «Акфен-Калининград» вручила квартиры участникам СВО, пострадавшим от недобросовестных застройщиков',
+    img: '/imgs/single/single.jpg',
     href: '#',
   },
   {
