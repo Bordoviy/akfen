@@ -113,10 +113,10 @@ const houseCards = [
     text: 'до центра на авто - менее 15 мин',
     price: '6 451 050',
     imgs: [
-      { img: '/imgs/projects/slide1.jpeg' },
-      { img: '/imgs/projects/slide2.jpeg' },
-      { img: '/imgs/projects/slide3.jpeg' },
-      { img: '/imgs/projects/slide4.jpeg' },
+      { img: '/imgs/projects/s1.jpeg' },
+      { img: '/imgs/projects/s2.jpeg' },
+      { img: '/imgs/projects/s3.jpeg' },
+      { img: '/imgs/projects/s4.jpeg' },
     ],
     categories: [
       { title: 'топовая локация' },
