@@ -40,7 +40,7 @@ function toggleModal() {
       <div class="header__inner" :class="{ active: isOpen }">
         <RouterLink to="/">
           <img
-            src="/imgs/logo.svg"
+            src="/imgs/new-logo.svg"
             alt=""
             class="header__logo common-logo"
             loading="lazy"

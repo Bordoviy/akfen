@@ -51,12 +51,12 @@ const newsCards = [
     href: '#',
   },
   {
-    title: 'ЖК “МореLife“ скоро в продаже',
+    title: 'ЖК “МореLife“ уже в продаже',
     img: '/imgs/projects/9.jpg',
     href: '#',
   },
   {
-    title: 'ЖК “Avrora“ скоро в продаже',
+    title: 'ЖК “Avrora“ уже в продаже',
     img: '/imgs/projects/13.jpg',
     href: '#',
   },

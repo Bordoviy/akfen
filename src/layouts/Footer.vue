@@ -45,7 +45,7 @@ const footerMenu = [
           <div class="footer__main">
             <RouterLink to="/">
               <img
-                src="/imgs/logo.svg"
+                src="/imgs/new-logo.svg"
                 alt=""
                 loading="lazy"
                 decoding="async"

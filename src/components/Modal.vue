@@ -31,31 +31,34 @@
         </svg>
       </button>
 
-      <form class="modal__form" action="#" method="post">
+      <form class="modal__form" @submit.prevent="submitForm">
         <div class="modal__fields">
           <div class="modal__field">
             <label class="modal__label" for="modal-name">Как вас зовут?</label>
             <input
-              class="modal__input"
-              type="text"
-              id="modal-name"
-              name="name"
-              placeholder="Введите ваше имя"
-              required
+             class="modal__input"
+             type="text"
+             id="modal-name"
+             name="name"
+             placeholder="Введите ваше имя"
+             v-model="form.name"
+             required
             />
+
           </div>
 
           <div class="modal__field">
             <label class="modal__label" for="modal-phone">Ваш телефон</label>
-            <input
-              v-phone-mask
-              class="modal__input"
-              type="tel"
-              id="modal-phone"
-              name="phone"
-              placeholder="+7 (___) ___-__-__"
-              required
-            />
+           <input
+            v-phone-mask
+            class="modal__input"
+            type="tel"
+            id="modal-phone"
+            name="phone"
+            placeholder="+7 (___) ___-__-__"
+            v-model="form.phone"
+            required
+           />
           </div>
         </div>
         <div class="modal__bottom">
@@ -78,12 +81,35 @@
 
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
+
 const emit = defineEmits(['close'])
 
 const noteChecked = ref(false)
 
+const form = ref({
+  name: '',
+  phone: ''
+})
+
 const emitClose = () => {
   emit('close')
+}
+
+const submitForm = () => {
+  const data = {
+    name: form.value.name,
+    phone: form.value.phone
+  }
+
+  console.log('Отправка формы:', data)
+
+  // await fetch('/api/form', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify(data)
+  // })
+
+  emitClose()
 }
 
 onMounted(() => {
