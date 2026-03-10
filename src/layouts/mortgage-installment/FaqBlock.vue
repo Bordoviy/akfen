@@ -119,6 +119,7 @@ const toggle = (index) => {
     font-size: clamp(17px, vw(20px, $desktop), 20px);
     line-height: 150%;
     color: var(--100);
+     white-space: pre-line;
   }
   .faq__icon {
     width: clamp(28px, vw(34px, $desktop), 34px);

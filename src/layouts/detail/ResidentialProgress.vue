@@ -41,6 +41,16 @@ onMounted(() => {
 })
 
 const progressCards = [
+  {
+    title: '3 марта 2026 года',
+    img: '/imgs/detail/pionerskiy-3-03-26.jpg',
+    id: 'more-life',
+  },
+  {
+    title: '7 марта 2026 года',
+    img: '/imgs/detail/avrora-7-03-26.jpg',
+    id: 'avrora',
+  },
    {
     title: '25 ноября 2025 года',
     img: '/imgs/detail/av-n.jpg',
@@ -51,7 +61,12 @@ const progressCards = [
     img: '/imgs/detail/av1.jpg',
     id: 'avrora',
   },
-   {
+  {
+    title: '5 марта 2026 года',
+    img: '/imgs/detail/kcity-5-03-26.jpg',
+    id: 'kaliningrad-city',
+  },
+  {
     title: '25 декабря 2025 года',
     img: '/imgs/detail/k-d.jpg',
     id: 'kaliningrad-city',
@@ -105,6 +120,11 @@ const progressCards = [
     title: '25 января 2025 года',
     img: '/imgs/detail/8.jpg',
     id: 'kaliningrad-city',
+  },
+   {
+    title: '2 марта 2026 года',
+    img: '/imgs/detail/sun-2-03-26.jpg',
+    id: 'sun-city',
   },
   {
     title: '25 декабря 2025 года',

@@ -23,8 +23,8 @@ const routes = [
       { path: '', component: Home, meta: { breadcrumb: 'Главная' } },
       { path: 'about', component: About, meta: { breadcrumb: 'О нас' } },
       { path: 'contacts', component: Contacts, meta: { breadcrumb: 'Контакты' } },
-      { path: 'mortgage', component: Mortgage, meta: { breadcrumb: 'Ипотека' } },
-      { path: 'installment', component: Installment, meta: { breadcrumb: 'Рассрочка' } },
+      { path: 'ipoteka', component: Mortgage, meta: { breadcrumb: 'Ипотека' } },
+      { path: 'rassrochka', component: Installment, meta: { breadcrumb: 'Рассрочка' } },
       { path: 'blog', component: Blog, meta: { breadcrumb: 'Блог' } },
       { path: 'blog/category/:type', component: Blog, meta: { breadcrumb: 'Блог' } },
       {

@@ -12,12 +12,14 @@ defineProps({
 onMounted(() => {
   nextTick(() => {
     if (!variationsContainer.value) return
-    if (window.innerWidth >= 992) return
 
-    const nextEl = variationsContainer.value.querySelector('.offers__button-next--mobile')
-    const prevEl = variationsContainer.value.querySelector('.offers__button-prev--mobile')
+    const nextEl = variationsContainer.value.querySelector('.m-variations__button-next--mobile')
+    const prevEl = variationsContainer.value.querySelector('.m-variations__button-prev--mobile')
+    const section = variationsContainer.value.closest('.m-variations')
+    const desktopNextEl = section?.querySelector('.m-variations__button-next--desktop')
+    const desktopPrevEl = section?.querySelector('.m-variations__button-prev--desktop')
 
-    new Swiper(variationsContainer.value, {
+    const swiper = new Swiper(variationsContainer.value, {
       loop: false,
       slidesPerView: 1, // по умолчанию один слайд
       spaceBetween: 20,
@@ -32,11 +34,26 @@ onMounted(() => {
           spaceBetween: 20,
         },
         992: {
-          // с 768px и выше – два слайда
-          spaceBetween: 0,
+          slidesPerView: 3,
+          spaceBetween: 20,
         },
       },
     })
+
+    desktopNextEl?.addEventListener('click', () => swiper.slideNext())
+    desktopPrevEl?.addEventListener('click', () => swiper.slidePrev())
+
+    const syncDesktopDisabledState = () => {
+      if (!desktopPrevEl || !desktopNextEl) return
+
+      desktopPrevEl.classList.toggle('swiper-button-disabled', swiper.isBeginning)
+      desktopNextEl.classList.toggle('swiper-button-disabled', swiper.isEnd)
+    }
+
+    syncDesktopDisabledState()
+    swiper.on('slideChange', syncDesktopDisabledState)
+    swiper.on('resize', syncDesktopDisabledState)
+    swiper.on('breakpoint', syncDesktopDisabledState)
   })
 })
 </script>
@@ -45,7 +62,46 @@ onMounted(() => {
   <div class="m-variations mt-110">
     <div class="container">
       <div class="m-variations__inner">
-        <h2 class="m-variations__title default-title">{{ title }}</h2>
+       
+        <div class="m-variations__top swiper-top">
+          <h2 class="m-variations__title default-title">{{ title }}</h2>
+          <div class="swiper-controls desktop-only">
+            <div class="swiper-button-prev m-variations__button-prev--desktop">
+              <svg
+                width="20"
+                height="21"
+                viewBox="0 0 20 21"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12.5 15.5L7.5 10.5L12.5 5.5"
+                  stroke="white"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+            <div class="swiper-button-next m-variations__button-next--desktop">
+              <svg
+                width="20"
+                height="21"
+                viewBox="0 0 20 21"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.5 15.5L12.5 10.5L7.5 5.5"
+                  stroke="white"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
         <div class="m-variations__wrapper swiper" ref="variationsContainer">
           <div class="swiper-wrapper">
             <div
@@ -53,9 +109,11 @@ onMounted(() => {
               :key="index"
               class="m-variations__item swiper-slide"
             >
-              <div class="m-variations__icon">
-                <img :src="item.img" alt="" />
-              </div>
+              <!--
+                <div class="m-variations__icon">
+                  <img :src="item.img" alt="" />
+                </div>
+              -->
               <p class="m-variations__subtitle">{{ item.title }}</p>
               <p class="m-variations__text">{{ item.text }}</p>
               <div class="m-variations__bottom">
@@ -74,7 +132,7 @@ onMounted(() => {
             </div>
           </div>
           <div class="swiper-controls mobile-only">
-            <div class="swiper-button-prev offers__button-prev--mobile">
+            <div class="swiper-button-prev m-variations__button-prev--mobile">
               <svg
                 width="20"
                 height="21"
@@ -92,7 +150,7 @@ onMounted(() => {
               </svg>
             </div>
             <p>листайте, чтобы увидеть больше</p>
-            <div class="swiper-button-next offers__button-next--mobile">
+            <div class="swiper-button-next m-variations__button-next--mobile">
               <svg
                 width="20"
                 height="21"
@@ -120,16 +178,17 @@ onMounted(() => {
 @import '/src/assets/styles/index.scss';
 
 .m-variations {
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   &__inner {
   }
 
   &__wrapper .swiper-wrapper {
-    // display: flex;
-    @media (min-width: $desk) {
-      display: flex;
-      gap: clamp(10px, vw(20px, $desktop), 20px);
-      flex-wrap: wrap;
-    }
+    // Swiper управляет layout через transform; не переопределяем на desktop.
   }
   // &__wrapper .swiper-slide {
   //   @media (min-width: 768px) and (max-width: 991px) {
@@ -146,10 +205,6 @@ onMounted(() => {
     height: auto;
     box-sizing: border-box;
     @media (min-width: $tab-inner) {
-    }
-    @media (min-width: $desk) {
-      flex: 1;
-      // max-width: unset;
     }
   }
   &__icon {
