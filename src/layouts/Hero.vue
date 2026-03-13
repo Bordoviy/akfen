@@ -1,212 +1,537 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import Button from '@/components/Button.vue'
-import Tab from '@/components/Tab.vue'
 
-const isMobile = ref(window.innerWidth < 992)
+const viewportWidth = ref(window.innerWidth)
+const heroContainer = ref(null)
+const heroSwiper = ref(null)
+const activeSlideIndex = ref(0)
 
-function updateIsMobile() {
-  isMobile.value = window.innerWidth < 992
+const isDesktop = computed(() => viewportWidth.value >= 993)
+const isMobile = computed(() => viewportWidth.value < 600)
+const isTablet = computed(() => viewportWidth.value >= 600 && viewportWidth.value < 993)
+
+function updateViewport() {
+  viewportWidth.value = window.innerWidth
+}
+
+const defaultSidebarCards = [
+  {
+    title: '0 % рассрочка',
+    text: 'Текст описание, текст описание, текст описание, текст описание',
+    buttonText: 'Подробнее',
+    link: '/projects',
+  },
+  {
+    title: 'С траншевой ипотекой платеж 2 000 ₽/мес',
+    text: 'Текст описание, текст описание, текст описание, текст описание',
+    buttonText: 'Подробнее',
+    link: '/projects',
+  },
+]
+
+const heroCards = [
+  {
+    title: 'ЖК “МореLife“',
+    text: 'Жизнь в гармонии с природой',
+    categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+    desktopImg: '/imgs/hero/pioner-desk.webp',
+    mobileImg: '/imgs/hero/pioner-mob.webp',
+    id: 'more-life',
+    sidebarCards: [
+      {
+        title: 'Траншевая ипотека: от 2 000 руб./мес.',
+        text: 'Платите всего 2 000 ₽ в месяц до ввода дома в эксплуатацию.',
+        buttonText: 'Подробнее',
+        link: '/projects/more-life',
+      },
+      {
+        title: 'ЖК "Пионерский берег"',
+        text: 'Жизнь у моря в экологичном районе. Свежий воздух и современный дизайн и комфорт в шаге от пляжа.',
+        buttonText: 'Подробнее',
+        link: '/projects/more-life',
+      },
+    ],
+  },
+  {
+    title: 'ЖК “МореLife“',
+    text: 'Жизнь в гармонии с природой',
+    categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+    desktopImg: '/imgs/hero/pioner-desk2.webp',
+    mobileImg: '/imgs/hero/pioner-mob2.webp',
+    id: 'more-life',
+    sidebarCards: [
+      {
+        title: 'Скидка 3% на квартиру',
+        text: 'Ваша выгода при 100% оплате или стандартной ипотеке.',
+        buttonText: 'Подробнее',
+        link: '/projects/more-life',
+      },
+      {
+        title: 'ЖК "Пионерский берег"',
+        text: 'Жизнь у моря в экологичном районе. Свежий воздух и современный дизайн в шаге от пляжа.',
+        buttonText: 'Подробнее',
+        link: '/projects/more-life',
+      },
+    ],
+  },
+  {
+    title: 'ЖК “Sun City“',
+    text: 'Пространство новой жизни на Сельме',
+    categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+    desktopImg: '/imgs/hero/sun-desk.webp',
+    mobileImg: '/imgs/hero/sun-mob.webp',
+    id: 'sun-city',
+    sidebarCards: [
+      {
+        title: 'Скидка 3% на квартиру',
+        text: 'Специальная цена при полной оплате. Узнайте сумму вашей экономии.',
+        buttonText: 'Подробнее',
+        link: '/projects/sun-city',
+      },
+      {
+        title: 'ЖК "Елизаветинский"',
+        text: 'Жизнь в уютном районе в 10 минутах от Центра. Тишина, комфорт и всё нужное рядом.',
+        buttonText: 'Подробнее',
+        link: '/projects/sun-city',
+      },
+    ],
+  },
+  {
+    title: 'ЖК “Sun City“',
+    text: 'Пространство новой жизни на Сельме',
+    categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+    desktopImg: '/imgs/hero/sun-desk2.webp',
+    mobileImg: '/imgs/hero/sun-mob2.webp',
+    id: 'sun-city',
+    sidebarCards: [
+      {
+        title: 'Семейная ипотека 4,5%',
+        text: 'Комфортная ставка для семей с детьми. Успейте забронировать!',
+        buttonText: 'Подробнее',
+        link: '/projects/sun-city',
+      },
+      {
+        title: 'ЖК "Елизаветинский"',
+        text: 'Жизнь в уютном районе в 10 минутах от Центра. Тишина, комфорт и всё нужное рядом.',
+        buttonText: 'Подробнее',
+        link: '/projects/sun-city',
+      },
+    ],
+  },
+  {
+    title: 'ЖК “МореLife“',
+    text: 'Жизнь в гармонии с природой',
+    categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+    desktopImg: '/imgs/hero/pioner-desk3.webp',
+    mobileImg: '/imgs/hero/pioner-mob3.webp',
+    id: 'more-life',
+    sidebarCards: [
+      {
+        title: 'Семейная ипотека 4,5%',
+        text: 'Низкий процент на весь срок кредитования. Подробности у менеджеров.',
+        buttonText: 'Подробнее',
+        link: '/projects/more-life',
+      },
+      {
+        title: 'ЖК "Пионерский берег"',
+        text: 'Жизнь у моря в экологичном районе. Свежий воздух и современный дизайн в шаге от пляжа.',
+        buttonText: 'Подробнее',
+        link: '/projects/more-life',
+      },
+    ],
+  },
+  {
+    title: 'ЖК “Калининград City”',
+    text: '25 этажей высоты открывают 1000 возможностей для жизни!',
+    categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+    desktopImg: '/imgs/hero/kali-desk.webp',
+    mobileImg: '/imgs/hero/kali-mob.webp',
+    id: 'kaliningrad-city',
+    sidebarCards: [
+      {
+        title: '0% рассрочка',
+        text: 'Без переплат и процентов до сдачи дома',
+        buttonText: 'Подробнее',
+        link: '/projects/kaliningrad-city',
+      },
+      {
+        title: 'ЖК "Огни Калининграда"',
+        text: 'Современный квартал в сердце города. Панорамные виды и развитая инфраструктура.',
+        buttonText: 'Подробнее',
+        link: '/projects/kaliningrad-city',
+      },
+    ],
+  },
+  {
+    title: 'ЖК “Калининград City”',
+    text: '25 этажей высоты открывают 1000 возможностей для жизни!',
+    categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+    desktopImg: '/imgs/hero/kali-desk2.webp',
+    mobileImg: '/imgs/hero/kali-mob2.webp',
+    id: 'kaliningrad-city',
+    sidebarCards: [
+      {
+        title: 'Скидка 5% на квартиру',
+        text: 'Максимальная скидка при 100% оплате за наличный расчет.',
+        buttonText: 'Подробнее',
+        link: '/projects/kaliningrad-city',
+      },
+      {
+        title: 'ЖК "Огни Калининграда"',
+        text: 'Современный квартал в сердце города. Панорамные виды и развитая инфраструктура.',
+        buttonText: 'Подробнее',
+        link: '/projects/kaliningrad-city',
+      },
+    ],
+  },
+  {
+    title: 'ЖК “Avrora“',
+    text: 'Жизнь в гармонии с природой',
+    categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+    desktopImg: '/imgs/hero/avrora-desk.webp',
+    mobileImg: '/imgs/hero/avrora-mob.webp',
+    id: 'avrora',
+    sidebarCards: [
+      {
+        title: '0% рассрочка',
+        text: 'Удобный график: ежемесячные платежи по 50 000 ₽ до конца строительства.',
+        buttonText: 'Подробнее',
+        link: '/projects/avrora',
+      },
+      {
+        title: 'ЖК "Аврора"',
+        text: 'Семейный жилой комплекс с благоустроенной территорией и продуманными планировками.',
+        buttonText: 'Подробнее',
+        link: '/projects/avrora',
+      },
+    ],
+  },
+   {
+    title: 'ЖК “Avrora“',
+    text: 'Жизнь в гармонии с природой',
+    categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+    desktopImg: '/imgs/hero/avrora-desk2.webp',
+    mobileImg: '/imgs/hero/avrora-mob2.webp',
+    id: 'avrora',
+    sidebarCards: [
+      {
+        title: 'Траншевая ипотека',
+        text: 'Платеж 2 000 ₽/мес. — минимальная нагрузка на ваш бюджет.',
+        buttonText: 'Подробнее',
+        link: '/projects/avrora',
+      },
+      {
+        title: 'ЖК "Аврора"',
+        text: 'Семейный жилой комплекс с благоустроенной территорией и продуманными планировками.',
+        buttonText: 'Подробнее',
+        link: '/projects/avrora',
+      },
+    ],
+  },
+   {
+    title: 'ЖК “Avrora“',
+    text: 'Жизнь в гармонии с природой',
+    categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+    desktopImg: '/imgs/hero/avrora-desk3.webp',
+    mobileImg: '/imgs/hero/avrora-mob3.webp',
+    id: 'avrora',
+    sidebarCards: [
+      {
+        title: 'Семейная ипотека 4,5%',
+        text: 'Ставка актуальна при первоначальном взносе от 20,1%.',
+        buttonText: 'Подробнее',
+        link: '/projects/avrora',
+      },
+      {
+        title: 'ЖК "Аврора"',
+        text: 'Семейный жилой комплекс с благоустроенной территорией и продуманными планировками.',
+        buttonText: 'Подробнее',
+        link: '/projects/avrora',
+      },
+    ],
+  },
+  // {
+  //   title: 'ЖК “Калининград City”',
+  //   text: '25 этажей высоты открывают 1000 возможностей для жизни!',
+  //   categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+  //   img: '/imgs/hero/banner-kal.jpg',
+  //   id: 'kaliningrad-city',
+  //   sidebarCards: [
+  //     {
+  //       title: 'Видовые квартиры в центре города',
+  //       text: 'Текст описание, текст описание, текст описание, текст описание',
+  //       buttonText: 'Подробнее',
+  //       link: '/projects/kaliningrad-city',
+  //     },
+  //     {
+  //       title: 'Семейные и IT-ипотеки',
+  //       text: 'Текст описание, текст описание, текст описание, текст описание',
+  //       buttonText: 'Подробнее',
+  //       link: '/projects/kaliningrad-city',
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: 'ЖК “Калининград City”',
+  //   text: '25 этажей высоты открывают 1000 возможностей для жизни!',
+  //   categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+  //   img: '/imgs/hero/banner-kal1.jpg',
+  //   id: 'kaliningrad-city',
+  //   sidebarCards: [
+  //     {
+  //       title: 'Готовые планировки для инвестиций',
+  //       text: 'Текст описание, текст описание, текст описание, текст описание',
+  //       buttonText: 'Подробнее',
+  //       link: '/projects/kaliningrad-city',
+  //     },
+  //     {
+  //       title: 'Рассрочка 0 % на ограниченный пул',
+  //       text: 'Текст описание, текст описание, текст описание, текст описание',
+  //       buttonText: 'Подробнее',
+  //       link: '/projects/kaliningrad-city',
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: 'ЖК “Avrora“',
+  //   text: 'Жизнь в гармонии с природой',
+  //   categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+  //   img: '/imgs/hero/banner-av.jpg',
+  //   id: 'avrora',
+  //   sidebarCards: [
+  //     {
+  //       title: 'Квартиры рядом с парком',
+  //       text: 'Текст описание, текст описание, текст описание, текст описание',
+  //       buttonText: 'Подробнее',
+  //       link: '/projects/avrora',
+  //     },
+  //     {
+  //       title: 'Ипотека от ведущих банков',
+  //       text: 'Текст описание, текст описание, текст описание, текст описание',
+  //       buttonText: 'Подробнее',
+  //       link: '/projects/avrora',
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: 'ЖК “Avrora“',
+  //   text: 'Жизнь в гармонии с природой',
+  //   categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+  //   img: '/imgs/hero/banner-av1.jpg',
+  //   id: 'avrora',
+  //   sidebarCards: [
+  //     {
+  //       title: 'Террасы и приватные форматы',
+  //       text: 'Текст описание, текст описание, текст описание, текст описание',
+  //       buttonText: 'Подробнее',
+  //       link: '/projects/avrora',
+  //     },
+  //     {
+  //       title: 'Льготные программы покупки',
+  //       text: 'Текст описание, текст описание, текст описание, текст описание',
+  //       buttonText: 'Подробнее',
+  //       link: '/projects/avrora',
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: 'ЖК “Avrora“',
+  //   text: 'Жизнь в гармонии с природой',
+  //   categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
+  //   img: '/imgs/hero/banner-av1.jpg',
+  //   id: 'avrora',
+  //   sidebarCards: [
+  //     {
+  //       title: '0 % рассрочка',
+  //       text: 'Текст описание, текст описание, текст описание, текст описание',
+  //       buttonText: 'Подробнее',
+  //       link: '/projects/avrora',
+  //     },
+  //     {
+  //       title: 'С траншевой ипотекой платеж 2 000 ₽/мес',
+  //       text: 'Текст описание, текст описание, текст описание, текст описание',
+  //       buttonText: 'Подробнее',
+  //       link: '/projects/avrora',
+  //     },
+  //   ],
+  // },
+]
+
+const totalSlides = computed(() => heroCards.length)
+const activeHero = computed(() => heroCards[activeSlideIndex.value] || heroCards[0])
+const activeSidebarCards = computed(() => {
+  const cards = activeHero.value?.sidebarCards
+  if (!Array.isArray(cards) || cards.length < 2) return defaultSidebarCards
+  return cards.slice(0, 2)
+})
+const mobilePromoCard = computed(() => activeSidebarCards.value[1] || activeSidebarCards.value[0])
+const formattedSlide = computed(() => String(activeSlideIndex.value + 1).padStart(2, '0'))
+const formattedTotal = computed(() => String(totalSlides.value).padStart(2, '0'))
+const progressItems = computed(() => Array.from({ length: totalSlides.value }, (_, i) => i))
+
+function goNext() {
+  heroSwiper.value?.slideNext()
+}
+
+function goPrev() {
+  heroSwiper.value?.slidePrev()
 }
 
 onMounted(() => {
-  window.addEventListener('resize', updateIsMobile)
-})
+  window.addEventListener('resize', updateViewport)
 
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateIsMobile)
-})
-
-const heroContainer = ref(null)
-
-onMounted(() => {
   nextTick(() => {
     if (!heroContainer.value) return
-    new Swiper(heroContainer.value, {
+
+    heroSwiper.value = new Swiper(heroContainer.value, {
       spaceBetween: 10,
       loop: true,
-      navigation: {
-        nextEl: heroContainer.value.querySelector('.swiper-button-next'),
-        prevEl: heroContainer.value.querySelector('.swiper-button-prev'),
+      on: {
+        init(swiper) {
+          activeSlideIndex.value = swiper.realIndex
+        },
+        slideChange(swiper) {
+          activeSlideIndex.value = swiper.realIndex
+        },
       },
     })
   })
 })
 
-const heroCards = [
-  // {
-  //   title: 'ЖК “Калининград City”',
-  //   text: '25 этажей высоты открывают 1000 возможностей для жизни!',
-  //   categories: [
-  //     { title: 'топовая локация' },
-  //     { title: '0 % рассрочка' },
-  //     { title: 'подземный паркинг' },
-  //     { title: 'вид на город' },
-  //   ],
-  //   img: '/imgs/hero/22.jpg',
-  //   id: 'kaliningrad-city',
-  // },
-  // {
-  //   title: 'ЖК “Sun City“',
-  //   text: 'Пространство новой жизни на Сельме',
-  //   categories: [{ title: 'сдача в 2026' }, { title: 'подземный паркинг' }],
-  //   img: '/imgs/hero/6.jpg',
-  //   id: 'sun-city',
-  // },
-  // {
-  //   title: 'ЖК “МореLife“”',
-  //   text: 'Ваша жизнь начинается у кромки Балтики',
-  //   categories: [{ title: 'у моря' }, { title: 'курортный город' }],
-  //   img: '/imgs/hero/3.jpg',
-  //   // id: 'mope-life',
-  // },
-  // {
-  //   title: 'ЖК “Avrora“',
-  //   text: 'Жизнь в гармонии с природой',
-  //   categories: [{ title: 'в центре' }, { title: 'у парка' }, { title: 'с террасой' }],
-  //   img: '/imgs/hero/7.jpg',
-  // },
-  {
-    title: 'ЖК “МореLife“”',
-    text: 'Ваша жизнь начинается у кромки Балтики',
-    categories: [{ title: 'у моря' }, { title: 'курортный город' }],
-    img: '/imgs/hero/slide1.jpg',
-    id: 'mope-life',
-  },
-  {
-    title: 'ЖК “МореLife“”',
-    text: 'Ваша жизнь начинается у кромки Балтики',
-    categories: [{ title: 'у моря' }, { title: 'курортный город' }],
-    img: '/imgs/hero/slide2.jpg',
-    id: 'mope-life',
-  },
-  {
-    title: 'ЖК “Sun City“',
-    text: 'Пространство новой жизни на Сельме',
-    categories: [{ title: 'сдача в 2026' }, { title: 'подземный паркинг' }],
-    img: '/imgs/hero/slide3.jpg',
-    id: 'sun-city',
-  },
-  {
-    title: 'ЖК “Sun City“',
-    text: 'Пространство новой жизни на Сельме',
-    categories: [{ title: 'сдача в 2026' }, { title: 'подземный паркинг' }],
-    img: '/imgs/hero/slide4.jpg',
-    id: 'sun-city',
-  },
-  {
-    title: 'ЖК “МореLife“”',
-    text: 'Ваша жизнь начинается у кромки Балтики',
-    categories: [{ title: 'у моря' }, { title: 'курортный город' }],
-    img: '/imgs/hero/slide5.jpg',
-    id: 'mope-life',
-  },
-  {
-    title: 'ЖК “Калининград City”',
-    text: '25 этажей высоты открывают 1000 возможностей для жизни!',
-    categories: [
-      { title: 'топовая локация' },
-      { title: '0 % рассрочка' },
-      { title: 'подземный паркинг' },
-      { title: 'вид на город' },
-    ],
-    img: '/imgs/hero/slide6.jpg',
-    id: 'kaliningrad-city',
-  },
-  {
-    title: 'ЖК “Калининград City”',
-    text: '25 этажей высоты открывают 1000 возможностей для жизни!',
-    categories: [
-      { title: 'топовая локация' },
-      { title: '0 % рассрочка' },
-      { title: 'подземный паркинг' },
-      { title: 'вид на город' },
-    ],
-    img: '/imgs/hero/slide7.jpg',
-    id: 'kaliningrad-city',
-  },
-  {
-    title: 'ЖК “Avrora“',
-    text: 'Жизнь в гармонии с природой',
-    categories: [{ title: 'в центре' }, { title: 'у парка' }, { title: 'с террасой' }],
-    img: '/imgs/hero/slide8.jpg',
-  },
-  {
-    title: 'ЖК “Avrora“',
-    text: 'Жизнь в гармонии с природой',
-    categories: [{ title: 'в центре' }, { title: 'у парка' }, { title: 'с террасой' }],
-    img: '/imgs/hero/slide9.jpg',
-  },
-  {
-    title: 'ЖК “Avrora“',
-    text: 'Жизнь в гармонии с природой',
-    categories: [{ title: 'в центре' }, { title: 'у парка' }, { title: 'с террасой' }],
-    img: '/imgs/hero/slide10.jpg',
-  },
-]
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateViewport)
+  if (heroSwiper.value) {
+    heroSwiper.value.destroy(true, true)
+    heroSwiper.value = null
+  }
+})
 </script>
 
 <template>
   <div class="hero hero__card">
     <div class="container">
-      <div class="hero__inner swiper" ref="heroContainer">
-        <div class="hero__container swiper-wrapper">
-          <div class="swiper-slide hero__card" v-for="(item, index) in heroCards" :key="index">
-            <div class="hero__img-wrap">
-              <img :src="item.img" :alt="item.title" loading="lazy" decoding="async" />
-            </div>
-            <!--
-            <div class="hero__wrapper">
-              <div class="hero__title">{{ item.title }}</div>
-              <div class="hero__tabs">
-               <Tab v-for="(i, index) in item.categories" :key="index" :title="i.title" />
+      <div class="hero__inner" :class="{ 'hero__inner--desktop': isDesktop }">
+        <div class="hero__slider swiper" ref="heroContainer">
+          <div class="hero__container swiper-wrapper">
+            <div class="swiper-slide hero__slide" v-for="(item, index) in heroCards" :key="index">
+              <div class="hero__img-wrap">
+                <picture>
+                  <source media="(max-width: 599px)" :srcset="item.mobileImg || item.img" />
+                  <source media="(min-width: 600px)" :srcset="item.desktopImg || item.img" />
+                  <img :src="item.desktopImg || item.mobileImg || item.img" :alt="item.title" loading="lazy"
+                    decoding="async" />
+                </picture>
               </div>
-              <p class="hero__text">{{ item.text }}</p>
-              <router-link v-if="item.id" :to="`/projects/${item.id}`">
-              <Button>Подробнее</Button>
-              </router-link>
             </div>
-           -->
+          </div>
+
+          <div v-if="isDesktop" class="hero__controls hero__controls--desktop">
+            <div class="hero__counter">
+              <span class="hero__counter-current">{{ formattedSlide }}</span>
+              <span class="hero__counter-total">{{ formattedTotal }}</span>
+            </div>
+            <div class="hero__progress" aria-hidden="true">
+              <span v-for="item in progressItems" :key="item" class="hero__progress-item"
+                :class="{ 'hero__progress-item--active': item === activeSlideIndex }"></span>
+            </div>
+            <div class="hero__actions">
+              <button type="button" class="hero__arrow" aria-label="Предыдущий слайд" @click="goPrev">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12.5 15L7.5 10L12.5 5" stroke="#3343A9" stroke-width="1.4" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </button>
+              <button type="button" class="hero__arrow" aria-label="Следующий слайд" @click="goNext">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7.5 15L12.5 10L7.5 5" stroke="#3343A9" stroke-width="1.4" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
-        <div class="swiper-controls">
-          <div class="swiper-button-prev hero__button-prev--desktop">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12.5 15L7.5 10L12.5 5"
-                stroke="#3343A9"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
+
+        <aside v-if="isDesktop" class="hero__sidebar" aria-label="Промо-предложения">
+          <article class="hero__sidebar-card" v-for="(card, index) in activeSidebarCards" :key="index">
+            <h3 class="hero__sidebar-title">{{ card.title }}</h3>
+            <p class="hero__sidebar-text">{{ card.text }}</p>
+            <router-link v-if="card.link" :to="card.link" class="hero__sidebar-link">
+              <Button>{{ card.buttonText || 'Подробнее' }}</Button>
+            </router-link>
+            <Button v-else>{{ card.buttonText || 'Подробнее' }}</Button>
+          </article>
+        </aside>
+      </div>
+
+      <div v-if="isTablet" class="hero__cards-row" aria-label="Промо-предложения">
+        <article class="hero__sidebar-card" v-for="(card, index) in activeSidebarCards" :key="index">
+          <h3 class="hero__sidebar-title">{{ card.title }}</h3>
+          <p class="hero__sidebar-text">{{ card.text }}</p>
+          <router-link v-if="card.link" :to="card.link" class="hero__sidebar-link">
+            <Button>{{ card.buttonText || 'Подробнее' }}</Button>
+          </router-link>
+          <Button v-else>{{ card.buttonText || 'Подробнее' }}</Button>
+        </article>
+      </div>
+
+      <router-link v-if="isMobile && mobilePromoCard" class="hero__mobile-card"
+        :to="mobilePromoCard.link || '/projects'">
+        <span class="hero__mobile-title">{{ mobilePromoCard.title }}</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7.5 15L12.5 10L7.5 5" stroke="#212026" stroke-width="1.6" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </router-link>
+
+      <div v-if="!isDesktop" class="hero__controls"
+        :class="{ 'hero__controls--mobile': isMobile, 'hero__controls--tablet': isTablet }">
+        <button v-if="isMobile" type="button" class="hero__arrow hero__arrow--alt" aria-label="Предыдущий слайд"
+          @click="goPrev">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.5 15L7.5 10L12.5 5" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+
+        <div class="hero__counter">
+          <span class="hero__counter-current">{{ formattedSlide }}</span>
+          <span class="hero__counter-total">{{ formattedTotal }}</span>
+        </div>
+
+        <div v-if="!isMobile" class="hero__progress" aria-hidden="true">
+          <span v-for="item in progressItems" :key="item" class="hero__progress-item"
+            :class="{ 'hero__progress-item--active': item === activeSlideIndex }"></span>
+        </div>
+
+        <button v-if="isMobile" type="button" class="hero__arrow hero__arrow--alt" aria-label="Следующий слайд"
+          @click="goNext">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.5 15L12.5 10L7.5 5" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+
+        <div v-if="isTablet" class="hero__actions">
+          <button type="button" class="hero__arrow hero__arrow--alt" aria-label="Предыдущий слайд" @click="goPrev">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12.5 15L7.5 10L12.5 5" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"
+                stroke-linejoin="round" />
             </svg>
-          </div>
-          <p>листайте, чтобы увидеть больше</p>
-          <div class="swiper-button-next hero__button-next--desktop">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.5 15L12.5 10L7.5 5"
-                stroke="#3343A9"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
+          </button>
+          <button type="button" class="hero__arrow hero__arrow--alt" aria-label="Следующий слайд" @click="goNext">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7.5 15L12.5 10L7.5 5" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"
+                stroke-linejoin="round" />
             </svg>
-          </div>
+          </button>
         </div>
       </div>
+      <!--
+      <div v-if="!isDesktop" class="hero__chips" aria-label="Категории проекта">
+        <span v-for="(item, index) in activeHero.categories" :key="index" class="hero__chip">{{ item.title }}</span>
+      </div>
+      -->
     </div>
   </div>
 </template>
@@ -216,197 +541,278 @@ const heroCards = [
 
 .hero {
   margin-top: 5px;
+
   &__inner {
-    box-sizing: border-box;
+    display: block;
+
+    &--desktop {
+      display: grid;
+      grid-template-columns: 2fr minmax(0, 1fr);
+      gap: clamp(15px, vw(20px, $desktop), 20px);
+      align-items: stretch;
+    }
+  }
+
+  &__slider {
     position: relative;
     border-radius: 30px;
+    overflow: hidden;
   }
-  &__img-wrap {
-    position: relative;
+
+  &__slide,
+  &__img-wrap,
+  &__img-wrap picture,
+  &__img-wrap img {
     border-radius: 30px;
   }
+
+  &__img-wrap picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
   &__img-wrap img {
     width: 100%;
     height: 100%;
+
+    object-fit: cover;
     min-height: 320px;
-    max-height: 440px;
-    // max-height: 320px;
-    // object-fit: cover;
-    border-radius: 30px;
+    // max-height: 480px;
+
     @media (min-width: $tab) {
-      // Пустой медиазапрос
-      object-fit: cover;
+      aspect-ratio: 8 / 4;
+      // min-height: 420px;
+      // max-height: 560px;
     }
 
     @media (min-width: $desk) {
-      // max-height: clamp(500px, vw(715px, $desktop), 715px);
-      max-height: clamp(644px, vw(844px, $desktop), 844px);
-      min-height: unset;
+      min-height: clamp(400px, vw(500px, $desktop), 500px);
+      // max-height: 500px;
     }
   }
-  &__img-wrap::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(55.59deg, rgba(33, 32, 38, 0.5) 20%, rgba(33, 32, 38, 0) 53.65%);
-    border-radius: 30px;
-    z-index: 1;
-    pointer-events: none;
-  }
-  &__wrapper {
-    z-index: 2;
-    color: var(--color);
-    font-family: var(--font-family);
-    margin-top: 12px;
+
+  &__sidebar,
+  &__cards-row {
     display: flex;
     flex-direction: column;
-    align-items: center;
-
-    @media (min-width: $tab) {
-      // Пустой медиазапрос
-    }
-
-    @media (min-width: $desk) {
-      margin-top: 0;
-      position: absolute;
-      top: clamp(230px, vw(350px, $desktop), 375px);
-      left: 50px;
-      align-items: normal;
-    }
+    gap: 20px;
   }
-  &__title {
-    font-weight: 600;
-    font-size: clamp(32px, vw(54px, $desktop), 54px);
-    line-height: 121%;
-    letter-spacing: -0.02em;
-    margin-bottom: clamp(10px, vw(16px, $desktop), 16px);
-    color: var(--100);
-    text-align: center;
-    text-shadow:
-      0 0 30px rgba(33, 32, 38, 0.2),
-      0 0 1px rgba(33, 32, 38, 0.4);
-    @media (min-width: $tab) {
-      // Пустой медиазапрос
-    }
 
-    @media (min-width: $desk) {
-      color: var(--color);
-      text-align: left;
-    }
+  &__cards-row {
+    margin-top: 20px;
   }
-  &__tabs {
+
+  &__sidebar-card {
+    flex: 1;
+    backdrop-filter: blur(84.4px);
+    background: #daddef;
+    border-radius: 27px;
+    padding: clamp(14px, vw(28px, $desktop), 28px) clamp(15px, vw(30px, $desktop), 30px);
     display: flex;
-    gap: clamp(7px, vw(8px, $desktop), 8px);
-    margin-bottom: clamp(12px, vw(24px, $desktop), 24px);
-    flex-wrap: wrap;
-    justify-content: center;
-    @media (min-width: $desk) {
-      justify-content: flex-start;
-    }
+    flex-direction: column;
   }
-  &__text {
-    margin-bottom: clamp(12px, vw(36px, $desktop), 36px);
+
+  &__sidebar-title {
+    margin: 0 0 10px;
+    font-size: clamp(17px, vw(21px, $desktop), 21px);
     font-weight: 600;
-    font-size: clamp(18px, vw(21px, $desktop), 21px);
     line-height: 136%;
-    letter-spacing: 0em;
     color: var(--100);
-    text-align: center;
+  }
 
-    @media (min-width: $tab) {
-      // Пустой медиазапрос
-    }
+  &__sidebar-text {
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(13px, vw(14px, $desktop), 14px);
+    line-height: 146%;
+    color: #767782;
+  }
 
-    @media (min-width: $desk) {
-      text-align: left;
-      text-shadow:
-        0 0 30px 0 rgba(33, 32, 38, 0.2),
-        0 0 1px 0 rgba(33, 32, 38, 0.4);
+  &__sidebar-link,
+  &__sidebar-card .btn {
+    margin-top: auto;
+    align-self: flex-start;
+    padding-top: clamp(10px, vw(20px, $desktop), 20px);
+  }
+
+  &__mobile-card {
+    margin-top: 12px;
+    border-radius: 27px;
+    backdrop-filter: blur(84.4px);
+    background: #daddef;
+    color: #212026;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 24px 26px;
+  }
+
+  &__mobile-title {
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 136%;
+    color: var(--100);
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 20px;
+  }
+
+  &__controls--desktop {
+    position: absolute;
+    left: 28px;
+    right: 28px;
+    bottom: 22px;
+    z-index: 3;
+    margin-top: 0;
+    gap: 16px;
+
+    .hero__counter-current {
       color: var(--color);
     }
-  }
-  & .btn {
-    align-self: center;
-    @media (min-width: $tab) {
-      // Пустой медиазапрос
+
+    .hero__counter-total {
+      color: #c0c5e4;
     }
 
-    @media (min-width: $desk) {
-      align-self: flex-start;
+    .hero__progress-item {
+      background: rgba(255, 255, 255, 0.45);
+    }
+
+    .hero__progress-item--active {
+      background: #fff;
     }
   }
-  & .swiper-slide {
-    border-radius: 30px;
+
+  &__controls--tablet {
+    justify-content: space-between;
+    margin-top: 18px;
   }
-  & .swiper-controls {
+
+  &__controls--mobile {
+    justify-content: space-between;
+    margin-top: 14px;
+  }
+
+  &__counter {
     display: flex;
-    gap: clamp(16px, vw(16px, $desktop), 16px);
-    margin-bottom: 19px;
-    margin-top: 16px;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
 
-    @media (min-width: $desk) {
-      margin-bottom: 0;
-      margin-top: 0;
-      position: absolute;
-      right: clamp(50px, vw(50px, $desktop), 50px);
-      // bottom: clamp(50px, vw(50px, $desktop), 50px);
-      // top: clamp(450px, vw(580px, $desktop), 594px);
-      top: clamp(480px, vw(705px, $desktop), 725px);
-    }
+  &__counter-current {
+    color: #3a49b9;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 146%;
   }
-  & .swiper-controls p {
-    display: inline-block;
 
-    @media (min-width: $desk) {
-      display: none;
-    }
+  &__counter-total {
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 146%;
+    color: #aaaaa9;
   }
-  // & .hero__button-next--desktop svg,
-  // & .hero__button-prev--desktop svg {
-  //   fill: white;
-  // }
-  & .hero__button-next--desktop svg path,
-  & .hero__button-prev--desktop svg path {
-    stroke: #fff; // или текущий цвет, который вы хотите
-    stroke-width: 1.4;
-    transition: stroke 0.3s ease;
-    @media (min-width: $desk) {
-      stroke: #3343a9;
-    }
-  }
-  & .hero__button-next--desktop,
-  & .hero__button-prev--desktop {
-    background: var(--2);
 
-    @media (min-width: $desk) {
-      background: var(--color);
-    }
+  &__progress {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
   }
-  & .swiper .swiper-controls .swiper-button-next,
-  .swiper .swiper-controls .swiper-button-prev {
+
+  &__progress-item {
+    height: 4px;
+    border-radius: 20px;
+    background: #b8bdd6;
+    max-width: 58px;
+    width: 100%;
+    transition: background-color 0.2s ease;
+  }
+
+  &__progress-item--active {
+    background: #3a49b9;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+  }
+
+  &__arrow {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
     border: 1px solid transparent;
-    width: clamp(29px, vw(43px, $desktop), 43px);
-    height: clamp(29px, vw(43px, $desktop), 43px);
+    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
   }
-  & .swiper .swiper-controls .swiper-button-next:hover svg path,
-  & .swiper .swiper-controls .swiper-button-prev:hover svg path {
-    stroke: #3343a9;
-    @media (min-width: $desk) {
-      stroke: #fff;
+
+  &__arrow--alt {
+    background: #3a49b9;
+  }
+
+  &__chips {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  &__chip {
+    background: #fff;
+    color: #3b3a42;
+    border-radius: 14px;
+    padding: 8px 16px;
+    font-size: 16px;
+    line-height: 1.2;
+    box-shadow: 0 6px 14px rgba(51, 67, 169, 0.2);
+  }
+
+  @media (max-width: 992px) {
+    &__cards-row {
+      flex-direction: row;
+    }
+
+    &__sidebar-card .btn {
+      min-width: 218px;
     }
   }
-  & .swiper .swiper-controls .swiper-button-next:hover {
-    background: var(--color);
-    border: 1px solid var(--2);
-    @media (min-width: $desk) {
-      background: var(--2);
+
+  @media (max-width: 668px) {
+    &__cards-row {
+      flex-direction: column;
     }
   }
-  & .swiper .swiper-controls .swiper-button-prev:hover {
-    background: var(--color);
-    border: 1px solid var(--2);
-    @media (min-width: $desk) {
-      background: var(--2);
+
+  @media (max-width: 599px) {
+    // &__img-wrap img {
+    //   min-height: 286px;
+    //   max-height: 286px;
+    // }
+
+    &__arrow,
+    &__arrow--alt {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+    }
+
+    &__chip {
+      font-size: 16px;
+      border-radius: 10px;
+      padding: 7px 14px;
     }
   }
 }
