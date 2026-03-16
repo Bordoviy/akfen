@@ -39,6 +39,18 @@ const allProjects = [
       isEmbedded: true,
     },
   },
+  {
+    id: 'pionerskiy-bereg',
+    params: {
+      src: 'https://smart-catalog.profitbase.ru/eco/catalog/house/121896#/catalog/house/121896/facades?facadeId=60898',
+      host: 'https://smart-catalog.profitbase.ru/eco',
+      pbDomain: 'profitbase.ru',
+      accountId: '3667',
+      referrer: window.location.origin,
+      pbApiKey: 'c573317dcd6ae60d94f0764d41d89462',
+      isEmbedded: true,
+    },
+  },
 ]
 
 const route = useRoute()

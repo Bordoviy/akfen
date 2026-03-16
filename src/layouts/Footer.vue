@@ -8,9 +8,9 @@ const footerMenu = [
   {
     title: 'Проекты',
     links: [
-      { title: 'Огни Калининграда', to: '/projects/kaliningrad-city', isRouterLink: true },
-      { title: 'ЖК Елизаветинский', to: '/projects/sun-city', isRouterLink: true },
-      { title: 'Пионерский берег', to: '/projects/more-life', isRouterLink: true },
+      { title: 'Огни Калининграда', to: '/projects/ogni-kaliningrada', isRouterLink: true },
+      { title: 'ЖК Елизаветинский', to: '/projects/elizavetinskiy', isRouterLink: true },
+      { title: 'Пионерский берег', to: '/projects/pionerskiy-bereg', isRouterLink: true },
       { title: 'Аврора', to: '/projects/avrora', isRouterLink: true },
       // { title: 'Аврора', href: '#' },
       // { title: 'Объекты', to: '/contacts', isRouterLink: true },
@@ -89,11 +89,11 @@ const footerMenu = [
         </div>
         <div class="footer__bottom">
           <div class="footer__left">
-            <p class="footer__bottom-text">2003 - 2025 © Строительная компания</p>
+            <p class="footer__bottom-text">2003 - 2026 © Строительная компания</p>
           </div>
           <div class="footer__right">
             <p class="footer__bottom-text">
-              Все права на публикуемые на сайте материалы принадлежат АО СЗ «AKFEN». ОГРН
+              Все права на публикуемые на сайте материалы принадлежат АО СЗ "АКФЕН". ОГРН
               1037728055331 <br />
               ИНН 7728306340. Любая информация, представленная на данном сайте, носит исключительно
               информационный характер и ни при каких условиях не является публичной офертой,

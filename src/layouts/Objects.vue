@@ -7,10 +7,10 @@ const API_KEY = '66a13e6b-4231-44ac-91c1-a692c3828e41'
 /** Данные */
 const projects = ref([
   {
-    id: 'kaliningrad-city',
+    id: 'ogni-kaliningrada',
     hasDetail: true,
     coords: [54.738302, 20.491497],
-    title: 'ЖК “Калининград-Сити”',
+    title: 'Огни Калининграда',
     address: 'г. Калининград, Гайдара 90',
     price: '5.7 млн',
     image: '/imgs/projects/1.jpg',
@@ -19,10 +19,10 @@ const projects = ref([
     // type: 'Строится',
   },
   {
-    id: 'sun-city',
+    id: 'elizavetinskiy',
     hasDetail: true,
     coords: [54.746966, 20.484724],
-    title: 'ЖК “Sun City”',
+    title: 'ЖК Елизаветинский',
     address: 'г. Калининград, Елизаветинская, 47',
     price: '6 млн',
     image: '/imgs/projects/5.jpg',
@@ -31,10 +31,10 @@ const projects = ref([
     // type: 'Строится',
   },
   {
-    id: 'morelife',
+    id: 'pionerskiy-bereg',
     hasDetail: false, // нет детальной
     coords: [54.95171, 20.198578],
-    title: 'ЖК “МореLife“',
+    title: 'Пионерский берег',
     address: 'г. Пионерский, ул. Новоставского',
     price: '7 млн',
     image: '/imgs/projects/9.jpg',
@@ -45,7 +45,7 @@ const projects = ref([
     id: 'avrora',
     hasDetail: false, // нет детальной
     coords: [54.775771, 20.603077],
-    title: 'ЖК “Avrora“',
+    title: 'Аврора',
     address: 'Гурьевск, ул. Ленина',
     price: '6 млн',
     image: '/imgs/projects/13.jpg',

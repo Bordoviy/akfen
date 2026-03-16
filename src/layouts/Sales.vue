@@ -31,14 +31,14 @@ const salesCards = [
     title: 'Коммерческие помещения',
     price: '3,8 млн',
     img: '/imgs/sales/img1.png',
-    categories: [{ title: 'ЖК “Sun City“"' }, { title: 'ЖК "Калининград-Сити"' }],
+    categories: [{ title: 'ЖК Елизаветинский' }, { title: 'ЖК "Огни Калининграда"' }],
     href: '#',
   },
   {
     title: 'Парковочные места',
     price: '1.3млн',
     img: '/imgs/sales/1.jpg',
-    categories: [{ title: ' ЖК “Калининград City”' }, { title: 'ЖК “Sun City“' }],
+    categories: [{ title: ' ЖК “Огни Калининграда”' }, { title: 'ЖК Елизаветинский' }],
     href: '#',
   },
 ]
