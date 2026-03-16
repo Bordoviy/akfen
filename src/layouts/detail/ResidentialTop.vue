@@ -29,8 +29,8 @@ onMounted(() => {
 
 const allProjects = [
   {
-    id: 'kaliningrad-city',
-    title: 'ЖК “Калининград-Сити”',
+    id: 'ogni-kaliningrada',
+    title: 'Огни Калининграда',
     address: 'г. Калининград, Гайдара 90',
     text: 'до центра на авто - 5 мин',
     price: '5 700 000',
@@ -48,8 +48,8 @@ const allProjects = [
     categories: ['топовая локация', '0 % рассрочка', 'подземный паркинг', 'вид на город'],
   },
   {
-    id: 'sun-city',
-    title: 'ЖК “Sun City“',
+    id: 'elizavetinskiy',
+    title: 'ЖК Елизаветинский',
     address: 'г. Калининград, Елизаветинская, 47',
     text: 'до центра на авто - 5 мин',
     price: '6 732 600',
@@ -76,8 +76,8 @@ const allProjects = [
     categories: ['сдача в 2026', 'подземный паркинг'],
   },
   {
-    id: 'more-life',
-    title: 'ЖК “МореLife“',
+    id: 'pionerskiy-bereg',
+    title: 'Пионерский берег',
     address: 'г. Калининград, ул.Новоставского',
     text: 'до Калининграда - 30 мин',
     price: '7 120 000',
@@ -95,7 +95,7 @@ const allProjects = [
   },
   {
     id: 'avrora',
-    title: 'ЖК “Avrora“',
+    title: 'Аврора',
     address: 'г. Калининград, ул. Гурьева',
     text: 'до центра на авто - менее 15 мин',
     price: '6 451 050',

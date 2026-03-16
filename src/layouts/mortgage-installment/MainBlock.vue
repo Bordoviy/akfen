@@ -193,9 +193,11 @@ defineProps({
   &__main-btns .btn:first-child:hover {
     background-color: transparent;
     border: 1px solid #000;
+  
   }
 
   &__main-btns .btn {
+    max-width: 300px;
     @media (min-width: $tab) {
       width: 100%;
     }
@@ -214,6 +216,7 @@ defineProps({
       object-position: left;
       max-height: 100%;
       min-height: clamp(332px, vw(616px, $desktop), 616px);
+      max-height: 718px;
     }
   }
 

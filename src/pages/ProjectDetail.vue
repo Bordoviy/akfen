@@ -24,7 +24,7 @@ import InfrastructureMap from '@/layouts/detail/InfrastructureMap.vue'
   <Cc></Cc>
   <InfrastructureMap></InfrastructureMap>
   <ResidentialProgress />
-  <News></News>
+  <News :title="'Новости'"></News>
 
   <!-- <Sales :title="'Кроме квартир'" /> -->
 

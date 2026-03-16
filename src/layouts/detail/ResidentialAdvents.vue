@@ -10,7 +10,7 @@ const allAdvents = [
   {
     buttonName: 'Архитектура',
     buttonContent: {
-      id: 'kaliningrad-city',
+      id: 'ogni-kaliningrada',
       title:
         'Дизайн зданий отличается оригинальностью и элегантностью, исключая излишнюю помпезность.',
       text: 'Цветовое решение для фасада выполнено в светлых тонах с природно-коричневыми акцентами, что придает зданию объемности.',
@@ -28,7 +28,7 @@ const allAdvents = [
   {
     buttonName: 'Отопление',
     buttonContent: {
-      id: 'kaliningrad-city',
+      id: 'ogni-kaliningrada',
       title: 'Современная система отопления.',
       text: 'Энергоэффективное и надежное отопление в каждой квартире.',
       lists: [
@@ -45,7 +45,7 @@ const allAdvents = [
   {
     buttonName: 'Благоустройство',
     buttonContent: {
-      id: 'kaliningrad-city',
+      id: 'ogni-kaliningrada',
       title: 'Озеленённые дворы и современные площадки.',
       text: 'Удобство и комфорт для жителей всех возрастов.',
       lists: [
@@ -62,7 +62,7 @@ const allAdvents = [
   {
     buttonName: 'Инфраструктура',
     buttonContent: {
-      id: 'kaliningrad-city',
+      id: 'ogni-kaliningrada',
       title: 'Развитая инфраструктура рядом.',
       text: 'Школы, детсады и магазины в шаговой доступности.',
       lists: [
@@ -79,7 +79,7 @@ const allAdvents = [
   {
     buttonName: 'Паркинг',
     buttonContent: {
-      id: 'kaliningrad-city',
+      id: 'ogni-kaliningrada',
       title: 'Удобные парковочные места.',
       text: 'Наземный и подземный паркинг для вашего авто.',
       lists: [

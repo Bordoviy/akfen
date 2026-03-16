@@ -86,11 +86,11 @@
   --2: #3343a9;
   --obvodka: #dadae7;
   --80: #4a484f;
-  --font-family: "Onest", sans-serif;
-  --second-family: "Manrope", sans-serif;
-  --third-family: "Inter Tight", sans-serif;
-  --font3: "Raleway", sans-serif;
-  --font4: "DIN Pro", sans-serif;
+  --font-family: 'Onest', sans-serif;
+  --second-family: 'Manrope', sans-serif;
+  --third-family: 'Inter Tight', sans-serif;
+  --font3: 'Raleway', sans-serif;
+  --font4: 'DIN Pro', sans-serif;
 }
 
 /* Обнуление */

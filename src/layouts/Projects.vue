@@ -43,7 +43,7 @@ onMounted(() => {
 
 const houseCards = [
   {
-    title: 'ЖК “Калининград-Сити”',
+    title: 'Огни Калининграда',
     address: 'г. Калининград, Гайдара 90',
     text: 'до центра на авто - 5 мин',
     price: '5 700 000',
@@ -67,10 +67,10 @@ const houseCards = [
     flat: '480',
     floor: '25',
     date: 'IV кв. 2027',
-    id: 'kaliningrad-city',
+    id: 'ogni-kaliningrada',
   },
   {
-    title: 'ЖК “Sun City”',
+    title: 'ЖК Елизаветинский',
     address: 'г. Калининград, Елизаветинская, 47',
     text: 'до центра на авто - 5 мин',
     price: '6 732 600',
@@ -94,10 +94,10 @@ const houseCards = [
     flat: '285',
     floor: '15',
     date: 'I кв. 2026',
-    id: 'sun-city',
+    id: 'elizavetinskiy',
   },
   {
-    title: 'ЖК “МореLife“',
+    title: 'Пионерский берег',
     address: 'г. Пионерский, ул. Новоставского',
     text: 'до моря 4 мин пешком',
     price: '7 000 000',
@@ -121,10 +121,10 @@ const houseCards = [
     flat: '85',
     floor: '5',
     date: 'IV кв. 2026',
-    id: 'more-life',
+    id: 'pionerskiy-bereg',
   },
   {
-    title: 'ЖК “Avrora“',
+    title: 'Аврора',
     address: 'г. Калининград, ул. Гурьева',
     text: 'до центра на авто - менее 15 мин',
     price: '6 451 050',

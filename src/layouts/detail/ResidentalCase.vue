@@ -4,7 +4,7 @@ import { computed, onMounted } from 'vue'
 
 const allProjects = [
   {
-    id: 'sun-city',
+    id: 'elizavetinskiy',
     params: {
       src: 'https://smart-catalog.profitbase.ru/eco/catalog/projects/houses?filter=project:8286&filter=property.status:AVAILABLE',
       host: 'https://smart-catalog.profitbase.ru/eco',
@@ -16,7 +16,7 @@ const allProjects = [
     },
   },
   {
-    id: 'kaliningrad-city',
+    id: 'ogni-kaliningrada',
     params: {
       src: 'https://smart-catalog.profitbase.ru/eco/catalog/house/91865#/catalog/house/91865/facades?facadeId=60537',
       host: 'https://smart-catalog.profitbase.ru/eco',

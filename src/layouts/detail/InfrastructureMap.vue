@@ -6,7 +6,7 @@ const API_KEY = '66a13e6b-4231-44ac-91c1-a692c3828e41'
 
 const props = defineProps({ projectId: { type: String, required: false } })
 const route = useRoute()
-const projectId = computed(() => props.projectId || route.params.id || 'kaliningrad-city')
+const projectId = computed(() => props.projectId || route.params.id || 'ogni-kaliningrada')
 
 /* Категории */
 const CATS = [
@@ -28,30 +28,30 @@ const CAT_LABEL = {
 
 /* ЖК */
 const PROJECTS = {
-  'kaliningrad-city': {
+  'ogni-kaliningrada': {
     coords: [54.738302, 20.491497],
-    title: 'ЖК “Калининград-Сити”',
+    title: 'Огни Калининграда',
     image: '/imgs/projects/1.jpg',
   },
-  'sun-city': {
+  'elizavetinskiy': {
     coords: [54.746966, 20.484724],
-    title: 'ЖК “Sun City”',
+    title: 'ЖК Елизаветинский',
     image: '/imgs/projects/5.jpg',
   },
-  morelife: {
+  'pionerskiy-bereg': {
     coords: [54.95171, 20.198578],
-    title: 'ЖК “МореLife”',
+    title: 'Пионерский берег',
     image: '/imgs/projects/9.jpg',
   },
-  avrora: {
+  'avrora': {
     coords: [54.777055, 20.596335],
-    title: 'ЖК “Avrora”',
+    title: 'Аврора',
     image: '/imgs/projects/13.jpg',
   },
 }
 
 /* бейдж минут до центра */
-const BADGE_BY_PROJECT = { 'kaliningrad-city': 5, 'sun-city': 8, morelife: 12, avrora: 10 }
+const BADGE_BY_PROJECT = { 'ogni-kaliningrada': 5, 'elizavetinskiy': 8, 'pionerskiy-bereg': 12, 'avrora': 10 }
 
 /* настройки выборки */
 const RADIUS_M = 700
@@ -69,7 +69,7 @@ let PoiBalloonLayout = null
 
 const points = reactive([])
 
-const currentProject = computed(() => PROJECTS[projectId.value] || PROJECTS['kaliningrad-city'])
+const currentProject = computed(() => PROJECTS[projectId.value] || PROJECTS['ogni-kaliningrada'])
 const counts = computed(() => {
   const res = { all: points.length }
   for (const c of CATS)

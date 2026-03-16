@@ -126,8 +126,8 @@ onMounted(() => {
                     <p class="m-variations__inert-title">{{ sub.title }}</p>
                     <p class="m-variations__inert-subtitle">{{ sub.text }}</p>
                   </div>
-                </div>
-                <Button :none="true">Узнать подробности</Button>
+                </div> 
+               <!--  <Button :none="true">Узнать подробности</Button>  -->
               </div>
             </div>
           </div>

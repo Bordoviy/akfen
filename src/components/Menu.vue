@@ -151,33 +151,35 @@ function close() {
 const menuItems = [
   { title: 'Объекты', to: '', isRouterLink: true, children: [] },
   { title: 'О компании', to: '/about', isRouterLink: true },
+  { title: 'Ипотека', to: '/ipoteka', isRouterLink: true },
+  { title: 'Рассрочка', to: '/rassrochka', isRouterLink: true },
   { title: 'Контакты', to: '/contacts', isRouterLink: true },
 ]
 
 const housingCards = [
   {
-    title: 'ЖК "Калининград-Сити"',
+    title: 'Огни Калининграда',
     address: 'г. Калининград, Гайдара 90',
     price: 'от 5 700 000',
     image: '/imgs/projects/1.jpg',
-    id: 'kaliningrad-city',
+    id: 'ogni-kaliningrada',
   },
   {
-    title: 'ЖК “Sun City“”',
+    title: 'ЖК Елизаветинский',
     address: 'г. Калининград, Елизаветинская, 47',
     price: 'от 6 732 600',
     image: '/imgs/projects/5.jpg',
-    id: 'sun-city',
+    id: 'elizavetinskiy',
   },
   {
-    title: 'ЖК “МореLife“',
+    title: 'Пионерский берег',
     address: 'г. Пионерский, ул. Новоставского',
     price: 'от 7 000 000',
     image: '/imgs/projects/9.jpg',
-    id: 'more-life',
+    id: 'pionerskiy-bereg',
   },
   {
-    title: 'ЖК “Avrora“',
+    title: 'Аврора',
     address: 'Гурьевск, ул Ленина',
     price: 'от 6 451 050',
     image: '/imgs/projects/13.jpg',

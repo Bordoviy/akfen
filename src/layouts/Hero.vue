@@ -32,161 +32,161 @@ const defaultSidebarCards = [
 
 const heroCards = [
   {
-    title: 'ЖК “МореLife“',
+    title: 'Пионерский берег',
     text: 'Жизнь в гармонии с природой',
     categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
     desktopImg: '/imgs/hero/pioner-desk.webp',
     mobileImg: '/imgs/hero/pioner-mob.webp',
-    id: 'more-life',
+    id: 'pionerskiy-bereg',
     sidebarCards: [
       {
         title: 'Траншевая ипотека: от 2 000 руб./мес.',
         text: 'Платите всего 2 000 ₽ в месяц до ввода дома в эксплуатацию.',
         buttonText: 'Подробнее',
-        link: '/projects/more-life',
+        link: '/projects/pionerskiy-bereg',
       },
       {
         title: 'ЖК "Пионерский берег"',
         text: 'Жизнь у моря в экологичном районе. Свежий воздух и современный дизайн и комфорт в шаге от пляжа.',
         buttonText: 'Подробнее',
-        link: '/projects/more-life',
+        link: '/projects/pionerskiy-bereg',
       },
     ],
   },
   {
-    title: 'ЖК “МореLife“',
+    title: 'Пионерский берег',
     text: 'Жизнь в гармонии с природой',
     categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
     desktopImg: '/imgs/hero/pioner-desk2.webp',
     mobileImg: '/imgs/hero/pioner-mob2.webp',
-    id: 'more-life',
+    id: 'pionerskiy-bereg',
     sidebarCards: [
       {
         title: 'Скидка 3% на квартиру',
         text: 'Ваша выгода при 100% оплате или стандартной ипотеке.',
         buttonText: 'Подробнее',
-        link: '/projects/more-life',
+        link: '/projects/pionerskiy-bereg',
       },
       {
         title: 'ЖК "Пионерский берег"',
         text: 'Жизнь у моря в экологичном районе. Свежий воздух и современный дизайн в шаге от пляжа.',
         buttonText: 'Подробнее',
-        link: '/projects/more-life',
+        link: '/projects/pionerskiy-bereg',
       },
     ],
   },
   {
-    title: 'ЖК “Sun City“',
+    title: 'ЖК Елизаветинский',
     text: 'Пространство новой жизни на Сельме',
     categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
     desktopImg: '/imgs/hero/sun-desk.webp',
     mobileImg: '/imgs/hero/sun-mob.webp',
-    id: 'sun-city',
+    id: 'elizavetinskiy',
     sidebarCards: [
       {
         title: 'Скидка 3% на квартиру',
         text: 'Специальная цена при полной оплате. Узнайте сумму вашей экономии.',
         buttonText: 'Подробнее',
-        link: '/projects/sun-city',
+        link: '/projects/elizavetinskiy',
       },
       {
         title: 'ЖК "Елизаветинский"',
         text: 'Жизнь в уютном районе в 10 минутах от Центра. Тишина, комфорт и всё нужное рядом.',
         buttonText: 'Подробнее',
-        link: '/projects/sun-city',
+        link: '/projects/elizavetinskiy',
       },
     ],
   },
   {
-    title: 'ЖК “Sun City“',
+    title: 'ЖК Елизаветинский',
     text: 'Пространство новой жизни на Сельме',
     categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
     desktopImg: '/imgs/hero/sun-desk2.webp',
     mobileImg: '/imgs/hero/sun-mob2.webp',
-    id: 'sun-city',
+    id: 'elizavetinskiy',
     sidebarCards: [
       {
         title: 'Семейная ипотека 4,5%',
         text: 'Комфортная ставка для семей с детьми. Успейте забронировать!',
         buttonText: 'Подробнее',
-        link: '/projects/sun-city',
+        link: '/projects/elizavetinskiy',
       },
       {
         title: 'ЖК "Елизаветинский"',
         text: 'Жизнь в уютном районе в 10 минутах от Центра. Тишина, комфорт и всё нужное рядом.',
         buttonText: 'Подробнее',
-        link: '/projects/sun-city',
+        link: '/projects/elizavetinskiy',
       },
     ],
   },
   {
-    title: 'ЖК “МореLife“',
+    title: 'Пионерский берег',
     text: 'Жизнь в гармонии с природой',
     categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
     desktopImg: '/imgs/hero/pioner-desk3.webp',
     mobileImg: '/imgs/hero/pioner-mob3.webp',
-    id: 'more-life',
+    id: 'pionerskiy-bereg',
     sidebarCards: [
       {
         title: 'Семейная ипотека 4,5%',
         text: 'Низкий процент на весь срок кредитования. Подробности у менеджеров.',
         buttonText: 'Подробнее',
-        link: '/projects/more-life',
+        link: '/projects/pionerskiy-bereg',
       },
       {
         title: 'ЖК "Пионерский берег"',
         text: 'Жизнь у моря в экологичном районе. Свежий воздух и современный дизайн в шаге от пляжа.',
         buttonText: 'Подробнее',
-        link: '/projects/more-life',
+        link: '/projects/pionerskiy-bereg',
       },
     ],
   },
   {
-    title: 'ЖК “Калининград City”',
+    title: 'Огни Калининграда',
     text: '25 этажей высоты открывают 1000 возможностей для жизни!',
     categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
     desktopImg: '/imgs/hero/kali-desk.webp',
     mobileImg: '/imgs/hero/kali-mob.webp',
-    id: 'kaliningrad-city',
+    id: 'ogni-kaliningrada',
     sidebarCards: [
       {
         title: '0% рассрочка',
         text: 'Без переплат и процентов до сдачи дома',
         buttonText: 'Подробнее',
-        link: '/projects/kaliningrad-city',
+        link: '/projects/ogni-kaliningrada',
       },
       {
         title: 'ЖК "Огни Калининграда"',
         text: 'Современный квартал в сердце города. Панорамные виды и развитая инфраструктура.',
         buttonText: 'Подробнее',
-        link: '/projects/kaliningrad-city',
+        link: '/projects/ogni-kaliningrada',
       },
     ],
   },
   {
-    title: 'ЖК “Калининград City”',
+    title: 'Огни Калининграда',
     text: '25 этажей высоты открывают 1000 возможностей для жизни!',
     categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
     desktopImg: '/imgs/hero/kali-desk2.webp',
     mobileImg: '/imgs/hero/kali-mob2.webp',
-    id: 'kaliningrad-city',
+    id: 'ogni-kaliningrada',
     sidebarCards: [
       {
         title: 'Скидка 5% на квартиру',
         text: 'Максимальная скидка при 100% оплате за наличный расчет.',
         buttonText: 'Подробнее',
-        link: '/projects/kaliningrad-city',
+        link: '/projects/ogni-kaliningrada',
       },
       {
         title: 'ЖК "Огни Калининграда"',
         text: 'Современный квартал в сердце города. Панорамные виды и развитая инфраструктура.',
         buttonText: 'Подробнее',
-        link: '/projects/kaliningrad-city',
+        link: '/projects/ogni-kaliningrada',
       },
     ],
   },
   {
-    title: 'ЖК “Avrora“',
+    title: 'Аврора',
     text: 'Жизнь в гармонии с природой',
     categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
     desktopImg: '/imgs/hero/avrora-desk.webp',
@@ -208,7 +208,7 @@ const heroCards = [
     ],
   },
    {
-    title: 'ЖК “Avrora“',
+    title: 'Аврора',
     text: 'Жизнь в гармонии с природой',
     categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
     desktopImg: '/imgs/hero/avrora-desk2.webp',
@@ -230,7 +230,7 @@ const heroCards = [
     ],
   },
    {
-    title: 'ЖК “Avrora“',
+    title: 'Аврора',
     text: 'Жизнь в гармонии с природой',
     categories: [{ title: 'Рядом парк' }, { title: 'В центре Гурьевска' }, { title: 'Паркинг' }],
     desktopImg: '/imgs/hero/avrora-desk3.webp',
@@ -365,7 +365,7 @@ const activeSidebarCards = computed(() => {
   if (!Array.isArray(cards) || cards.length < 2) return defaultSidebarCards
   return cards.slice(0, 2)
 })
-const mobilePromoCard = computed(() => activeSidebarCards.value[1] || activeSidebarCards.value[0])
+const mobilePromoCard = computed(() => activeSidebarCards.value[0] || activeSidebarCards.value[0])
 const formattedSlide = computed(() => String(activeSlideIndex.value + 1).padStart(2, '0'))
 const formattedTotal = computed(() => String(totalSlides.value).padStart(2, '0'))
 const progressItems = computed(() => Array.from({ length: totalSlides.value }, (_, i) => i))

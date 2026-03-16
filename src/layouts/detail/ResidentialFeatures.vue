@@ -10,37 +10,37 @@ import { ref } from 'vue'
 
 const allfeatures = [
   {
-    id: 'kaliningrad-city',
+    id: 'ogni-kaliningrada',
     title: 'Детская площадка',
     text: 'Текстовое описание',
     img: '/imgs/detail/a-1.png',
   },
   {
-    id: 'kaliningrad-city',
+    id: 'ogni-kaliningrada',
     title: 'Рассрочка на 20 лет',
     text: 'Текстовое описание',
     img: '',
   },
   {
-    id: 'kaliningrad-city',
+    id: 'ogni-kaliningrada',
     title: 'До станции метро 10 минут пешком',
     text: 'Текстовое описание',
     img: '/imgs/detail/a-2.png',
   },
   {
-    id: 'kaliningrad-city',
+    id: 'ogni-kaliningrada',
     title: 'До станции метро 10 минут пешком',
     text: 'Текстовое описание',
     img: '/imgs/detail/a-3.png',
   },
   {
-    id: 'kaliningrad-city',
+    id: 'ogni-kaliningrada',
     title: 'Парк внутри комплекса',
     text: 'Текстовое описание',
     img: '/imgs/detail/a-4.png',
   },
   {
-    id: 'kaliningrad-city',
+    id: 'ogni-kaliningrada',
     title: 'Рассрочка на 20 лет',
     text: 'Текстовое описание',
     img: '',
