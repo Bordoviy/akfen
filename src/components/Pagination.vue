@@ -21,11 +21,55 @@ const emit = defineEmits(['update:currentPage'])
 const totalPages = computed(() => Math.ceil(props.total / props.perPage))
 
 const pages = computed(() => {
-  const arr = []
-  for (let i = 1; i <= totalPages.value; i++) {
-    arr.push(i)
+  if (totalPages.value <= 7) {
+    return Array.from({ length: totalPages.value }, (_, index) => ({
+      key: `page-${index + 1}`,
+      type: 'page',
+      value: index + 1,
+    }))
   }
-  return arr
+
+  const pagesToShow = new Set([1, totalPages.value])
+
+  for (
+    let page = Math.max(1, props.currentPage - 1);
+    page <= Math.min(totalPages.value, props.currentPage + 1);
+    page += 1
+  ) {
+    pagesToShow.add(page)
+  }
+
+  if (props.currentPage <= 3) {
+    pagesToShow.add(2)
+    pagesToShow.add(3)
+  }
+
+  if (props.currentPage >= totalPages.value - 2) {
+    pagesToShow.add(totalPages.value - 1)
+    pagesToShow.add(totalPages.value - 2)
+  }
+
+  const sortedPages = [...pagesToShow].sort((a, b) => a - b).filter((page) => page > 0)
+  const items = []
+
+  sortedPages.forEach((page, index) => {
+    items.push({
+      key: `page-${page}`,
+      type: 'page',
+      value: page,
+    })
+
+    const nextPage = sortedPages[index + 1]
+    if (nextPage && nextPage - page > 1) {
+      items.push({
+        key: `ellipsis-${page}-${nextPage}`,
+        type: 'ellipsis',
+        value: '...',
+      })
+    }
+  })
+
+  return items
 })
 
 function goToPage(page) {
@@ -40,13 +84,14 @@ function goToPage(page) {
     <div class="container">
       <div class="pagination__inner">
         <button
-          v-for="page in pages"
-          :key="page"
+          v-for="item in pages"
+          :key="item.key"
           class="pagination__btn"
-          :class="{ active: page === currentPage }"
-          @click="goToPage(page)"
+          :class="{ active: item.value === currentPage, 'pagination__btn--ellipsis': item.type === 'ellipsis' }"
+          :disabled="item.type === 'ellipsis'"
+          @click="item.type === 'page' && goToPage(item.value)"
         >
-          {{ page }}
+          {{ item.value }}
         </button>
       </div>
     </div>
@@ -62,6 +107,7 @@ function goToPage(page) {
   &__inner {
     display: flex;
     gap: clamp(8px, vw(8px, $desktop), 8px);
+    flex-wrap: wrap;
   }
 
   &__btn {
@@ -90,6 +136,16 @@ function goToPage(page) {
     &:disabled {
       cursor: not-allowed;
       opacity: 0.5;
+    }
+  }
+
+  &__btn--ellipsis {
+    border-color: transparent;
+    background: transparent;
+
+    &:hover {
+      background: transparent;
+      color: var(--80);
     }
   }
 }

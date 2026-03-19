@@ -22,15 +22,17 @@ const errorMessage = ref('')
 const currentPage = ref(1)
 const perPage = 6
 const totalItems = ref(0)
+const priceBounds = { min: 0, max: 30000000 }
+const areaBounds = { min: 20, max: 150 }
 
 const filters = reactive({
   city: 'all',
   project: 'all',
   rooms: '',
-  priceFrom: '',
-  priceTo: '',
-  areaFrom: '',
-  areaTo: '',
+  priceFrom: priceBounds.min,
+  priceTo: priceBounds.max,
+  areaFrom: areaBounds.min,
+  areaTo: areaBounds.max,
   sortBy: 'priceDesc',
 })
 
@@ -98,10 +100,10 @@ function getApartmentParams() {
   if (filters.city !== 'all') params.set('city', filters.city)
   if (filters.project !== 'all') params.set('complex_name', filters.project)
   if (filters.rooms) params.set('rooms', filters.rooms)
-  if (filters.priceFrom) params.set('price_from', filters.priceFrom)
-  if (filters.priceTo) params.set('price_to', filters.priceTo)
-  if (filters.areaFrom) params.set('area_from', filters.areaFrom)
-  if (filters.areaTo) params.set('area_to', filters.areaTo)
+  if (filters.priceFrom > priceBounds.min) params.set('price_from', String(filters.priceFrom))
+  if (filters.priceTo < priceBounds.max) params.set('price_to', String(filters.priceTo))
+  if (filters.areaFrom > areaBounds.min) params.set('area_from', String(filters.areaFrom))
+  if (filters.areaTo < areaBounds.max) params.set('area_to', String(filters.areaTo))
 
   return params.toString()
 }
@@ -136,16 +138,16 @@ const selectedChips = computed(() => {
   if (filters.city !== 'all') chips.push({ key: 'city', label: filters.city })
   if (filters.project !== 'all') chips.push({ key: 'project', label: filters.project })
   if (filters.rooms) chips.push({ key: 'rooms', label: `${filters.rooms} комн.` })
-  if (filters.priceFrom || filters.priceTo) {
+  if (filters.priceFrom > priceBounds.min || filters.priceTo < priceBounds.max) {
     chips.push({
       key: 'price',
-      label: `Цена: ${filters.priceFrom || '0'} - ${filters.priceTo || '...'}`,
+      label: `Цена: ${Math.trunc(filters.priceFrom)} - ${Math.trunc(filters.priceTo)}`,
     })
   }
-  if (filters.areaFrom || filters.areaTo) {
+  if (filters.areaFrom > areaBounds.min || filters.areaTo < areaBounds.max) {
     chips.push({
       key: 'area',
-      label: `Площадь: ${filters.areaFrom || '0'} - ${filters.areaTo || '...'}`,
+      label: `Площадь: ${filters.areaFrom} - ${filters.areaTo}`,
     })
   }
 
@@ -165,10 +167,10 @@ function resetFilters() {
   filters.city = 'all'
   filters.project = 'all'
   filters.rooms = ''
-  filters.priceFrom = ''
-  filters.priceTo = ''
-  filters.areaFrom = ''
-  filters.areaTo = ''
+  filters.priceFrom = priceBounds.min
+  filters.priceTo = priceBounds.max
+  filters.areaFrom = areaBounds.min
+  filters.areaTo = areaBounds.max
   filters.sortBy = 'priceDesc'
   applyFilters()
 }
@@ -185,12 +187,12 @@ function removeChip(key) {
       filters.rooms = ''
       break
     case 'price':
-      filters.priceFrom = ''
-      filters.priceTo = ''
+      filters.priceFrom = priceBounds.min
+      filters.priceTo = priceBounds.max
       break
     case 'area':
-      filters.areaFrom = ''
-      filters.areaTo = ''
+      filters.areaFrom = areaBounds.min
+      filters.areaTo = areaBounds.max
       break
     default:
       break
@@ -205,6 +207,22 @@ function setRoom(value) {
 
 function handlePageChange(page) {
   currentPage.value = page
+}
+
+function onPriceMinInput() {
+  if (filters.priceFrom > filters.priceTo) filters.priceTo = filters.priceFrom
+}
+
+function onPriceMaxInput() {
+  if (filters.priceTo < filters.priceFrom) filters.priceFrom = filters.priceTo
+}
+
+function onAreaMinInput() {
+  if (filters.areaFrom > filters.areaTo) filters.areaTo = filters.areaFrom
+}
+
+function onAreaMaxInput() {
+  if (filters.areaTo < filters.areaFrom) filters.areaFrom = filters.areaTo
 }
 
 function getHouse(apartment) {
@@ -346,34 +364,58 @@ onMounted(async () => {
               </div>
             </label>
 
-            <label class="find-ap__field">
+            <label class="find-ap__field find-ap__field--range">
               <span class="find-ap__label">Задать стоимость</span>
-              <div class="find-ap__range find-ap__range--inputs">
-                <input v-model="filters.priceFrom" type="number" placeholder="от" min="0" />
+              <div class="find-ap__range">
+                <span>от {{ Math.trunc(filters.priceFrom).toLocaleString('ru-RU') }}</span>
                 <span class="find-ap__dash">до</span>
-                <input v-model="filters.priceTo" type="number" placeholder="до" min="0" />
+                <span>{{ Math.trunc(filters.priceTo).toLocaleString('ru-RU') }}</span>
+              </div>
+              <div class="find-ap__slider-range">
+                <input
+                  v-model.number="filters.priceFrom"
+                  type="range"
+                  :min="priceBounds.min"
+                  :max="priceBounds.max"
+                  step="100000"
+                  @input="onPriceMinInput"
+                />
+                <input
+                  v-model.number="filters.priceTo"
+                  type="range"
+                  :min="priceBounds.min"
+                  :max="priceBounds.max"
+                  step="100000"
+                  @input="onPriceMaxInput"
+                />
               </div>
             </label>
           </div>
 
           <div class="find-ap__row">
-            <label class="find-ap__field">
+            <label class="find-ap__field find-ap__field--range">
               <span class="find-ap__label">Площадь, м²</span>
-              <div class="find-ap__range find-ap__range--inputs">
-                <input
-                  v-model="filters.areaFrom"
-                  type="number"
-                  placeholder="от"
-                  min="0"
-                  step="0.01"
-                />
+              <div class="find-ap__range">
+                <span>от {{ filters.areaFrom }}</span>
                 <span class="find-ap__dash">до</span>
+                <span>{{ filters.areaTo }}</span>
+              </div>
+              <div class="find-ap__slider-range">
                 <input
-                  v-model="filters.areaTo"
-                  type="number"
-                  placeholder="до"
-                  min="0"
-                  step="0.01"
+                  v-model.number="filters.areaFrom"
+                  type="range"
+                  :min="areaBounds.min"
+                  :max="areaBounds.max"
+                  step="1"
+                  @input="onAreaMinInput"
+                />
+                <input
+                  v-model.number="filters.areaTo"
+                  type="range"
+                  :min="areaBounds.min"
+                  :max="areaBounds.max"
+                  step="1"
+                  @input="onAreaMaxInput"
                 />
               </div>
             </label>
@@ -702,6 +744,10 @@ onMounted(async () => {
     position: relative;
   }
 
+  &__field--range {
+    padding-bottom: 22px;
+  }
+
   &__field {
     select,
     input[type='text'] {
@@ -846,13 +892,12 @@ onMounted(async () => {
   }
 
   &__slider-range {
-    // margin-top: 10px;
     height: 18px;
-    bottom: -15px;
-    margin-left: 10px;
-    //  margin-right: 15px;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
     position: absolute;
-    width: 95%;
+    width: auto;
   }
 
   &__slider-range input[type='range'] {
