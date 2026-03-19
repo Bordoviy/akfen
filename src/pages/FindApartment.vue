@@ -1,433 +1,179 @@
 ﻿<script setup>
-import { ref, reactive, computed, onMounted, nextTick } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Pagination from '@/components/Pagination.vue'
 import Button from '@/components/Button.vue'
 import Modal from '@/components/Modal.vue'
 import CallbackBlock from '@/layouts/mortgage-installment/CallbackBlock.vue'
 
+const API_URL = import.meta.env.DEV
+  ? '/api'
+  : import.meta.env.VITE_AKFEN_API_URL || 'http://dev-admin-api.akfen39.ru/api'
+const API_TOKEN =
+  import.meta.env.VITE_AKFEN_API_TOKEN ||
+  'NETGWLNgcZH5ntavOYULjOtTQCFRcS23Xn0Mgg7lEUfTol93VGPbNVT1Ek9jtNV8'
+
 const isModal = ref(false)
+const apartments = ref([])
+const complexes = ref([])
+const housesById = ref({})
+const isLoading = ref(false)
+const errorMessage = ref('')
+const currentPage = ref(1)
+const perPage = 6
+const totalItems = ref(0)
+
+const filters = reactive({
+  city: 'all',
+  project: 'all',
+  rooms: '',
+  priceFrom: '',
+  priceTo: '',
+  areaFrom: '',
+  areaTo: '',
+  sortBy: 'priceDesc',
+})
 
 function toggleModal() {
   isModal.value = !isModal.value
 }
 
-const showModal = ref(false)
-
-
-// const findContainer = ref(null)
-
-const findContainer = ref([])
-const setFindContainer = (el) => {
-  if (!el) return
-  if (!findContainer.value.includes(el)) findContainer.value.push(el)
+function getHeaders() {
+  return {
+    Authorization: `Bearer ${API_TOKEN}`,
+    Accept: 'application/json',
+  }
 }
 
-onMounted(() => {
-  nextTick(() => {
-    findContainer.value.forEach((el) => {
-      new Swiper(el, {
-        loop: false,
-        navigation: {
-          nextEl: el.querySelector('.fn__button-next--desktop'),
-          prevEl: el.querySelector('.fn__button-prev--desktop'),
-        },
-      })
-    })
+async function fetchJson(path) {
+  const response = await fetch(`${API_URL}${path}`, {
+    headers: getHeaders(),
   })
-})
-const apartments = ref([
-  {
-    id: 'A-205',
-    img: '/imgs/sp1.png',
-    imgs: [
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-    ],
-    city: 'Зеленоградск',
-    project: 'Акфиноград-Сити',
-    address: 'ул. Потемкина 15',
-    building: 'Корпус 1',
-    section: 'Секция B',
-    rooms: 2,
-    area: 66.9,
-    kitchen: 12.82,
-    living: 59.92,
-    floor: 8,
-    floorsTotal: 32,
-    price: 6785425,
-    priceM2: 196000,
-    finishing: 'Предчистовая',
-    status: 'В продаже',
-    code: '982',
-    delivery: '2025',
-    promo: true,
-    promoPercent: 10,
-  },
-  {
-    id: 'B-313',
-    img: '/imgs/sp1.png',
-    imgs: [
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-    ],
-    city: 'Калининград',
-    project: 'Солнечный квартал',
-    address: 'пр-т Мира 1',
-    building: 'Корпус 2',
-    section: 'Секция C',
-    rooms: 3,
-    area: 126.9,
-    kitchen: 14.2,
-    living: 92.1,
-    floor: 12,
-    floorsTotal: 18,
-    price: 12785425,
-    priceM2: 196000,
-    finishing: 'Чистовая',
-    status: 'В продаже',
-    code: '701',
-    delivery: '2026',
-    promo: false,
-  },
-  {
-    id: 'C-118',
-    img: '/imgs/sp1.png',
-    imgs: [
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-    ],
-    city: 'Калининград',
-    project: 'Северный парк',
-    address: 'ул. Центральная 3',
-    building: 'Корпус 3',
-    section: 'Секция A',
-    rooms: 2,
-    area: 49.7,
-    kitchen: 9.5,
-    living: 39.2,
-    floor: 2,
-    floorsTotal: 18,
-    price: 8100000,
-    priceM2: 162000,
-    finishing: 'Предчистовая',
-    status: 'В продаже',
-    code: '320',
-    delivery: '2026',
-    promo: true,
-    promoPercent: 12,
-  },
-  {
-    id: 'D-101',
-    img: '/imgs/sp1.png',
-    imgs: [
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-    ],
-    city: 'Зеленоградск',
-    project: 'Акфиноград-Сити',
-    address: 'ул. Потемкина 15',
-    building: 'Корпус 1',
-    section: 'Секция D',
-    rooms: 1,
-    area: 36.4,
-    kitchen: 10.1,
-    living: 26.3,
-    floor: 3,
-    floorsTotal: 22,
-    price: 6200000,
-    priceM2: 170000,
-    finishing: 'Чистовая',
-    status: 'В продаже',
-    code: '982',
-    delivery: '2025',
-    promo: false,
-  },
-  {
-    id: 'E-220',
-    img: '/imgs/sp1.png',
-    imgs: [
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-    ],
-    city: 'Калининград',
-    project: 'Квартал Восток',
-    address: 'ул. Победы 22',
-    building: 'Корпус 2',
-    section: 'Секция E',
-    rooms: 2,
-    area: 58.3,
-    kitchen: 11.0,
-    living: 44.7,
-    floor: 7,
-    floorsTotal: 20,
-    price: 8950000,
-    priceM2: 153000,
-    finishing: 'Чистовая',
-    status: 'В продаже',
-    code: '554',
-    delivery: '2025',
-    promo: false,
-  },
-  {
-    id: 'F-002',
-    img: '/imgs/sp1.png',
-    imgs: [
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-    ],
-    city: 'Зеленоградск',
-    project: 'Акфиноград-Сити',
-    address: 'ул. Потемкина 15',
-    building: 'Корпус 4',
-    section: 'Секция F',
-    rooms: 3,
-    area: 78.9,
-    kitchen: 13.3,
-    living: 60.1,
-    floor: 10,
-    floorsTotal: 24,
-    price: 11200000,
-    priceM2: 142000,
-    finishing: 'Предчистовая',
-    status: 'В продаже',
-    code: '732',
-    delivery: '2026',
-    promo: false,
-  },
-  {
-    id: 'G-330',
-    img: '/imgs/sp1.png',
-    imgs: [
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-    ],
-    city: 'Калининград',
-    project: 'Солнечный квартал',
-    address: 'пр-т Мира 1',
-    building: 'Корпус 5',
-    section: 'Секция G',
-    rooms: 4,
-    area: 102.1,
-    kitchen: 14.2,
-    living: 85.4,
-    floor: 16,
-    floorsTotal: 22,
-    price: 21500000,
-    priceM2: 210000,
-    finishing: 'Чистовая',
-    status: 'В продаже',
-    code: '514',
-    delivery: 'Сдан',
-    promo: false,
-  },
-  {
-    id: 'H-901',
-    img: '/imgs/sp1.png',
-    imgs: [
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-      { img: '/imgs/sp1.png' },
-    ],
-    city: 'Зеленоградск',
-    project: 'Балтийская бухта',
-    address: 'ул. Морская 7',
-    building: 'Корпус 6',
-    section: 'Секция H',
-    rooms: 1,
-    area: 42.5,
-    kitchen: 9.8,
-    living: 30.1,
-    floor: 5,
-    floorsTotal: 16,
-    price: 7350000,
-    priceM2: 173000,
-    finishing: 'Чистовая',
-    status: 'В продаже',
-    code: '605',
-    delivery: '2025',
-    promo: true,
-    promoPercent: 7,
-  },
-])
 
-// Filters state
-const filters = reactive({
-  city: 'all',
-  project: 'all',
-  building: 'all',
-  rooms: [], // ['Студия'|'1'|'2'|'3'|'4+']
-  areaMin: 22,
-  areaMax: 145,
-  priceMin: 0,
-  priceMax: Infinity,
-  floorMin: 1,
-  floorMax: 30,
-  finishing: 'all',
-  status: 'all',
-  delivery: 'all',
-  promo: false,
-  query: '',
-  sortBy: 'priceAsc',
-})
+  if (!response.ok) {
+    throw new Error(`API request failed with status ${response.status}`)
+  }
 
-const buildings = computed(() => ['all', ...new Set(apartments.value.map((a) => a.building))])
-const cities = computed(() => ['all', ...new Set(apartments.value.map((a) => a.city))])
-const projects = computed(() => ['all', ...new Set(apartments.value.map((a) => a.project))])
-const deliveries = computed(() => ['all', ...new Set(apartments.value.map((a) => a.delivery))])
+  return response.json()
+}
+
+async function fetchComplexes() {
+  try {
+    const response = await fetchJson('/complexes')
+    complexes.value = response.data ?? []
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+async function fetchHouseDetails(houseIds) {
+  const missingIds = houseIds.filter((id) => id && !housesById.value[id])
+
+  if (!missingIds.length) return
+
+  const responses = await Promise.all(
+    missingIds.map(async (id) => {
+      const response = await fetchJson(`/houses/${id}`)
+      return response.data
+    }),
+  )
+
+  housesById.value = responses.reduce(
+    (acc, house) => {
+      acc[house.id] = house
+      return acc
+    },
+    { ...housesById.value },
+  )
+}
+
+function getApartmentParams() {
+  const params = new URLSearchParams({
+    per_page: String(perPage),
+    page: String(currentPage.value),
+    sort_by: 'price',
+    sort_direction: filters.sortBy === 'priceDesc' ? 'desc' : 'asc',
+  })
+
+  if (filters.city !== 'all') params.set('city', filters.city)
+  if (filters.project !== 'all') params.set('complex_name', filters.project)
+  if (filters.rooms) params.set('rooms', filters.rooms)
+  if (filters.priceFrom) params.set('price_from', filters.priceFrom)
+  if (filters.priceTo) params.set('price_to', filters.priceTo)
+  if (filters.areaFrom) params.set('area_from', filters.areaFrom)
+  if (filters.areaTo) params.set('area_to', filters.areaTo)
+
+  return params.toString()
+}
+
+async function fetchApartments() {
+  isLoading.value = true
+  errorMessage.value = ''
+
+  try {
+    const response = await fetchJson(`/apartments?${getApartmentParams()}`)
+    apartments.value = response.data ?? []
+    totalItems.value = Number(response.meta?.total) || 0
+
+    const houseIds = apartments.value.map((apartment) => apartment.house?.id).filter(Boolean)
+    await fetchHouseDetails([...new Set(houseIds)])
+  } catch (error) {
+    console.error(error)
+    apartments.value = []
+    totalItems.value = 0
+    errorMessage.value = 'Не удалось загрузить список квартир'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const cities = computed(() => ['all', ...new Set(complexes.value.map((complex) => complex.city))])
+const projects = computed(() => ['all', ...new Set(complexes.value.map((complex) => complex.name))])
+
 const selectedChips = computed(() => {
   const chips = []
+
   if (filters.city !== 'all') chips.push({ key: 'city', label: filters.city })
   if (filters.project !== 'all') chips.push({ key: 'project', label: filters.project })
-  if (filters.building !== 'all') chips.push({ key: 'building', label: filters.building })
-  if (filters.rooms.length) {
-    filters.rooms.forEach((r) => {
-      chips.push({ key: `rooms-${r}`, label: r === 'Студия' ? 'Студия' : `${r} комн.`, room: r })
+  if (filters.rooms) chips.push({ key: 'rooms', label: `${filters.rooms} комн.` })
+  if (filters.priceFrom || filters.priceTo) {
+    chips.push({
+      key: 'price',
+      label: `Цена: ${filters.priceFrom || '0'} - ${filters.priceTo || '...'}`,
     })
   }
-  if (filters.delivery !== 'all') chips.push({ key: 'delivery', label: filters.delivery })
-  if (filters.finishing !== 'all') chips.push({ key: 'finishing', label: filters.finishing })
-  if (filters.status !== 'all') chips.push({ key: 'status', label: filters.status })
-  if (filters.promo) chips.push({ key: 'promo', label: 'По акции' })
-  if (filters.query.trim()) chips.push({ key: 'query', label: `Поиск: ${filters.query}` })
+  if (filters.areaFrom || filters.areaTo) {
+    chips.push({
+      key: 'area',
+      label: `Площадь: ${filters.areaFrom || '0'} - ${filters.areaTo || '...'}`,
+    })
+  }
+
   return chips
 })
 
-// Pagination
-const currentPage = ref(1)
-const perPage = ref(6)
-const resetPage = () => (currentPage.value = 1)
-const toggleRoom = (val) => {
-  const idx = filters.rooms.indexOf(val)
-  if (idx === -1) filters.rooms.push(val)
-  else filters.rooms.splice(idx, 1)
-  resetPage()
-}
-const applyFilters = () => resetPage()
-const showMoreFilters = ref(false)
-const monthlyPayment = (price) => Math.round(price / 360 / 1000) * 1000
-const promoPercent = (ap) => (ap.promo ? Number(ap.promoPercent) || 0 : 0)
-const priceWithPromo = (ap) =>
-  ap.promo ? Math.round(ap.price * (1 - promoPercent(ap) / 100)) : ap.price
-const priceM2WithPromo = (ap) =>
-  ap.promo ? Math.round(ap.priceM2 * (1 - promoPercent(ap) / 100)) : ap.priceM2
-
-const priceBounds = computed(() => {
-  const prices = apartments.value.map((a) => a.price)
-  return {
-    min: Math.min(...prices),
-    max: Math.max(...prices),
-  }
-})
-const areaBounds = computed(() => {
-  const areas = apartments.value.map((a) => a.area)
-  return {
-    min: Math.min(...areas),
-    max: Math.max(...areas),
-  }
-})
-
-const onPriceMinInput = () => {
-  if (filters.priceMin > filters.priceMax) filters.priceMax = filters.priceMin
-  resetPage()
-}
-const onPriceMaxInput = () => {
-  if (filters.priceMax < filters.priceMin) filters.priceMin = filters.priceMax
-  resetPage()
-}
-const onAreaMinInput = () => {
-  if (filters.areaMin > filters.areaMax) filters.areaMax = filters.areaMin
-  resetPage()
-}
-const onAreaMaxInput = () => {
-  if (filters.areaMax < filters.areaMin) filters.areaMin = filters.areaMax
-  resetPage()
-}
-
-// Filtering
-const filtered = computed(() => {
-  let list = apartments.value
-  if (filters.city !== 'all') list = list.filter((a) => a.city === filters.city)
-  if (filters.project !== 'all') list = list.filter((a) => a.project === filters.project)
-  if (filters.building !== 'all') list = list.filter((a) => a.building === filters.building)
-
-  if (filters.rooms.length) {
-    list = list.filter((a) =>
-      filters.rooms.some((r) => (r === '4+' ? a.rooms >= 4 : String(a.rooms) === String(r))),
-    )
+function applyFilters() {
+  if (currentPage.value !== 1) {
+    currentPage.value = 1
+    return
   }
 
-  list = list.filter(
-    (a) =>
-      a.area >= filters.areaMin &&
-      a.area <= filters.areaMax &&
-      priceWithPromo(a) >= filters.priceMin &&
-      priceWithPromo(a) <= filters.priceMax &&
-      a.floor >= filters.floorMin &&
-      a.floor <= filters.floorMax,
-  )
-
-  if (filters.finishing !== 'all') list = list.filter((a) => a.finishing === filters.finishing)
-  if (filters.status !== 'all') list = list.filter((a) => a.status === filters.status)
-  if (filters.delivery !== 'all') list = list.filter((a) => a.delivery === filters.delivery)
-  if (filters.promo) list = list.filter((a) => a.promo)
-
-  if (filters.query.trim()) {
-    const q = filters.query.toLowerCase()
-    list = list.filter((a) => a.id.toLowerCase().includes(q) || a.section.toLowerCase().includes(q))
-  }
-  return list
-})
-
-const sorted = computed(() => {
-  const list = [...filtered.value]
-  switch (filters.sortBy) {
-    case 'priceDesc':
-      return list.sort((a, b) => priceWithPromo(b) - priceWithPromo(a))
-    case 'areaAsc':
-      return list.sort((a, b) => a.area - b.area)
-    case 'areaDesc':
-      return list.sort((a, b) => b.area - a.area)
-    case 'priceAsc':
-    default:
-      return list.sort((a, b) => priceWithPromo(a) - priceWithPromo(b))
-  }
-})
-
-const totalItems = computed(() => sorted.value.length)
-const paginated = computed(() => {
-  const start = (currentPage.value - 1) * perPage.value
-  return sorted.value.slice(start, start + perPage.value)
-})
+  fetchApartments()
+}
 
 function resetFilters() {
   filters.city = 'all'
   filters.project = 'all'
-  filters.building = 'all'
-  filters.rooms = []
-  filters.areaMin = 22
-  filters.areaMax = 145
-  filters.priceMin = 1700000
-  filters.priceMax = 9030000
-  filters.floorMin = 1
-  filters.floorMax = 30
-  filters.finishing = 'all'
-  filters.status = 'all'
-  filters.delivery = 'all'
-  filters.promo = false
-  filters.sortBy = 'priceAsc'
-  filters.query = ''
-  resetPage()
+  filters.rooms = ''
+  filters.priceFrom = ''
+  filters.priceTo = ''
+  filters.areaFrom = ''
+  filters.areaTo = ''
+  filters.sortBy = 'priceDesc'
+  applyFilters()
 }
 
-function removeChip(key, room) {
+function removeChip(key) {
   switch (key) {
     case 'city':
       filters.city = 'all'
@@ -435,37 +181,125 @@ function removeChip(key, room) {
     case 'project':
       filters.project = 'all'
       break
-    case 'building':
-      filters.building = 'all'
-      break
     case 'rooms':
-      if (room) {
-        const idx = filters.rooms.indexOf(room)
-        if (idx !== -1) filters.rooms.splice(idx, 1)
-      } else {
-        filters.rooms = []
-      }
+      filters.rooms = ''
       break
-    case 'delivery':
-      filters.delivery = 'all'
+    case 'price':
+      filters.priceFrom = ''
+      filters.priceTo = ''
       break
-    case 'finishing':
-      filters.finishing = 'all'
-      break
-    case 'status':
-      filters.status = 'all'
-      break
-    case 'promo':
-      filters.promo = false
-      break
-    case 'query':
-      filters.query = ''
+    case 'area':
+      filters.areaFrom = ''
+      filters.areaTo = ''
       break
     default:
       break
   }
-  resetPage()
+
+  applyFilters()
 }
+
+function setRoom(value) {
+  filters.rooms = filters.rooms === value ? '' : value
+}
+
+function handlePageChange(page) {
+  currentPage.value = page
+}
+
+function getHouse(apartment) {
+  return housesById.value[apartment.house?.id] || apartment.house || {}
+}
+
+function formatPrice(value) {
+  const parsedValue = Number(value)
+
+  if (!Number.isFinite(parsedValue) || parsedValue <= 0) return null
+
+  return Math.trunc(parsedValue).toLocaleString('ru-RU')
+}
+
+function formatArea(value) {
+  if (value === null || value === undefined || value === '') return '-'
+  return String(value).replace('.', ',')
+}
+
+function formatRooms(apartment) {
+  return `${apartment.rooms_amount}-х комнатная квартира ${formatArea(apartment.area_total)} м2`
+}
+
+function formatCity(apartment) {
+  const house = getHouse(apartment)
+  return `г. ${house.locality || apartment.complex?.city || '-'}`
+}
+
+function normalizeFullAddress(address, city) {
+  if (!address) return 'Адрес уточняется'
+
+  const normalizedAddress = address
+    .replace(`${city || ''},`, '')
+    .replace(/\s+/g, ' ')
+    .replace(/^,\s*/, '')
+    .trim()
+
+  return normalizedAddress || 'Адрес уточняется'
+}
+
+function formatAddress(apartment) {
+  const house = getHouse(apartment)
+  const street = house.street?.trim()
+  const number = house.number?.trim()
+
+  if (street && number) {
+    return `${street}, ${number}`
+  }
+
+  if (street) {
+    return street
+  }
+
+  if (number) {
+    return number
+  }
+
+  const normalizedAddress = normalizeFullAddress(
+    house.full_address,
+    house.locality || apartment.complex?.city,
+  )
+
+  if (normalizedAddress === 'Адрес уточняется') return normalizedAddress
+
+  return normalizedAddress.replace(/^ул\.\s*ул\./i, 'ул.')
+}
+
+function formatProject(apartment) {
+  return `ЖК ${apartment.complex?.name || '-'}`
+}
+
+function formatFloor(apartment) {
+  const house = getHouse(apartment)
+  return house.maxFloor ? `${apartment.floor} из ${house.maxFloor}` : String(apartment.floor ?? '-')
+}
+
+function formatBuildingState(apartment) {
+  const buildingState = getHouse(apartment).details?.buildingState
+
+  if (buildingState === 'UNFINISHED') return 'Строящийся дом'
+  if (buildingState === 'FINISHED') return 'Дом сдан'
+
+  return 'Не указано'
+}
+
+function getImage(apartment) {
+  return apartment.images?.[0] || apartment.pb_image || '/imgs/sp1.png'
+}
+
+watch(currentPage, fetchApartments)
+
+onMounted(async () => {
+  await fetchComplexes()
+  await fetchApartments()
+})
 </script>
 
 <template>
@@ -474,28 +308,24 @@ function removeChip(key, room) {
   <div class="find-ap">
     <div class="container">
       <div class="find-ap__inner">
-        <!-- <button @click="showModal = true">Открыть модалку</button> -->
-
-        <!-- Показываем модалку, только если showModal = true -->
-        <!-- <Modal v-if="showModal" @close="showModal = false" /> -->
         <h1 class="default-title find-ap__title">Подобрать квартиру</h1>
 
         <div class="find-ap__filters">
           <div class="find-ap__row">
             <label class="find-ap__field">
               <span class="find-ap__label">Город</span>
-              <select v-model="filters.city" @change="resetPage">
-                <option v-for="c in cities" :key="c" :value="c">
-                  {{ c === 'all' ? 'Выбрать' : c }}
+              <select v-model="filters.city">
+                <option v-for="city in cities" :key="city" :value="city">
+                  {{ city === 'all' ? 'Выбрать' : city }}
                 </option>
               </select>
             </label>
 
             <label class="find-ap__field">
               <span class="find-ap__label">Проект</span>
-              <select v-model="filters.project" @change="resetPage">
-                <option v-for="p in projects" :key="p" :value="p">
-                  {{ p === 'all' ? 'Выбрать' : p }}
+              <select v-model="filters.project">
+                <option v-for="project in projects" :key="project" :value="project">
+                  {{ project === 'all' ? 'Выбрать' : project }}
                 </option>
               </select>
             </label>
@@ -503,25 +333,25 @@ function removeChip(key, room) {
             <label class="find-ap__field">
               <span class="find-ap__label">Число комнат</span>
               <div class="find-ap__chips">
-                <button type="button" class="find-ap__chip" :class="{ active: filters.rooms.includes('Студия') }"
-                  @click="toggleRoom('Студия')">Студия</button>
-                <button v-for="r in ['1', '2', '3', '4+']" :key="r" type="button" class="find-ap__chip"
-                  :class="{ active: filters.rooms.includes(r) }" @click="toggleRoom(r)">{{ r }}</button>
+                <button
+                  v-for="room in ['1', '2', '3', '4']"
+                  :key="room"
+                  type="button"
+                  class="find-ap__chip"
+                  :class="{ active: filters.rooms === room }"
+                  @click="setRoom(room)"
+                >
+                  {{ room }}
+                </button>
               </div>
             </label>
 
             <label class="find-ap__field">
-              <span class="find-ap__label">Задать стоимость, млн</span>
-              <div class="find-ap__range">
-                <span>от {{ (filters.priceMin / 1000000).toLocaleString('ru-RU') }}</span>
+              <span class="find-ap__label">Задать стоимость</span>
+              <div class="find-ap__range find-ap__range--inputs">
+                <input v-model="filters.priceFrom" type="number" placeholder="от" min="0" />
                 <span class="find-ap__dash">до</span>
-                <span>{{ (filters.priceMax / 1000000).toLocaleString('ru-RU') }}</span>
-              </div>
-              <div class="find-ap__slider-range">
-                <input type="range" :min="priceBounds.min" :max="priceBounds.max" step="10000"
-                  v-model.number="filters.priceMin" @input="onPriceMinInput" />
-                <input type="range" :min="priceBounds.min" :max="priceBounds.max" step="10000"
-                  v-model.number="filters.priceMax" @input="onPriceMaxInput" />
+                <input v-model="filters.priceTo" type="number" placeholder="до" min="0" />
               </div>
             </label>
           </div>
@@ -529,338 +359,174 @@ function removeChip(key, room) {
           <div class="find-ap__row">
             <label class="find-ap__field">
               <span class="find-ap__label">Площадь, м²</span>
-              <div class="find-ap__range">
-                <span>от {{ filters.areaMin }}</span>
+              <div class="find-ap__range find-ap__range--inputs">
+                <input
+                  v-model="filters.areaFrom"
+                  type="number"
+                  placeholder="от"
+                  min="0"
+                  step="0.01"
+                />
                 <span class="find-ap__dash">до</span>
-                <span>{{ filters.areaMax }}</span>
-              </div>
-              <div class="find-ap__slider-range">
-                <input type="range" :min="areaBounds.min" :max="areaBounds.max" step="1"
-                  v-model.number="filters.areaMin" @input="onAreaMinInput" />
-                <input type="range" :min="areaBounds.min" :max="areaBounds.max" step="1"
-                  v-model.number="filters.areaMax" @input="onAreaMaxInput" />
+                <input
+                  v-model="filters.areaTo"
+                  type="number"
+                  placeholder="до"
+                  min="0"
+                  step="0.01"
+                />
               </div>
             </label>
 
             <label class="find-ap__field">
-              <span class="find-ap__label">Срок сдачи</span>
-              <select v-model="filters.delivery" @change="resetPage">
-                <option v-for="d in deliveries" :key="d" :value="d">
-                  {{ d === 'all' ? 'Выбрать' : d }}
-                </option>
+              <span class="find-ap__label">Сортировка</span>
+              <select v-model="filters.sortBy">
+                <option value="priceDesc">Сначала дороже</option>
+                <option value="priceAsc">Сначала дешевле</option>
               </select>
             </label>
 
-            <label class="find-ap__field find-ap__field--check">
-              <span class="find-ap__label">&nbsp;</span>
-              <label class="find-ap__check">
-                <input type="checkbox" v-model="filters.promo" @change="resetPage" />
-                <span>По акции</span>
-              </label>
-            </label>
-
-            <Button class="find-ap__apply" @click="applyFilters">Подобрать квартиру</Button>
-          </div>
-
-          <div class="find-ap__more-toggle">
-            <button class="find-ap__more" type="button" @click="showMoreFilters = !showMoreFilters">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_223_23473)">
-                  <path d="M14.0007 13.3333L9.33398 13.3333" stroke="black" stroke-width="1.4" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                  <path d="M6.66667 13.3333L2 13.3333" stroke="black" stroke-width="1.4" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                  <path d="M14 8L8 8" stroke="black" stroke-width="1.4" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                  <path d="M5.33333 8L2 8" stroke="black" stroke-width="1.4" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                  <path d="M13.9993 2.66666L10.666 2.66666" stroke="black" stroke-width="1.4" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                  <path d="M8 2.66666L2 2.66666" stroke="black" stroke-width="1.4" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                  <path d="M9.33398 15.3333L9.33398 11.3333" stroke="black" stroke-width="1.4" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                  <path d="M5.33398 10L5.33398 6" stroke="black" stroke-width="1.4" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                  <path d="M10.666 4.66666L10.666 0.666657" stroke="black" stroke-width="1.4" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </g>
-                <defs>
-                  <clipPath id="clip0_223_23473">
-                    <rect width="16" height="16" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-              {{ showMoreFilters ? 'скрыть фильтры' : 'все фильтры' }}
-            </button>
-            <button class="find-ap__reset-link" type="button" @click="resetFilters">
-              сбросить фильтр
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 3L3 9" stroke="black" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M3 3L9 9" stroke="black" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </button>
+            <div class="find-ap__actions-row">
+              <Button class="find-ap__apply" @click="applyFilters">Подобрать квартиру</Button>
+              <button class="find-ap__reset-link" type="button" @click="resetFilters">
+                сбросить фильтр
+              </button>
+            </div>
           </div>
         </div>
 
         <div v-if="selectedChips.length" class="find-ap__selected">
           <div class="find-ap__selected-list">
-            <button v-for="chip in selectedChips" :key="chip.key" type="button" class="find-ap__selected-chip"
-              @click="removeChip(chip.key.split('-')[0], chip.room)">
+            <button
+              v-for="chip in selectedChips"
+              :key="chip.key"
+              type="button"
+              class="find-ap__selected-chip"
+              @click="removeChip(chip.key)"
+            >
               <span>{{ chip.label }}</span>
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 3L3 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
-                  stroke-linejoin="round" />
-                <path d="M3 3L9 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
-                  stroke-linejoin="round" />
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9 3L3 9"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M3 3L9 9"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             </button>
           </div>
         </div>
-
-        <transition name="fade">
-          <div v-if="showMoreFilters" class="find-ap__sidebar-overlay" @click="showMoreFilters = false">
-            <aside class="find-ap__sidebar" @click.stop>
-              <div class="find-ap__sidebar-head">
-                <h3>Все фильтры</h3>
-                <button type="button" class="find-ap__sidebar-close" @click="showMoreFilters = false">×</button>
-              </div>
-
-              <div class="find-ap__sidebar-grid">
-                <label class="find-ap__field">
-                  <span class="find-ap__label">Корпус</span>
-                  <select v-model="filters.building" @change="resetPage">
-                    <option v-for="b in buildings" :key="b" :value="b">
-                      {{ b === 'all' ? 'Выбрать' : b }}
-                    </option>
-                  </select>
-                </label>
-
-                <label class="find-ap__field">
-                  <span class="find-ap__label">Этаж</span>
-                  <div class="find-ap__range">
-                    <input type="number" v-model.number="filters.floorMin" @input="resetPage" min="1" />
-                    <span class="find-ap__dash">до</span>
-                    <input type="number" v-model.number="filters.floorMax" @input="resetPage" min="1" />
-                  </div>
-                </label>
-
-                <label class="find-ap__field">
-                  <span class="find-ap__label">Отделка</span>
-                  <select v-model="filters.finishing" @change="resetPage">
-                    <option value="all">Любая</option>
-                    <option value="Чистовая">Чистовая</option>
-                    <option value="Предчистовая">Предчистовая</option>
-                  </select>
-                </label>
-
-                <label class="find-ap__field">
-                  <span class="find-ap__label">Статус</span>
-                  <select v-model="filters.status" @change="resetPage">
-                    <option value="all">Любой</option>
-                    <option value="В продаже">В продаже</option>
-                    <option value="Забронировано">Забронировано</option>
-                  </select>
-                </label>
-
-                <label class="find-ap__field find-ap__field--search">
-                  <span class="find-ap__label">Поиск по ID/секции</span>
-                  <input type="text" v-model="filters.query" @input="resetPage" placeholder="Например, A-205" />
-                </label>
-              </div>
-
-              <div class="find-ap__sidebar-actions">
-                <Button class="find-ap__apply" @click="applyFilters">Подобрать квартиру</Button>
-                <button class="find-ap__reset-link" type="button" @click="resetFilters">
-                  сбросить фильтр
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 3L3 9" stroke="black" stroke-width="1.4" stroke-linecap="round"
-                      stroke-linejoin="round" />
-                    <path d="M3 3L9 9" stroke="black" stroke-width="1.4" stroke-linecap="round"
-                      stroke-linejoin="round" />
-                  </svg>
-                </button>
-              </div>
-            </aside>
-          </div>
-        </transition>
-
-
       </div>
     </div>
+
     <div class="find-ap__main">
       <div class="container">
-        <div class="find-ap__head">
-          <div class="find-ap__sort-select">
-            <!-- <span class="find-ap__sort-label">Сортировка</span> -->
-            <select v-model="filters.sortBy" @change="resetPage">
-              <option value="priceAsc">Сначала дешевле</option>
-              <option value="priceDesc">Сначала дороже</option>
-              <option value="areaAsc">Площадь (меньше)</option>
-              <option value="areaDesc">Площадь (больше)</option>
-            </select>
-          </div>
-        </div>
         <div class="find-ap__panel">
           <div class="find-ap__results">
-            <div v-if="paginated.length" class="find-ap__list">
-              <div v-for="ap in paginated" :key="ap.id" class="find-ap__card">
+            <div v-if="isLoading" class="find-ap__empty">Загрузка...</div>
+            <div v-else-if="errorMessage" class="find-ap__empty">{{ errorMessage }}</div>
+            <div v-else-if="apartments.length" class="find-ap__list">
+              <div v-for="apartment in apartments" :key="apartment.id" class="find-ap__card">
                 <div class="find-ap__left">
                   <div class="find-ap__plan">
-                    <div class="find-ap__swiper swiper" :ref="setFindContainer">
-                      <div class="swiper-wrapper">
-                        <div class="swiper-slide find__card" v-for="(img, index) in ap.imgs" :key="index">
-                          <!-- <a class="fancy" :href="img.img" data-fancybox="find-gallery">
-                              <img :src="img.img" loading="lazy" decoding="async" />
-                            </a> -->
-                          <img :src="img.img" loading="lazy" decoding="async" />
-                          <span v-if="ap.promo" class="find-ap__badge">-{{ promoPercent(ap) }}%</span>
-                        </div>
-                      </div>
-                      <div class="swiper-controls">
-                        <div class="swiper-button-prev fn__button-prev--desktop">
-                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12.5 15L7.5 10L12.5 5" stroke="#3343A9" stroke-width="1.4" stroke-linecap="round"
-                              stroke-linejoin="round" />
-                          </svg>
-                        </div>
-                        <div class="swiper-button-next fn__button-next--desktop">
-                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.5 15L12.5 10L7.5 5" stroke="#3343A9" stroke-width="1.4" stroke-linecap="round"
-                              stroke-linejoin="round" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- <img :src="ap.img" :alt="ap.id" loading="lazy" decoding="async" /> -->
-
+                    <img
+                      :src="getImage(apartment)"
+                      :alt="formatRooms(apartment)"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
                 </div>
 
                 <div class="find-ap__right">
                   <div class="find-ap__top">
-                    <!-- <a href="#" class="find-ap__title-in">
-                        {{ ap.rooms }}-х комнатная квартира {{ ap.area }} м2
-                      </a> -->
-                    <RouterLink class="find-ap__title-in" :to="{ path: '/apartment', query: { id: ap.id } }"
-                      aria-label="Подробнее">
-                      {{ ap.rooms }}-х комнатная квартира {{ ap.area }} м2
+                    <RouterLink
+                      class="find-ap__title-in"
+                      :to="{ path: '/apartment', query: { id: apartment.id } }"
+                      aria-label="Подробнее"
+                    >
+                      {{ formatRooms(apartment) }}
                     </RouterLink>
 
-
                     <div class="find-ap__loc">
-                      <p>г. {{ ap.city }}</p>
-                      <a href="#" @click.prevent>{{ ap.address }}</a>
+                      <p>{{ formatCity(apartment) }}</p>
+                      <p>{{ formatAddress(apartment) }}</p>
+                      <p>{{ formatProject(apartment) }}</p>
+                    </div>
+                  </div>
 
-                      <p>ЖК «{{ ap.project }}»</p>
+                  <div class="find-ap__prices">
+                    <div>
+                      <div class="find-ap__price red">
+                        {{ formatPrice(apartment.price) ? `${formatPrice(apartment.price)} руб.` : 'Цена уточняется' }}
+                      </div>
+                    </div>
+                    <div>
+                      <div class="find-ap__price">
+                        {{
+                          formatPrice(apartment.pricePerMeter)
+                            ? `${formatPrice(apartment.pricePerMeter)} руб/м²`
+                            : 'Цена за м² уточняется'
+                        }}
+                      </div>
                     </div>
                   </div>
 
                   <div class="find-ap__specgrid">
                     <dl>
-                      <dt>Этаж</dt>
-                      <dd>{{ ap.floor }} из {{ ap.floorsTotal }}</dd>
-                    </dl>
-                    <dl>
-                      <dt>Жилой метраж</dt>
-                      <dd>{{ ap.living }} м2</dd>
+                      <dt>Количество комнат</dt>
+                      <dd>{{ apartment.rooms_amount }}</dd>
                     </dl>
                     <dl>
                       <dt>Площадь квартиры</dt>
-                      <dd>{{ ap.area }} м2</dd>
+                      <dd>{{ formatArea(apartment.area_total) }} м2</dd>
                     </dl>
                     <dl>
-                      <dt>Состояние</dt>
-                      <dd>Строящийся дом</dd>
+                      <dt>Жилая площадь</dt>
+                      <dd>{{ formatArea(apartment.details?.area_living) }} м2</dd>
                     </dl>
                     <dl>
-                      <dt>Метраж кухни</dt>
-                      <dd>{{ ap.kitchen }} м2</dd>
+                      <dt>Площадь кухни</dt>
+                      <dd>{{ formatArea(apartment.details?.area_kitchen) }} м2</dd>
                     </dl>
                     <dl>
-                      <dt>Код</dt>
-                      <dd>{{ ap.code }}</dd>
+                      <dt>Этаж</dt>
+                      <dd>{{ formatFloor(apartment) }}</dd>
                     </dl>
-                  </div>
-
-                  <div class="find-ap__prices">
-                    <div>
-                      <div class="find-ap__price-row">
-                        <div class="find-ap__price" :class="{ red: ap.promo }">
-                          {{ priceWithPromo(ap).toLocaleString('ru-RU') }} руб.
-                        </div>
-                        <div v-if="ap.promo" class="find-ap__price find-ap__price--old">
-                          {{ ap.price.toLocaleString('ru-RU') }} руб.
-                        </div>
-                      </div>
-                      <div class="find-ap__hint">
-                        в ипотеку от {{ monthlyPayment(priceWithPromo(ap)).toLocaleString('ru-RU') }} руб.
-                      </div>
-                    </div>
-                    <div>
-                      <div class="find-ap__price">
-                        {{ priceM2WithPromo(ap).toLocaleString('ru-RU') }} руб/м²
-                      </div>
-                      <div class="find-ap__hint">цена за квадратный метр</div>
-                    </div>
+                    <dl>
+                      <dt>Стадия строительства</dt>
+                      <dd>{{ formatBuildingState(apartment) }}</dd>
+                    </dl>
                   </div>
 
                   <div class="find-ap__actions">
-                    <Button class="find-ap__cta" @click.prevent="toggleModal">Связаться по квартире</Button>
-                    <Modal v-if="isModal" @close="toggleModal"></Modal>
+                    <Button class="find-ap__cta" @click.prevent="toggleModal"
+                      >Связаться по квартире</Button
+                    >
+                    <Modal v-if="isModal" @close="toggleModal" />
                     <a class="find-ap__phone" href="tel:+74012279086">
                       <svg viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                           d="M14.7008 11.284L14.7069 13.2839C14.7082 13.4696 14.6707 13.6535 14.5969 13.8238C14.523 13.9942 14.4144 14.1472 14.2779 14.2732C14.1415 14.3991 13.9803 14.4951 13.8046 14.5551C13.6288 14.6152 13.4425 14.6378 13.2576 14.6217C11.2055 14.405 9.23281 13.7099 7.49809 12.5924C5.88423 11.5737 4.51445 10.2122 3.48603 8.60449C2.3541 6.8687 1.64696 4.89069 1.42191 2.83069C1.40469 2.64639 1.42604 2.46052 1.4846 2.28492C1.54315 2.10932 1.63763 1.94783 1.76201 1.81074C1.88639 1.67365 2.03796 1.56397 2.20705 1.48866C2.37615 1.41336 2.55908 1.37409 2.74418 1.37336L4.74417 1.36732C5.0677 1.36316 5.3817 1.47678 5.62765 1.68701C5.8736 1.89723 6.03471 2.18972 6.08096 2.50995C6.16731 3.14974 6.32576 3.7777 6.55329 4.38187C6.6437 4.62021 6.6639 4.87948 6.61148 5.12895C6.55906 5.37842 6.43623 5.60763 6.25754 5.78943L5.41343 6.63865C6.36751 8.30481 7.75361 9.68256 9.4255 10.6266L10.2696 9.77733C10.4503 9.59754 10.6788 9.47333 10.9279 9.4194C11.1771 9.36548 11.4365 9.38411 11.6754 9.47308C12.2809 9.69696 12.9098 9.85161 13.5501 9.93409C13.8741 9.9788 14.1703 10.141 14.3825 10.3899C14.5947 10.6388 14.708 10.957 14.7008 11.284Z"
-                          fill="#212026" />
+                          fill="#212026"
+                        />
                       </svg>
-                      +7 (4012) 27-90-86</a>
-                    <div class="find-ap__icons">
-                      <a href="#" class="find-ap__icon">
-                        <svg viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <g clip-path="url(#clip0_2370_7448)">
-                            <path
-                              d="M7.99996 0.144917C6.89998 0.15156 6.00544 1.05698 6.01209 2.15696L6.18133 30.1564C6.18798 31.2564 7.09341 32.151 8.19339 32.1443L28.193 32.0236C29.293 32.0169 30.1875 31.1115 30.1809 30.0115L30.0479 8.01191L21.9997 0.0603703L7.99996 0.144917Z"
-                              fill="white" />
-                            <path
-                              d="M24.0483 8.04815L30.0482 8.01192L22 0.0603768L22.0363 6.06027C22.0429 7.16025 22.9483 8.0548 24.0483 8.04815Z"
-                              fill="#BAB9BE" />
-                            <path
-                              d="M26.1559 26.0358C26.1592 26.5858 25.7119 27.0385 25.162 27.0418L3.16236 27.1747C2.61237 27.178 2.15966 26.7307 2.15633 26.1807L2.09589 16.1809C2.09256 15.6309 2.53984 15.1782 3.08983 15.1749L25.0894 15.042C25.6394 15.0387 26.0921 15.486 26.0954 16.036L26.1559 26.0358Z"
-                              fill="#DA1A1F" />
-                            <path
-                              d="M6.47404 19.1014C6.47244 18.8374 6.6787 18.5482 7.01369 18.5462L8.86066 18.535C9.90064 18.5287 10.8408 19.2191 10.8489 20.553C10.8565 21.817 9.92481 22.5267 8.88482 22.5329L7.54985 22.541L7.55623 23.597C7.55836 23.949 7.33557 24.1493 7.04757 24.1511C6.78358 24.1527 6.50338 23.9553 6.50125 23.6034L6.47404 19.1014ZM7.53177 19.5501L7.54381 21.542L8.87879 21.534C9.41478 21.5307 9.83591 21.0552 9.83291 20.5592C9.82953 20.0002 9.40274 19.5388 8.86675 19.542L7.53177 19.5501Z"
-                              fill="#F2F2F9" />
-                            <path
-                              d="M12.437 24.1184C12.173 24.12 11.8841 23.9778 11.882 23.6268L11.8546 19.0849C11.8528 18.7979 12.1396 18.5871 12.4036 18.5855L14.2345 18.5745C17.8884 18.5524 17.8419 24.0858 14.34 24.107L12.437 24.1184ZM12.9134 19.5585L12.9351 23.1404L14.2621 23.1324C16.421 23.1194 16.4954 19.5369 14.2404 19.5505L12.9134 19.5585Z"
-                              fill="#F2F2F9" />
-                            <path
-                              d="M19.1109 19.5852L19.1186 20.8561L21.1575 20.8438C21.4455 20.8421 21.7352 21.1283 21.7369 21.4073C21.7385 21.6713 21.4518 21.8891 21.1638 21.8908L19.1249 21.9031L19.135 23.5821C19.1367 23.8621 18.939 24.0783 18.659 24.08C18.307 24.0821 18.0907 23.8684 18.089 23.5884L18.0616 19.0465C18.0599 18.7595 18.2746 18.5492 18.6256 18.5471L21.4325 18.5301C21.7845 18.528 21.9938 18.7357 21.9955 19.0227C21.9971 19.2787 21.7908 19.568 21.4388 19.5701L19.1109 19.5842L19.1109 19.5852Z"
-                              fill="#F2F2F9" />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_2370_7448">
-                              <rect width="32" height="32" fill="white"
-                                transform="matrix(0.999982 -0.00603907 0.00604443 0.999982 0 0.19325)" />
-                            </clipPath>
-                          </defs>
-                        </svg>
-                      </a>
-                      <a href="#" class="find-ap__icon">
-                        <svg viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path
-                            d="M20.0615 10.327C20.0974 16.2663 12.1283 21.4054 12.1283 21.4054C12.1283 21.4054 4.09768 16.3629 4.06178 10.4236C4.04954 8.39839 4.88064 6.45099 6.37225 5.00986C7.86385 3.56873 9.89379 2.75192 12.0155 2.7391C14.1372 2.72629 16.1768 3.51853 17.6857 4.94154C19.1947 6.36455 20.0492 8.30176 20.0615 10.327Z"
-                            fill="#212026" />
-                          <path
-                            d="M12.0797 13.4056C13.5524 13.3967 14.7391 12.1956 14.7302 10.7228C14.7213 9.25012 13.5202 8.06344 12.0475 8.07234C10.5747 8.08123 9.38808 9.28233 9.39698 10.7551C9.40588 12.2278 10.607 13.4145 12.0797 13.4056Z"
-                            fill="#F2F2F9" />
-                        </svg>
-                      </a>
-                      <!-- <RouterLink class="find-ap__icon" :to="{ path: '/apartment', query: { id: ap.id } }"
-                          aria-label="Подробнее">⋯</RouterLink> -->
-                    </div>
+                      +7 (4012) 27-90-86
+                    </a>
                   </div>
                 </div>
               </div>
@@ -869,12 +535,15 @@ function removeChip(key, room) {
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
-  <Pagination :total="totalItems" :perPage="perPage" :currentPage="currentPage"
-    @update:currentPage="(p) => (currentPage = p)" />
+  <Pagination
+    :total="totalItems"
+    :perPage="perPage"
+    :currentPage="currentPage"
+    @update:currentPage="handlePageChange"
+  />
 
   <CallbackBlock :isblue="true" />
 </template>
@@ -1034,7 +703,6 @@ function removeChip(key, room) {
   }
 
   &__field {
-
     select,
     input[type='text'] {
       // width: 100%;
@@ -1062,7 +730,6 @@ function removeChip(key, room) {
       color: var(--100);
       transition: background 0.3s ease;
     }
-
 
     // когда input не пустой
     input[type='text']:not(:placeholder-shown),
@@ -1115,7 +782,10 @@ function removeChip(key, room) {
     line-height: 136%;
     letter-spacing: 0em;
     color: var(--60);
-    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease;
   }
 
   &__chip.active {
@@ -1141,12 +811,41 @@ function removeChip(key, room) {
     padding: clamp(16px, vw(18px, $desktop), 18px) clamp(12px, vw(16px, $desktop), 16px);
   }
 
+  &__range--inputs {
+    padding: clamp(10px, vw(12px, $desktop), 12px) clamp(12px, vw(16px, $desktop), 16px);
+
+    input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      background: transparent;
+      font-weight: 400;
+      font-size: clamp(16px, vw(18px, $desktop), 18px);
+      line-height: 146%;
+      color: var(--100);
+
+      &::placeholder {
+        color: var(--60);
+      }
+    }
+  }
+
   &__dash {
     color: var(--60);
   }
 
-  &__slider-range {
+  &__actions-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
 
+    @media (max-width: $tab) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  &__slider-range {
     // margin-top: 10px;
     height: 18px;
     bottom: -15px;
@@ -1228,7 +927,7 @@ function removeChip(key, room) {
       }
     }
 
-    input:checked+span::before {
+    input:checked + span::before {
       background: var(--100);
       background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16.6673 5L7.50065 14.1667L3.33398 10' stroke='white' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
@@ -1334,10 +1033,10 @@ function removeChip(key, room) {
     color: var(--100);
     margin-left: 20px;
     -webkit-appearance: none;
-
   }
 
-  &__panel {}
+  &__panel {
+  }
 
   &__list {
     display: flex;
@@ -1532,8 +1231,6 @@ function removeChip(key, room) {
     line-height: 126%;
     color: var(--100);
     margin-bottom: clamp(2px, vw(3px, $desktop), 3px);
-
-
   }
 
   & .red {
@@ -1570,7 +1267,8 @@ function removeChip(key, room) {
     // justify-content: center;
     flex-wrap: wrap;
 
-    @media (min-width: $tab) {}
+    @media (min-width: $tab) {
+    }
 
     @media (min-width: $desk) {
       justify-content: center;
@@ -1597,7 +1295,8 @@ function removeChip(key, room) {
     display: flex;
     gap: clamp(6px, vw(8px, $desktop), 8px);
 
-    @media (min-width: $tab) {}
+    @media (min-width: $tab) {
+    }
 
     @media (min-width: $desk) {
       margin-left: auto;
@@ -1706,7 +1405,6 @@ function removeChip(key, room) {
 
   // ховер – только на устройствах с мышью
   @media (hover: hover) and (pointer: fine) {
-
     & .swiper .swiper-controls .swiper-button-next:hover svg path,
     & .swiper .swiper-controls .swiper-button-prev:hover svg path {
       stroke: #3343a9;
