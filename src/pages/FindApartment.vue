@@ -8,7 +8,7 @@ import CallbackBlock from '@/layouts/mortgage-installment/CallbackBlock.vue'
 
 const API_URL = import.meta.env.DEV
   ? '/api'
-  : import.meta.env.VITE_AKFEN_API_URL || 'http://dev-admin-api.akfen39.ru/api'
+  : import.meta.env.VITE_AKFEN_API_URL || 'https://admin-api.akfen39.ru/api'
 const API_TOKEN =
   import.meta.env.VITE_AKFEN_API_TOKEN ||
   'NETGWLNgcZH5ntavOYULjOtTQCFRcS23Xn0Mgg7lEUfTol93VGPbNVT1Ek9jtNV8'
@@ -251,7 +251,7 @@ function formatCity(apartment) {
   return `г. ${house.locality || apartment.complex?.city || '-'}`
 }
 
-function normalizeFullAddress(address, city) {
+function normalizeç(address, city) {
   if (!address) return 'Адрес уточняется'
 
   const normalizedAddress = address
@@ -263,9 +263,20 @@ function normalizeFullAddress(address, city) {
   return normalizedAddress || 'Адрес уточняется'
 }
 
+function normalizeStreetAddress(street, city) {
+  if (!street) return ''
+
+  return street
+    .replace(new RegExp(`^${city || ''},\\s*`, 'i'), '')
+    .replace(/^ул\.\s*ул\./i, 'ул.')
+    .replace(/(\s[-/]\s)ул\.\s*/gi, '$1')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 function formatAddress(apartment) {
   const house = getHouse(apartment)
-  const street = house.street?.trim()
+  const street = normalizeStreetAddress(house.street?.trim(), house.locality || apartment.complex?.city)
   const number = house.number?.trim()
 
   if (street && number) {
@@ -280,7 +291,7 @@ function formatAddress(apartment) {
     return number
   }
 
-  const normalizedAddress = normalizeFullAddress(
+  const normalizedAddress = normalizeStreetAddress(
     house.full_address,
     house.locality || apartment.complex?.city,
   )
@@ -557,8 +568,7 @@ onMounted(async () => {
 
                   <div class="find-ap__actions">
                     <Button class="find-ap__cta" @click.prevent="toggleModal"
-                      >Связаться по квартире</Button
-                    >
+                      >Связаться по квартире</Button>
                     <Modal v-if="isModal" @close="toggleModal" />
                     <a class="find-ap__phone" href="tel:+74012279086">
                       <svg viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -744,10 +754,7 @@ onMounted(async () => {
     position: relative;
   }
 
-  &__field--range {
-    padding-bottom: 22px;
-  }
-
+  
   &__field {
     select,
     input[type='text'] {
@@ -884,16 +891,19 @@ onMounted(async () => {
     display: flex;
     align-items: center;
     gap: 16px;
+    grid-column: span 2;
+    margin-bottom: 3px;
+    align-self: flex-end;
 
-    @media (max-width: $tab) {
-      flex-direction: column;
-      align-items: stretch;
-    }
+    // @media (max-width: $tab) {
+    //   flex-direction: column;
+    //   align-items: stretch;
+    // }
   }
 
   &__slider-range {
     height: 18px;
-    bottom: 0;
+    bottom: -16px;
     left: 10px;
     right: 10px;
     position: absolute;
@@ -1306,17 +1316,19 @@ onMounted(async () => {
 
   &__actions {
     display: flex;
-    justify-content: space-between;
+    
+     justify-content: center;
     align-items: center;
     gap: clamp(15px, vw(20px, $desktop), 20px);
     // justify-content: center;
     flex-wrap: wrap;
 
     @media (min-width: $tab) {
+      
     }
 
     @media (min-width: $desk) {
-      justify-content: center;
+     justify-content: space-between;
       flex-wrap: nowrap;
     }
   }
@@ -1326,6 +1338,7 @@ onMounted(async () => {
     color: #fff;
     border: 1px solid transparent;
     width: 100%;
+    order: 2;
 
     &:hover {
       border: 1px solid var(--100);
@@ -1333,6 +1346,7 @@ onMounted(async () => {
 
     @media (min-width: $desk) {
       width: auto;
+      order: 1;
     }
   }
 
@@ -1374,10 +1388,15 @@ onMounted(async () => {
     display: flex;
     align-items: center;
     gap: clamp(4px, vw(5px, $desktop), 5px);
+    order: 1;
 
     svg {
       width: clamp(15px, vw(17px, $desktop), 17px);
       height: clamp(15px, vw(17px, $desktop), 17px);
+    }
+    @media (min-width: $desk) {
+    
+      order: 2;
     }
   }
 
