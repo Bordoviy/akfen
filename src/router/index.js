@@ -13,6 +13,7 @@ import SingleLayout from '@/pages/SingleLayout.vue'
 import Installment from '@/pages/Installment.vue'
 import Apartment from '@/pages/Apartment.vue'
 import FindApartment from '@/pages/FindApartment.vue'
+import Default from '@/pages/Default.vue'
 
 const routes = [
   {
@@ -23,6 +24,7 @@ const routes = [
       { path: '', component: Home, meta: { breadcrumb: 'Главная' } },
       { path: 'about', component: About, meta: { breadcrumb: 'О нас' } },
       { path: 'contacts', component: Contacts, meta: { breadcrumb: 'Контакты' } },
+      { path: 'politika-konfidenczialnosti', component: Default, meta: { breadcrumb: 'Политика Конфиденциальности' } },
       { path: 'ipoteka', component: Mortgage, meta: { breadcrumb: 'Ипотека' } },
       { path: 'rassrochka', component: Installment, meta: { breadcrumb: 'Рассрочка' } },
       { path: 'blog', component: Blog, meta: { breadcrumb: 'Блог' } },

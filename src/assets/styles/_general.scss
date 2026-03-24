@@ -25,7 +25,7 @@ body.lock {
 .container {
   margin: 0 auto;
   max-width: clamp(320px, vw(1400px, $desktop), 1880px);
-  padding: 0 clamp(10px, vw(30px, $desktop), 30px);
+  padding: 0 clamp(10px, vw(40px, $desktop), 40px);
   // width: 100%;
 
   @media (min-width: $tab) {

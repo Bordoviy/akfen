@@ -100,7 +100,10 @@ const footerMenu = [
               определяемой положениями статьи 437 ГК РФ.
             </p>
             <div class="footer__right-span">
-              <a href="#" class="footer__bottom-text footer__bottom-text-line">Политика конфиденциальности</a>
+              <router-link  :to="`/politika-konfidenczialnosti`" class="footer__bottom-text footer__bottom-text-line">
+                Политика конфиденциальности
+              </router-link>
+            
               <a href="https://almond-media.ru/" class="footer__bottom-text footer__bottom-text-line"
                 target="_blank">Создание и продвижение сайта - Almond Media</a>
             </div>

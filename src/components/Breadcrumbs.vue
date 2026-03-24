@@ -53,7 +53,7 @@ const breadcrumbs = computed(() => {
 .breadcrumbs {
   // display: flex;
   margin-top: clamp(8px, vw(8px, $desktop), 8px);
-  margin-bottom: clamp(16px, vw(16px, $desktop), 16px);
+  padding-bottom: clamp(16px, vw(16px, $desktop), 16px);
   // margin: 16px 0;
 
   .breadcrumb-link {
@@ -68,6 +68,9 @@ const breadcrumbs = computed(() => {
       pointer-events: none;
       cursor: default;
     }
+  }
+  .router-link-active:hover{
+    color: #2a2e8a;
   }
 
   .dot-separator {

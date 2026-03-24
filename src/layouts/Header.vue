@@ -256,7 +256,7 @@ function toggleModal() {
     }
 
     @media (min-width: $desk) {
-      display: bf;
+      display: block;
     }
   }
   &__inner.active .header__additional-tel-num {

@@ -359,7 +359,7 @@ onMounted(async () => {
               </select>
             </label>
 
-            <label class="find-ap__field">
+            <div class="find-ap__field">
               <span class="find-ap__label">Число комнат</span>
               <div class="find-ap__chips">
                 <button
@@ -373,7 +373,7 @@ onMounted(async () => {
                   {{ room }}
                 </button>
               </div>
-            </label>
+            </div>
 
             <label class="find-ap__field find-ap__field--range">
               <span class="find-ap__label">Задать стоимость</span>
@@ -750,7 +750,7 @@ onMounted(async () => {
   &__field {
     display: flex;
     flex-direction: column;
-    gap: clamp(5px, vw(6px, $desktop), 6px);
+    gap: clamp(4px, vw(4px, $desktop), 4px);
     position: relative;
   }
 
