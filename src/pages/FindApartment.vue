@@ -760,7 +760,7 @@ onMounted(async () => {
     input[type='text'] {
       // width: 100%;
       border-radius: 10px;
-      background: var(--seryy) !important;
+      background-color: var(--seryy) !important;
       border: 1px solid transparent;
       padding: clamp(14px, vw(15.3px, $desktop), 15.3px) clamp(15px, vw(20px, $desktop), 20px);
       font-weight: 400;
@@ -769,6 +769,15 @@ onMounted(async () => {
       color: var(--100);
       transition: background 0.3s ease;
       -webkit-appearance: none;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23929095' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-position: right clamp(15px, vw(20px, $desktop), 20px) center;
+      background-repeat: no-repeat;
+      background-size: 12px 8px;
+      padding-right: clamp(40px, vw(48px, $desktop), 48px);
+      appearance: none;
     }
 
     input[type='number'] {
@@ -791,9 +800,10 @@ onMounted(async () => {
     }
 
     // когда select выбран
-    select:valid {
-      background: var(--color);
-    }
+    // select:valid {
+    //   background-color: var(--color) !important;
+    //    border: 1px solid var(--seryy);
+    // }
   }
 
   // &__field--search {
@@ -1076,12 +1086,16 @@ onMounted(async () => {
 
   &__sort-select select {
     // border-radius: 10px;
-    background: var(--seryy);
+    background-color: var(--seryy);
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23191A1F' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-position: right 0 center;
+    background-repeat: no-repeat;
+    background-size: 12px 8px;
     outline: none;
     cursor: pointer;
     // border: 1px solid transparent;
     border-bottom: 1px dashed var(--2);
-    padding: clamp(4px, vw(4px, $desktop), 4px) clamp(0px, vw(0px, $desktop), 0px);
+    padding: clamp(4px, vw(4px, $desktop), 4px) 20px clamp(4px, vw(4px, $desktop), 4px) 0;
     font-weight: 600;
     font-size: clamp(15px, vw(17px, $desktop), 17px);
     line-height: 136%;
