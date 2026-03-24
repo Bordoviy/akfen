@@ -225,6 +225,25 @@ function onAreaMaxInput() {
   if (filters.areaTo < filters.areaFrom) filters.areaFrom = filters.areaTo
 }
 
+function getRangeStyle(min, max, from, to) {
+  const range = max - min
+
+  if (range <= 0) {
+    return {
+      '--range-start': '0%',
+      '--range-end': '100%',
+    }
+  }
+
+  const start = ((from - min) / range) * 100
+  const end = ((to - min) / range) * 100
+
+  return {
+    '--range-start': `${Math.max(0, Math.min(100, start))}%`,
+    '--range-end': `${Math.max(0, Math.min(100, end))}%`,
+  }
+}
+
 function getHouse(apartment) {
   return housesById.value[apartment.house?.id] || apartment.house || {}
 }
@@ -362,14 +381,8 @@ onMounted(async () => {
             <div class="find-ap__field">
               <span class="find-ap__label">Число комнат</span>
               <div class="find-ap__chips">
-                <button
-                  v-for="room in ['1', '2', '3', '4']"
-                  :key="room"
-                  type="button"
-                  class="find-ap__chip"
-                  :class="{ active: filters.rooms === room }"
-                  @click="setRoom(room)"
-                >
+                <button v-for="room in ['1', '2', '3', '4']" :key="room" type="button" class="find-ap__chip"
+                  :class="{ active: filters.rooms === room }" @click="setRoom(room)">
                   {{ room }}
                 </button>
               </div>
@@ -378,27 +391,30 @@ onMounted(async () => {
             <label class="find-ap__field find-ap__field--range">
               <span class="find-ap__label">Задать стоимость</span>
               <div class="find-ap__range">
-                <span>от {{ Math.trunc(filters.priceFrom).toLocaleString('ru-RU') }}</span>
-                <span class="find-ap__dash">до</span>
-                <span>{{ Math.trunc(filters.priceTo).toLocaleString('ru-RU') }}</span>
+                <div class="find-ap__range--w">
+                  <span class="find-ap__dash">от</span>
+                  <p> {{ Math.trunc(filters.priceFrom).toLocaleString('ru-RU') }}
+                  </p>
+                </div>
+                <div class="find-ap__range--w">
+                  <span class="find-ap__dash">до</span>
+                  <p> {{ Math.trunc(filters.priceTo).toLocaleString('ru-RU') }}
+                  </p>
+                </div>
+
+
               </div>
-              <div class="find-ap__slider-range">
-                <input
-                  v-model.number="filters.priceFrom"
-                  type="range"
-                  :min="priceBounds.min"
-                  :max="priceBounds.max"
-                  step="100000"
-                  @input="onPriceMinInput"
-                />
-                <input
-                  v-model.number="filters.priceTo"
-                  type="range"
-                  :min="priceBounds.min"
-                  :max="priceBounds.max"
-                  step="100000"
-                  @input="onPriceMaxInput"
-                />
+              <div class="find-ap__slider-range" :style="getRangeStyle(
+                priceBounds.min,
+                priceBounds.max,
+                filters.priceFrom,
+                filters.priceTo,
+              )
+                ">
+                <input v-model.number="filters.priceFrom" type="range" :min="priceBounds.min" :max="priceBounds.max"
+                  step="100000" @input="onPriceMinInput" />
+                <input v-model.number="filters.priceTo" type="range" :min="priceBounds.min" :max="priceBounds.max"
+                  step="100000" @input="onPriceMaxInput" />
               </div>
             </label>
           </div>
@@ -407,27 +423,27 @@ onMounted(async () => {
             <label class="find-ap__field find-ap__field--range">
               <span class="find-ap__label">Площадь, м²</span>
               <div class="find-ap__range">
-                <span>от {{ filters.areaFrom }}</span>
-                <span class="find-ap__dash">до</span>
-                <span>{{ filters.areaTo }}</span>
+                <div>
+                  <span class="find-ap__dash">от</span>
+                  <p>{{ filters.areaFrom }}</p>
+                </div>
+                 <div>
+                  <span class="find-ap__dash">до</span>
+                  <p>{{ filters.areaTo }}</p>
+                </div>
+
               </div>
-              <div class="find-ap__slider-range">
-                <input
-                  v-model.number="filters.areaFrom"
-                  type="range"
-                  :min="areaBounds.min"
-                  :max="areaBounds.max"
-                  step="1"
-                  @input="onAreaMinInput"
-                />
-                <input
-                  v-model.number="filters.areaTo"
-                  type="range"
-                  :min="areaBounds.min"
-                  :max="areaBounds.max"
-                  step="1"
-                  @input="onAreaMaxInput"
-                />
+              <div class="find-ap__slider-range" :style="getRangeStyle(
+                areaBounds.min,
+                areaBounds.max,
+                filters.areaFrom,
+                filters.areaTo,
+              )
+                ">
+                <input v-model.number="filters.areaFrom" type="range" :min="areaBounds.min" :max="areaBounds.max"
+                  step="1" @input="onAreaMinInput" />
+                <input v-model.number="filters.areaTo" type="range" :min="areaBounds.min" :max="areaBounds.max" step="1"
+                  @input="onAreaMaxInput" />
               </div>
             </label>
 
@@ -450,35 +466,14 @@ onMounted(async () => {
 
         <div v-if="selectedChips.length" class="find-ap__selected">
           <div class="find-ap__selected-list">
-            <button
-              v-for="chip in selectedChips"
-              :key="chip.key"
-              type="button"
-              class="find-ap__selected-chip"
-              @click="removeChip(chip.key)"
-            >
+            <button v-for="chip in selectedChips" :key="chip.key" type="button" class="find-ap__selected-chip"
+              @click="removeChip(chip.key)">
               <span>{{ chip.label }}</span>
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9 3L3 9"
-                  stroke="currentColor"
-                  stroke-width="1.4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M3 3L9 9"
-                  stroke="currentColor"
-                  stroke-width="1.4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 3L3 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                  stroke-linejoin="round" />
+                <path d="M3 3L9 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                  stroke-linejoin="round" />
               </svg>
             </button>
           </div>
@@ -496,22 +491,14 @@ onMounted(async () => {
               <div v-for="apartment in apartments" :key="apartment.id" class="find-ap__card">
                 <div class="find-ap__left">
                   <div class="find-ap__plan">
-                    <img
-                      :src="getImage(apartment)"
-                      :alt="formatRooms(apartment)"
-                      loading="lazy"
-                      decoding="async"
-                    />
+                    <img :src="getImage(apartment)" :alt="formatRooms(apartment)" loading="lazy" decoding="async" />
                   </div>
                 </div>
 
                 <div class="find-ap__right">
                   <div class="find-ap__top">
-                    <RouterLink
-                      class="find-ap__title-in"
-                      :to="{ path: '/apartment', query: { id: apartment.id } }"
-                      aria-label="Подробнее"
-                    >
+                    <RouterLink class="find-ap__title-in" :to="{ path: '/apartment', query: { id: apartment.id } }"
+                      aria-label="Подробнее">
                       {{ formatRooms(apartment) }}
                     </RouterLink>
 
@@ -567,15 +554,13 @@ onMounted(async () => {
                   </div>
 
                   <div class="find-ap__actions">
-                    <Button class="find-ap__cta" @click.prevent="toggleModal"
-                      >Связаться по квартире</Button>
+                    <Button class="find-ap__cta" @click.prevent="toggleModal">Связаться по квартире</Button>
                     <Modal v-if="isModal" @close="toggleModal" />
                     <a class="find-ap__phone" href="tel:+74012279086">
                       <svg viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                           d="M14.7008 11.284L14.7069 13.2839C14.7082 13.4696 14.6707 13.6535 14.5969 13.8238C14.523 13.9942 14.4144 14.1472 14.2779 14.2732C14.1415 14.3991 13.9803 14.4951 13.8046 14.5551C13.6288 14.6152 13.4425 14.6378 13.2576 14.6217C11.2055 14.405 9.23281 13.7099 7.49809 12.5924C5.88423 11.5737 4.51445 10.2122 3.48603 8.60449C2.3541 6.8687 1.64696 4.89069 1.42191 2.83069C1.40469 2.64639 1.42604 2.46052 1.4846 2.28492C1.54315 2.10932 1.63763 1.94783 1.76201 1.81074C1.88639 1.67365 2.03796 1.56397 2.20705 1.48866C2.37615 1.41336 2.55908 1.37409 2.74418 1.37336L4.74417 1.36732C5.0677 1.36316 5.3817 1.47678 5.62765 1.68701C5.8736 1.89723 6.03471 2.18972 6.08096 2.50995C6.16731 3.14974 6.32576 3.7777 6.55329 4.38187C6.6437 4.62021 6.6639 4.87948 6.61148 5.12895C6.55906 5.37842 6.43623 5.60763 6.25754 5.78943L5.41343 6.63865C6.36751 8.30481 7.75361 9.68256 9.4255 10.6266L10.2696 9.77733C10.4503 9.59754 10.6788 9.47333 10.9279 9.4194C11.1771 9.36548 11.4365 9.38411 11.6754 9.47308C12.2809 9.69696 12.9098 9.85161 13.5501 9.93409C13.8741 9.9788 14.1703 10.141 14.3825 10.3899C14.5947 10.6388 14.708 10.957 14.7008 11.284Z"
-                          fill="#212026"
-                        />
+                          fill="#212026" />
                       </svg>
                       +7 (4012) 27-90-86
                     </a>
@@ -590,12 +575,8 @@ onMounted(async () => {
     </div>
   </div>
 
-  <Pagination
-    :total="totalItems"
-    :perPage="perPage"
-    :currentPage="currentPage"
-    @update:currentPage="handlePageChange"
-  />
+  <Pagination :total="totalItems" :perPage="perPage" :currentPage="currentPage"
+    @update:currentPage="handlePageChange" />
 
   <CallbackBlock :isblue="true" />
 </template>
@@ -754,8 +735,9 @@ onMounted(async () => {
     position: relative;
   }
 
-  
+
   &__field {
+
     select,
     input[type='text'] {
       // width: 100%;
@@ -869,9 +851,30 @@ onMounted(async () => {
     display: flex;
     align-items: center;
     gap: 8px;
+    justify-content: space-between;
     background: var(--seryy);
     border-radius: 10px;
     padding: clamp(16px, vw(18px, $desktop), 18px) clamp(12px, vw(16px, $desktop), 16px);
+
+    div {
+      font-weight: 400;
+      font-size: clamp(16px, vw(18px, $desktop), 18px);
+      color: var(--100);
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex: 1;
+    }
+  
+
+    &--w {
+      display: flex;
+
+
+    }
+  }
+  &__dash {
+    color: var(--40);
   }
 
   &__range--inputs {
@@ -893,9 +896,7 @@ onMounted(async () => {
     }
   }
 
-  &__dash {
-    color: var(--60);
-  }
+
 
   &__actions-row {
     display: flex;
@@ -918,6 +919,31 @@ onMounted(async () => {
     right: 10px;
     position: absolute;
     width: auto;
+    --range-start: 0%;
+    --range-end: 100%;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      // top: 50%;
+      // transform: translateY(-50%);
+      height: 2px;
+      border-radius: 999px;
+      pointer-events: none;
+    }
+
+    &::before {
+      left: 0;
+      right: 0;
+      background: #e5e5e5;
+    }
+
+    &::after {
+      left: var(--range-start);
+      right: calc(100% - var(--range-end));
+      background: #da1a1f;
+    }
   }
 
   &__slider-range input[type='range'] {
@@ -929,7 +955,7 @@ onMounted(async () => {
     appearance: none;
     -webkit-appearance: none;
     height: 2px;
-    background: #e5e5e5;
+    background: transparent;
     pointer-events: none;
   }
 
@@ -992,7 +1018,7 @@ onMounted(async () => {
       }
     }
 
-    input:checked + span::before {
+    input:checked+span::before {
       background: var(--100);
       background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16.6673 5L7.50065 14.1667L3.33398 10' stroke='white' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
@@ -1104,8 +1130,7 @@ onMounted(async () => {
     -webkit-appearance: none;
   }
 
-  &__panel {
-  }
+  &__panel {}
 
   &__list {
     display: flex;
@@ -1330,19 +1355,17 @@ onMounted(async () => {
 
   &__actions {
     display: flex;
-    
-     justify-content: center;
+
+    justify-content: center;
     align-items: center;
     gap: clamp(15px, vw(20px, $desktop), 20px);
     // justify-content: center;
     flex-wrap: wrap;
 
-    @media (min-width: $tab) {
-      
-    }
+    @media (min-width: $tab) {}
 
     @media (min-width: $desk) {
-     justify-content: space-between;
+      justify-content: space-between;
       flex-wrap: nowrap;
     }
   }
@@ -1368,8 +1391,7 @@ onMounted(async () => {
     display: flex;
     gap: clamp(6px, vw(8px, $desktop), 8px);
 
-    @media (min-width: $tab) {
-    }
+    @media (min-width: $tab) {}
 
     @media (min-width: $desk) {
       margin-left: auto;
@@ -1408,8 +1430,9 @@ onMounted(async () => {
       width: clamp(15px, vw(17px, $desktop), 17px);
       height: clamp(15px, vw(17px, $desktop), 17px);
     }
+
     @media (min-width: $desk) {
-    
+
       order: 2;
     }
   }
@@ -1483,6 +1506,7 @@ onMounted(async () => {
 
   // ховер – только на устройствах с мышью
   @media (hover: hover) and (pointer: fine) {
+
     & .swiper .swiper-controls .swiper-button-next:hover svg path,
     & .swiper .swiper-controls .swiper-button-prev:hover svg path {
       stroke: #3343a9;
