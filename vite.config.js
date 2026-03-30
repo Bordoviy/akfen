@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://dev-admin-api.akfen39.ru',
+        target: 'http://admin-api.akfen39.ru',
         changeOrigin: true,
       },
     },

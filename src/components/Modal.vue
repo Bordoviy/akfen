@@ -2,7 +2,7 @@
 <template>
   <div class="modal__overlay" @click.self="emitClose">
     <div class="modal__content">
-      <h2 class="modal__title">Модальное окно</h2>
+      <h2 class="modal__title">Получить индивидуальное предложение</h2>
       <p class="modal__subtitle">
         Менеджер свяжется с вами, чтобы ответить на все вопросы и показать готовые объекты
       </p>
@@ -49,31 +49,39 @@
 
           <div class="modal__field">
             <label class="modal__label" for="modal-phone">Ваш телефон</label>
-           <input
-            v-phone-mask
-            class="modal__input"
-            type="tel"
-            id="modal-phone"
-            name="phone"
-            placeholder="+7 (___) ___-__-__"
-            v-model="form.phone"
-            required
+            <input
+             v-phone-mask
+             class="modal__input"
+             type="tel"
+             id="modal-phone"
+             name="phone"
+             placeholder="+7 (___) ___-__-__"
+             v-model="form.phone"
+             ref="phoneInput"
+             required
            />
           </div>
         </div>
         <div class="modal__bottom">
-          <button class="modal__submit" type="submit" :disabled="!noteChecked">
-            Название кнопки
+          <button class="modal__submit" type="submit" :disabled="!noteChecked || isSubmitting">
+            Отправить
           </button>
 
           <label class="modal__note">
             <input type="checkbox" class="modal__note-checkbox" v-model="noteChecked" required="" />
             <span>
               Нажимая кнопку,
-              <a href="#">вы соглашаетесь с условиями обработки персональных данных</a></span
+             <router-link to="/politika-konfidenczialnosti">
+                вы соглашаетесь с условиями обработки персональных данных
+              </router-link>
+              </span
             >
           </label>
         </div>
+        <p v-if="submitError" class="modal__status modal__status--error">{{ submitError }}</p>
+        <p v-else-if="submitSuccess" class="modal__status modal__status--success">
+          Заявка отправлена. Мы свяжемся с вами в ближайшее время.
+        </p>
       </form>
     </div>
   </div>
@@ -82,34 +90,85 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
 
+const API_URL = import.meta.env.VITE_AKFEN_API_URL || 'https://admin-api.akfen39.ru/api'
+const API_TOKEN = import.meta.env.VITE_AKFEN_API_TOKEN || 'mG7Hz6eYGwl07MW30nB2qYFWjtkUeWU38LstTdBvdIryrMsFk0YEJnYrp0KgqCWd'
+
 const emit = defineEmits(['close'])
 
 const noteChecked = ref(false)
+const phoneInput = ref(null)
+const isSubmitting = ref(false)
+const submitError = ref('')
+const submitSuccess = ref(false)
 
 const form = ref({
   name: '',
   phone: ''
 })
 
+function getHeaders() {
+  const headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  }
+  if (API_TOKEN) {
+    headers.Authorization = `Bearer ${API_TOKEN}`
+  }
+  return headers
+}
+
 const emitClose = () => {
   emit('close')
 }
 
-const submitForm = () => {
-  const data = {
-    name: form.value.name,
-    phone: form.value.phone
+const submitForm = async () => {
+  if (isSubmitting.value) return
+
+  submitError.value = ''
+  submitSuccess.value = false
+
+  const name = String(form.value.name || '').trim()
+  const phoneRaw =
+    String(form.value.phone || '').trim() ||
+    String(phoneInput.value?.value || '').trim()
+  const phoneDigits = phoneRaw.replace(/\D/g, '')
+
+  if (!name || phoneDigits.length < 10) {
+    submitError.value = 'Заполните имя и телефон.'
+    return
   }
 
-  console.log('Отправка формы:', data)
+  const data = {
+    name,
+    phone: phoneDigits.length ? phoneDigits : phoneRaw,
+    page_url: window.location.href,
+  }
 
-  // await fetch('/api/form', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify(data)
-  // })
+  try {
+    isSubmitting.value = true
+    const response = await fetch(`${API_URL}/feedback`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    })
 
-  emitClose()
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`)
+    }
+
+    submitSuccess.value = true
+    form.value.name = ''
+    form.value.phone = ''
+    noteChecked.value = false
+    setTimeout(() => {
+      emitClose()
+    }, 800)
+  } catch (error) {
+    console.error(error)
+    submitError.value = 'Не удалось отправить заявку. Попробуйте позже.'
+  } finally {
+    isSubmitting.value = false
+  }
 }
 
 onMounted(() => {
@@ -305,5 +364,22 @@ onUnmounted(() => {
 
 .modal__note-checkbox {
   margin-top: 3px;
+}
+
+.modal__status {
+  margin: 0;
+  font-weight: 400;
+  font-size: clamp(14px, vw(15px, $desktop), 15px);
+  line-height: 146%;
+  color: var(--color);
+  opacity: 0.9;
+}
+
+.modal__status--error {
+  color: #ffb3b3;
+}
+
+.modal__status--success {
+  color: #b8ffd0;
 }
 </style>

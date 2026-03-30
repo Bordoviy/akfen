@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
 import Button from '@/components/Button.vue'
+import { RouterLink } from 'vue-router'
 
 defineProps({
   isblue: { type: Boolean, default: false },
@@ -34,25 +35,13 @@ const handleSubmit = () => {
         <div class="m-callback__fields">
           <div class="m-callback__field">
             <label class="m-callback__label" for="cb-name">Как вас зовут?</label>
-            <input
-              id="cb-name"
-              v-model="name"
-              type="text"
-              class="m-callback__input"
-              placeholder="Введите ваше имя"
-            />
+            <input id="cb-name" v-model="name" type="text" class="m-callback__input" placeholder="Введите ваше имя" />
           </div>
 
           <div class="m-callback__field">
             <label class="m-callback__label" for="cb-phone">Ваш телефон</label>
-            <input
-              id="cb-phone"
-              v-phone-mask
-              type="tel"
-              name="phone"
-              class="m-callback__input"
-              placeholder="+7 (___) ___-__-__"
-            />
+            <input id="cb-phone" v-phone-mask type="tel" name="phone" class="m-callback__input"
+              placeholder="+7 (___) ___-__-__" />
           </div>
         </div>
 
@@ -65,7 +54,10 @@ const handleSubmit = () => {
             <input type="checkbox" class="modal__note-checkbox" v-model="noteChecked" required="" />
             <span>
               Нажимая кнопку,
-              <a href="#">вы соглашаетесь с условиями обработки персональных данных</a>
+              <router-link to="/politika-konfidenczialnosti">
+                вы соглашаетесь с условиями обработки персональных данных
+              </router-link>
+
             </span>
           </div>
         </div>
@@ -83,9 +75,11 @@ const handleSubmit = () => {
   @media (min-width: $tab) {
     max-width: clamp(320px, vw(1400px, $desktop), 1880px);
   }
+
   @media (min-width: $desk) {
     //
   }
+
   &__inner {
     background: var(--seryy);
     border-radius: 24px;
@@ -126,6 +120,7 @@ const handleSubmit = () => {
     line-height: 146%;
     color: var(--80);
     text-align: center;
+
     @media (min-width: $desk) {
       text-align: left;
     }
@@ -220,11 +215,13 @@ const handleSubmit = () => {
       text-align: left;
     }
   }
+
   &__bottom div {
     display: flex;
     align-items: flex-start;
     gap: 6px;
   }
+
   &__bottom div span {
     font-family: var(--font-family);
     font-weight: 400;
@@ -244,6 +241,7 @@ const handleSubmit = () => {
       text-decoration: none;
     }
   }
+
   .modal__note-checkbox {
     margin-top: 3px;
   }
@@ -253,9 +251,11 @@ const handleSubmit = () => {
   .m-callback__inner {
     background: var(--2);
   }
+
   .m-callback__title {
     color: var(--color);
   }
+
   .m-callback__subtitle {
     color: var(--color);
     opacity: 0.8;

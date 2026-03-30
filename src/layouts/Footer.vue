@@ -100,7 +100,7 @@ const footerMenu = [
               определяемой положениями статьи 437 ГК РФ.
             </p>
             <div class="footer__right-span">
-              <router-link  :to="`/politika-konfidenczialnosti`" class="footer__bottom-text footer__bottom-text-line">
+              <router-link to="/politika-konfidenczialnosti" class="footer__bottom-text footer__bottom-text-line">
                 Политика конфиденциальности
               </router-link>
             

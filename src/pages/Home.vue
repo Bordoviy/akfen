@@ -9,11 +9,13 @@ import News from '@/layouts/News.vue'
 import Other from '@/layouts/Other.vue'
 import Objects from '@/layouts/Objects.vue'
 import Cc from '@/layouts/Cc.vue'
+import FindBlock from '@/layouts/FindBlock.vue'
 </script>
 
 <template>
   <Hero></Hero>
   <Projects></Projects>
+  <FindBlock></FindBlock>
   <Cc></Cc>
   <Objects></Objects>
   <Offers></Offers>

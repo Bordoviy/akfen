@@ -1,5 +1,6 @@
 ﻿<script setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Pagination from '@/components/Pagination.vue'
 import Button from '@/components/Button.vue'
@@ -11,7 +12,7 @@ const API_URL = import.meta.env.DEV
   : import.meta.env.VITE_AKFEN_API_URL || 'https://admin-api.akfen39.ru/api'
 const API_TOKEN =
   import.meta.env.VITE_AKFEN_API_TOKEN ||
-  'NETGWLNgcZH5ntavOYULjOtTQCFRcS23Xn0Mgg7lEUfTol93VGPbNVT1Ek9jtNV8'
+  'mG7Hz6eYGwl07MW30nB2qYFWjtkUeWU38LstTdBvdIryrMsFk0YEJnYrp0KgqCWd'
 
 const isModal = ref(false)
 const apartments = ref([])
@@ -24,6 +25,8 @@ const perPage = 6
 const totalItems = ref(0)
 const priceBounds = { min: 0, max: 30000000 }
 const areaBounds = { min: 20, max: 150 }
+const route = useRoute()
+const router = useRouter()
 
 const filters = reactive({
   city: 'all',
@@ -87,6 +90,56 @@ async function fetchHouseDetails(houseIds) {
     },
     { ...housesById.value },
   )
+}
+
+function getQueryValue(value) {
+  return Array.isArray(value) ? value[0] : value
+}
+
+function parseBoundedNumber(value, fallback, min, max) {
+  const parsedValue = Number(getQueryValue(value))
+
+  if (!Number.isFinite(parsedValue)) return fallback
+
+  return Math.min(max, Math.max(min, parsedValue))
+}
+
+function applyQueryToFilters(query) {
+  currentPage.value = Math.max(1, parseBoundedNumber(query.page, 1, 1, Number.MAX_SAFE_INTEGER))
+  filters.city = getQueryValue(query.city) || 'all'
+  filters.project = getQueryValue(query.project) || 'all'
+  filters.rooms = getQueryValue(query.rooms) || ''
+  filters.priceFrom = parseBoundedNumber(query.priceFrom, priceBounds.min, priceBounds.min, priceBounds.max)
+  filters.priceTo = parseBoundedNumber(query.priceTo, priceBounds.max, priceBounds.min, priceBounds.max)
+  filters.areaFrom = parseBoundedNumber(query.areaFrom, areaBounds.min, areaBounds.min, areaBounds.max)
+  filters.areaTo = parseBoundedNumber(query.areaTo, areaBounds.max, areaBounds.min, areaBounds.max)
+  filters.sortBy = getQueryValue(query.sortBy) === 'priceAsc' ? 'priceAsc' : 'priceDesc'
+
+  if (filters.priceFrom > filters.priceTo) filters.priceTo = filters.priceFrom
+  if (filters.areaFrom > filters.areaTo) filters.areaTo = filters.areaFrom
+}
+
+function buildRouteQuery() {
+  const query = {}
+
+  if (currentPage.value > 1) query.page = String(currentPage.value)
+  if (filters.city !== 'all') query.city = filters.city
+  if (filters.project !== 'all') query.project = filters.project
+  if (filters.rooms) query.rooms = filters.rooms
+  if (filters.priceFrom > priceBounds.min) query.priceFrom = String(filters.priceFrom)
+  if (filters.priceTo < priceBounds.max) query.priceTo = String(filters.priceTo)
+  if (filters.areaFrom > areaBounds.min) query.areaFrom = String(filters.areaFrom)
+  if (filters.areaTo < areaBounds.max) query.areaTo = String(filters.areaTo)
+  if (filters.sortBy !== 'priceDesc') query.sortBy = filters.sortBy
+
+  return query
+}
+
+function updateRouteQuery() {
+  router.replace({
+    path: '/find-apartment',
+    query: buildRouteQuery(),
+  })
 }
 
 function getApartmentParams() {
@@ -157,10 +210,9 @@ const selectedChips = computed(() => {
 function applyFilters() {
   if (currentPage.value !== 1) {
     currentPage.value = 1
-    return
   }
 
-  fetchApartments()
+  updateRouteQuery()
 }
 
 function resetFilters() {
@@ -172,7 +224,8 @@ function resetFilters() {
   filters.areaFrom = areaBounds.min
   filters.areaTo = areaBounds.max
   filters.sortBy = 'priceDesc'
-  applyFilters()
+  currentPage.value = 1
+  updateRouteQuery()
 }
 
 function removeChip(key) {
@@ -198,7 +251,8 @@ function removeChip(key) {
       break
   }
 
-  applyFilters()
+  currentPage.value = 1
+  updateRouteQuery()
 }
 
 function setRoom(value) {
@@ -207,6 +261,7 @@ function setRoom(value) {
 
 function handlePageChange(page) {
   currentPage.value = page
+  updateRouteQuery()
 }
 
 function onPriceMinInput() {
@@ -342,10 +397,18 @@ function getImage(apartment) {
   return apartment.images?.[0] || apartment.pb_image || '/imgs/sp1.png'
 }
 
-watch(currentPage, fetchApartments)
+watch(
+  () => route.query,
+  async (query) => {
+    applyQueryToFilters(query)
+    await fetchApartments()
+  },
+  { immediate: false },
+)
 
 onMounted(async () => {
   await fetchComplexes()
+  applyQueryToFilters(route.query)
   await fetchApartments()
 })
 </script>
@@ -578,7 +641,7 @@ onMounted(async () => {
   <Pagination :total="totalItems" :perPage="perPage" :currentPage="currentPage"
     @update:currentPage="handlePageChange" />
 
-  <CallbackBlock :isblue="true" />
+  <!-- <CallbackBlock :isblue="true" /> -->
 </template>
 
 <style lang="scss" scoped>
@@ -629,7 +692,7 @@ onMounted(async () => {
 
   &__sidebar {
     width: min(1040px, 100%);
-    height: 100%;
+    height: auto;
     background: var(--color);
     border-radius: 30px 0 0 30px;
     padding: clamp(24px, vw(36px, $desktop), 36px);
@@ -865,7 +928,6 @@ onMounted(async () => {
       align-items: center;
       flex: 1;
     }
-  
 
     &--w {
       display: flex;

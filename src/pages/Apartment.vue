@@ -11,7 +11,7 @@ const API_URL = import.meta.env.DEV
   : import.meta.env.VITE_AKFEN_API_URL || 'https://admin-api.akfen39.ru/api'
 const API_TOKEN =
   import.meta.env.VITE_AKFEN_API_TOKEN ||
-  'NETGWLNgcZH5ntavOYULjOtTQCFRcS23Xn0Mgg7lEUfTol93VGPbNVT1Ek9jtNV8'
+  'mG7Hz6eYGwl07MW30nB2qYFWjtkUeWU38LstTdBvdIryrMsFk0YEJnYrp0KgqCWd'
 
 const route = useRoute()
 const apartContainer = ref(null)
@@ -158,7 +158,7 @@ onMounted(fetchApartment)
                 <a class="fancy" :href="img" data-fancybox="apartment-gallery">
                   <img :src="img" loading="lazy" decoding="async" :alt="apartmentTitle" />
                 </a>
-                <img class="glock" src="/imgs/comp.svg" alt="" />
+                
               </div>
             </div>
             <div v-if="apartmentImages.length > 1" class="swiper-controls">
