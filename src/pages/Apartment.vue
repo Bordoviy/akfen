@@ -5,6 +5,7 @@ import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import Finishing from '@/layouts/apartment/Finishing.vue'
 import Cc from '@/layouts/Cc.vue'
 import OtherApartment from '@/layouts/apartment/OtherApartment.vue'
+import Button from '@/components/Button.vue'
 import Modal from '@/components/Modal.vue'
 
 const API_URL = import.meta.env.DEV
@@ -115,6 +116,11 @@ async function initSlider() {
   })
 }
 
+const isModal = ref(false)
+
+function toggleModal() {
+  isModal.value = !isModal.value
+}
 async function fetchApartment() {
   const apartmentId = route.query.id
 
