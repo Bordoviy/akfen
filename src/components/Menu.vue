@@ -150,6 +150,7 @@ function close() {
 
 const menuItems = [
   { title: 'Объекты', to: '', isRouterLink: true, children: [] },
+  { title: 'Подобрать квартиру', to: '/find-apartment', isRouterLink: true },
   { title: 'О компании', to: '/about', isRouterLink: true },
   { title: 'Ипотека', to: '/ipoteka', isRouterLink: true },
   { title: 'Рассрочка', to: '/rassrochka', isRouterLink: true },
@@ -462,12 +463,29 @@ const housingCards = [
   flex-shrink: 0;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='17' height='16' fill='none' viewBox='0 0 17 16'><path d='M5.8335 4H14.5002M5.8335 8H14.5002M5.8335 12H14.5002M2.5 4H2.50667M2.5 8H2.50667M2.5 12H2.50667' stroke='%23DA1A1F' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 }
+.menu > .menu-item:nth-child(2) > a::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  flex-shrink: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 16 16'><path d='M7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667Z' stroke='%23DA1A1F' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/><path d='M14.0001 14L11.1001 11.1' stroke='%23DA1A1F' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+}
 .header__inner.active > .menu-item:nth-child(1) > a::before {
+  width: 24px;
+  height: 24px;
+}
+.header__inner.active > .menu-item:nth-child(2) > a::before {
   width: 24px;
   height: 24px;
 }
 .header__inner.active .menu-item:nth-child(1) > a::before {
   background-image: url('data:image/svg+xml;utf8,<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 6.5H21" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 12.5H21" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 18.5H21" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 6.5H3.01" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12.5H3.01" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 18.5H3.01" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+}
+.header__inner.active .menu-item:nth-child(2) > a::before {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' viewBox='0 0 24 24'><path d='M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z' stroke='white' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/><path d='M20.9999 21L16.6499 16.65' stroke='white' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 }
 
 /* для v-show мобильного состояния */
