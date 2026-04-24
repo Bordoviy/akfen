@@ -30,32 +30,48 @@ function bindHoverListeners() {
 
   const showSubmenu = () => {
     clearTimeout(hideTimeout)
+    hideTimeout = null
     submenu.style.opacity = '1'
     submenu.style.visibility = 'visible'
     backdrop.style.opacity = '0.8'
     backdrop.style.visibility = 'visible'
   }
 
-  const hideSubmenu = () => {
-    hideTimeout = setTimeout(() => {
-      submenu.style.opacity = '0'
-      submenu.style.visibility = 'hidden'
-      backdrop.style.opacity = '0'
-      backdrop.style.visibility = 'hidden'
-    }, 200)
+  const hideNow = () => {
+    clearTimeout(hideTimeout)
+    hideTimeout = null
+    submenu.style.opacity = '0'
+    submenu.style.visibility = 'hidden'
+    backdrop.style.opacity = '0'
+    backdrop.style.visibility = 'hidden'
+  }
+
+  const hideSubmenu = (event) => {
+    const nextTarget = event?.relatedTarget
+
+    if (nextTarget && (menuItem.contains(nextTarget) || submenu.contains(nextTarget))) {
+      return
+    }
+
+    if (nextTarget && backdrop.contains(nextTarget)) {
+      hideNow()
+      return
+    }
+
+    clearTimeout(hideTimeout)
+    hideTimeout = setTimeout(hideNow, 200)
   }
 
   menuItem.addEventListener('mouseenter', showSubmenu)
   menuItem.addEventListener('mouseleave', hideSubmenu)
   submenu.addEventListener('mouseenter', showSubmenu)
   submenu.addEventListener('mouseleave', hideSubmenu)
-  backdrop.addEventListener('mouseenter', showSubmenu)
-  backdrop.addEventListener('mouseleave', hideSubmenu)
+  backdrop.addEventListener('mouseenter', hideNow)
 
   // ссылки на обработчики для снятия
   menuItem._hoverHandlers = { showSubmenu, hideSubmenu }
   submenu._hoverHandlers = { showSubmenu, hideSubmenu }
-  backdrop._hoverHandlers = { showSubmenu, hideSubmenu }
+  backdrop._hoverHandlers = { hideNow }
   listenersBound = true
 }
 
@@ -73,8 +89,7 @@ function unbindHoverListeners() {
     submenu.removeEventListener('mouseleave', submenu._hoverHandlers.hideSubmenu)
   }
   if (backdrop && backdrop._hoverHandlers) {
-    backdrop.removeEventListener('mouseenter', backdrop._hoverHandlers.showSubmenu)
-    backdrop.removeEventListener('mouseleave', backdrop._hoverHandlers.hideSubmenu)
+    backdrop.removeEventListener('mouseenter', backdrop._hoverHandlers.hideNow)
   }
   listenersBound = false
 }
@@ -161,28 +176,28 @@ const housingCards = [
   {
     title: 'Огни Калининграда',
     address: 'г. Калининград, Гайдара 90',
-    price: 'от 5 700 000',
+    price: 'от 7 189 100',
     image: '/imgs/projects/1.jpg',
     id: 'ogni-kaliningrada',
   },
   {
     title: 'ЖК Елизаветинский',
     address: 'г. Калининград, Елизаветинская, 47',
-    price: 'от 6 732 600',
+    price: 'от 7 037 800',
     image: '/imgs/projects/5.jpg',
     id: 'elizavetinskiy',
   },
   {
     title: 'Пионерский берег',
     address: 'г. Пионерский, ул. Новоставского',
-    price: 'от 7 000 000',
+    price: 'от 6 764 000',
     image: '/imgs/projects/9.jpg',
     id: 'pionerskiy-bereg',
   },
   {
     title: 'Аврора',
     address: 'Гурьевск, ул Ленина',
-    price: 'от 6 451 050',
+    price: 'от 6 352 500',
     image: '/imgs/projects/13.jpg',
     id: 'avrora',
   },

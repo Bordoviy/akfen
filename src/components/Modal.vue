@@ -57,11 +57,12 @@
              name="phone"
              placeholder="+7 (___) ___-__-__"
              v-model="form.phone"
-             ref="phoneInput"
+            ref="phoneInput"
              required
            />
           </div>
         </div>
+        <div ref="captchaContainer" class="modal__captcha"></div>
         <div class="modal__bottom">
           <button class="modal__submit" type="submit" :disabled="!noteChecked || isSubmitting">
             Отправить
@@ -78,6 +79,10 @@
             >
           </label>
         </div>
+        <p class="modal__captcha-note">
+          Форма защищена Yandex SmartCaptcha. Сервис может обрабатывать технические данные для
+          защиты от автоматических отправок.
+        </p>
         <p v-if="submitError" class="modal__status modal__status--error">{{ submitError }}</p>
         <p v-else-if="submitSuccess" class="modal__status modal__status--success">
           Заявка отправлена. Мы свяжемся с вами в ближайшее время.
@@ -92,19 +97,29 @@ import { onMounted, onUnmounted, ref } from 'vue'
 
 const API_URL = import.meta.env.VITE_AKFEN_API_URL || 'https://admin-api.akfen39.ru/api'
 const API_TOKEN = import.meta.env.VITE_AKFEN_API_TOKEN || 'mG7Hz6eYGwl07MW30nB2qYFWjtkUeWU38LstTdBvdIryrMsFk0YEJnYrp0KgqCWd'
+const SMARTCAPTCHA_SITEKEY =
+  import.meta.env.VITE_YANDEX_SMARTCAPTCHA_SITEKEY ||
+  'ysc1_tBed9WJhXvIBpmLOpcujJGTyTI8CfADEMv6Kc3CZ023a2582'
+const SMARTCAPTCHA_SCRIPT_SRC =
+  'https://smartcaptcha.cloud.yandex.ru/captcha.js?render=onload&onload=onSmartCaptchaLoaded'
 
 const emit = defineEmits(['close'])
 
 const noteChecked = ref(false)
 const phoneInput = ref(null)
+const captchaContainer = ref(null)
 const isSubmitting = ref(false)
 const submitError = ref('')
 const submitSuccess = ref(false)
+const isCaptchaReady = ref(false)
 
 const form = ref({
   name: '',
-  phone: ''
+  phone: '',
 })
+
+let captchaWidgetId = null
+let submitAfterCaptcha = null
 
 function getHeaders() {
   const headers = {
@@ -121,12 +136,7 @@ const emitClose = () => {
   emit('close')
 }
 
-const submitForm = async () => {
-  if (isSubmitting.value) return
-
-  submitError.value = ''
-  submitSuccess.value = false
-
+function validateForm() {
   const name = String(form.value.name || '').trim()
   const phoneRaw =
     String(form.value.phone || '').trim() ||
@@ -135,13 +145,28 @@ const submitForm = async () => {
 
   if (!name || phoneDigits.length < 10) {
     submitError.value = 'Заполните имя и телефон.'
-    return
+    return null
   }
 
-  const data = {
+  return {
     name,
     phone: phoneDigits.length ? phoneDigits : phoneRaw,
     page_url: window.location.href,
+  }
+}
+
+function resetCaptcha() {
+  if (window.smartCaptcha && captchaWidgetId !== null && typeof window.smartCaptcha.reset === 'function') {
+    window.smartCaptcha.reset(captchaWidgetId)
+  }
+}
+
+async function sendForm(data, captchaToken) {
+  const payload = {
+    ...data,
+    smart_token: captchaToken,
+    captcha_token: captchaToken,
+    captcha_provider: 'yandex_smartcaptcha',
   }
 
   try {
@@ -149,7 +174,7 @@ const submitForm = async () => {
     const response = await fetch(`${API_URL}/feedback`, {
       method: 'POST',
       headers: getHeaders(),
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     })
 
     if (!response.ok) {
@@ -162,20 +187,129 @@ const submitForm = async () => {
     noteChecked.value = false
     setTimeout(() => {
       emitClose()
-    }, 800)
+    }, 1800)
   } catch (error) {
     console.error(error)
     submitError.value = 'Не удалось отправить заявку. Попробуйте позже.'
+    resetCaptcha()
   } finally {
     isSubmitting.value = false
+    submitAfterCaptcha = null
+  }
+}
+
+function loadCaptchaScript() {
+  if (window.smartCaptcha) {
+    return Promise.resolve(window.smartCaptcha)
+  }
+
+  if (window.__akfenSmartCaptchaPromise) {
+    return window.__akfenSmartCaptchaPromise
+  }
+
+  window.__akfenSmartCaptchaPromise = new Promise((resolve, reject) => {
+    window.onSmartCaptchaLoaded = () => {
+      if (window.smartCaptcha) {
+        resolve(window.smartCaptcha)
+        return
+      }
+
+      reject(new Error('SmartCaptcha did not initialize'))
+    }
+
+    const existingScript = document.querySelector('script[data-smartcaptcha-script="true"]')
+    if (existingScript) {
+      return
+    }
+
+    const script = document.createElement('script')
+    script.src = SMARTCAPTCHA_SCRIPT_SRC
+    script.defer = true
+    script.dataset.smartcaptchaScript = 'true'
+    script.onerror = () => reject(new Error('Failed to load SmartCaptcha script'))
+    document.head.appendChild(script)
+  })
+
+  return window.__akfenSmartCaptchaPromise
+}
+
+async function ensureCaptcha() {
+  if (!SMARTCAPTCHA_SITEKEY) {
+    throw new Error('SmartCaptcha site key is not configured')
+  }
+
+  if (window.smartCaptcha && captchaWidgetId !== null) {
+    isCaptchaReady.value = true
+    return
+  }
+
+  const smartCaptcha = await loadCaptchaScript()
+
+  if (!captchaContainer.value) {
+    throw new Error('SmartCaptcha container is not available')
+  }
+
+  if (captchaWidgetId !== null) {
+    return
+  }
+
+  captchaWidgetId = smartCaptcha.render(captchaContainer.value, {
+    sitekey: SMARTCAPTCHA_SITEKEY,
+    invisible: true,
+    hl: 'ru',
+    shieldPosition: 'bottom-right',
+    callback: (token) => {
+      if (!token || !submitAfterCaptcha) {
+        return
+      }
+
+      const currentSubmit = submitAfterCaptcha
+      submitAfterCaptcha = null
+      currentSubmit(token)
+    },
+  })
+
+  isCaptchaReady.value = true
+}
+
+const submitForm = async () => {
+  if (isSubmitting.value) return
+
+  submitError.value = ''
+  submitSuccess.value = false
+
+  const data = validateForm()
+  if (!data) return
+
+  try {
+    await ensureCaptcha()
+    submitAfterCaptcha = (token) => sendForm(data, token)
+    window.smartCaptcha.execute(captchaWidgetId)
+  } catch (error) {
+    console.error(error)
+    submitAfterCaptcha = null
+    submitError.value = 'Не удалось инициализировать капчу. Попробуйте позже.'
   }
 }
 
 onMounted(() => {
   document.body.classList.add('lock')
+  ensureCaptcha().catch((error) => {
+    console.error(error)
+  })
 })
 
 onUnmounted(() => {
+  if (
+    window.smartCaptcha &&
+    captchaWidgetId !== null &&
+    typeof window.smartCaptcha.destroy === 'function'
+  ) {
+    window.smartCaptcha.destroy(captchaWidgetId)
+  }
+  captchaWidgetId = null
+  submitAfterCaptcha = null
+  isCaptchaReady.value = false
   document.body.classList.remove('lock')
 })
 </script>
@@ -259,6 +393,13 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: clamp(20px, vw(24px, $desktop), 24px);
+}
+
+.modal__captcha {
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .modal__fields {
@@ -364,6 +505,14 @@ onUnmounted(() => {
 
 .modal__note-checkbox {
   margin-top: 3px;
+}
+
+.modal__captcha-note {
+  margin: -8px 0 0;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 140%;
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .modal__status {

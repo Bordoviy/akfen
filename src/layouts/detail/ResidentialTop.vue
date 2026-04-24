@@ -78,7 +78,7 @@ const allProjects = [
   {
     id: 'pionerskiy-bereg',
     title: 'Пионерский берег',
-    address: 'г. Калининград, ул.Новоставского',
+    address: 'г. Пионерский, ул. Новоставского',
     text: 'до Калининграда - 30 мин',
     price: '7 120 000',
     file: '',
@@ -96,7 +96,7 @@ const allProjects = [
   {
     id: 'avrora',
     title: 'Аврора',
-    address: 'г. Калининград, ул. Гурьева',
+    address: 'Гурьевск, ул Ленина',
     text: 'до центра на авто - менее 15 мин',
     price: '6 451 050',
     file: '/files/avrora_05.pdf',

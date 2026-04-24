@@ -165,7 +165,7 @@ onMounted(fetchApartment)
                 <a class="fancy" :href="img" data-fancybox="apartment-gallery">
                   <img :src="img" loading="lazy" decoding="async" :alt="apartmentTitle" />
                 </a>
-                
+
               </div>
             </div>
             <div v-if="apartmentImages.length > 1" class="swiper-controls">
@@ -198,10 +198,12 @@ onMounted(fetchApartment)
                   </dl>
                 </div>
               </div>
+              
                <div class="apartment__bottom">
                 <Button @click.prevent="toggleModal">Забронировать квартиру</Button>
                 <Modal v-if="isModal" @close="toggleModal"></Modal>
               </div>
+              
             </div>
           </div>
         </div>
@@ -310,6 +312,10 @@ onMounted(fetchApartment)
     line-height: 136%;
     letter-spacing: 0em;
     color: #161717;
+  }
+
+  & .btn-default:hover {
+    border: 1px solid #161717;
   }
 
   .swiper-wrapper {

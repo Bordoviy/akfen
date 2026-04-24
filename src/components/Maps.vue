@@ -3,7 +3,7 @@ import { onMounted, onBeforeUnmount, ref } from 'vue'
 
 /** ключ и данные */
 const API_KEY = '66a13e6b-4231-44ac-91c1-a692c3828e41'
-const COORDS = [54.7172, 20.4729]
+const COORDS = [54.746711, 20.481930]
 const ADDRESS = 'Калининград, ул. Генерала Челнокова, 52'
 const PHONE_RAW = '+74012777747'
 const PHONE_PRETTY = '+7 4012 77 7747'

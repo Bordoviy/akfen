@@ -490,7 +490,7 @@ onMounted(async () => {
                   <span class="find-ap__dash">от</span>
                   <p>{{ filters.areaFrom }}</p>
                 </div>
-                 <div>
+                <div>
                   <span class="find-ap__dash">до</span>
                   <p>{{ filters.areaTo }}</p>
                 </div>
@@ -617,8 +617,10 @@ onMounted(async () => {
                   </div>
 
                   <div class="find-ap__actions">
+                    
                     <Button class="find-ap__cta" @click.prevent="toggleModal">Связаться по квартире</Button>
                     <Modal v-if="isModal" @close="toggleModal" />
+                    
                     <a class="find-ap__phone" href="tel:+7 4012 777747">
                       <svg viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -935,6 +937,7 @@ onMounted(async () => {
 
     }
   }
+
   &__dash {
     color: var(--40);
   }
