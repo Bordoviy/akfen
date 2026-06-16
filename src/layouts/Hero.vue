@@ -2,6 +2,14 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import Button from '@/components/Button.vue'
 
+const API_URL =
+  import.meta.env.VITE_AKFEN_API_URL || (import.meta.env.DEV ? '/api' : 'https://admin-api.akfen39.ru/api')
+const API_TOKEN =
+  import.meta.env.VITE_AKFEN_API_TOKEN ||
+  'mG7Hz6eYGwl07MW30nB2qYFWjtkUeWU38LstTdBvdIryrMsFk0YEJnYrp0KgqCWd'
+const API_ASSET_ORIGIN =
+  API_URL.startsWith('http') ? API_URL.replace(/\/api\/?$/, '') : ''
+
 const viewportWidth = ref(window.innerWidth)
 const heroContainer = ref(null)
 const heroSwiper = ref(null)
@@ -30,7 +38,7 @@ const defaultSidebarCards = [
   },
 ]
 
-const heroCards = [
+const fallbackHeroCards = [
   {
     title: 'Пионерский берег',
     text: 'Жизнь в гармонии с природой',
@@ -358,8 +366,10 @@ const heroCards = [
   // },
 ]
 
-const totalSlides = computed(() => heroCards.length)
-const activeHero = computed(() => heroCards[activeSlideIndex.value] || heroCards[0])
+const heroCards = ref(fallbackHeroCards)
+
+const totalSlides = computed(() => heroCards.value.length)
+const activeHero = computed(() => heroCards.value[activeSlideIndex.value] || heroCards.value[0])
 const activeSidebarCards = computed(() => {
   const cards = activeHero.value?.sidebarCards
   if (!Array.isArray(cards) || cards.length < 2) return defaultSidebarCards
@@ -378,25 +388,172 @@ function goPrev() {
   heroSwiper.value?.slidePrev()
 }
 
-onMounted(() => {
+function isExternalLink(link) {
+  return /^(https?:)?\/\//.test(link)
+}
+
+function getHeaders() {
+  return {
+    Authorization: `Bearer ${API_TOKEN}`,
+    Accept: 'application/json',
+  }
+}
+
+async function fetchJson(path) {
+  const response = await fetch(`${API_URL}${path}`, {
+    headers: getHeaders(),
+  })
+
+  if (!response.ok) {
+    throw new Error(`API request failed with status ${response.status}`)
+  }
+
+  return response.json()
+}
+
+function getFirstString(...values) {
+  for (const value of values) {
+    if (typeof value === 'string' && value.trim()) return value.trim()
+  }
+
+  return ''
+}
+
+function normalizeImageUrl(value) {
+  const url = getFirstString(value?.url, value?.path, value?.src, value)
+  if (!url) return ''
+  if (/^(https?:)?\/\//.test(url) || url.startsWith('data:') || url.startsWith('blob:')) return url
+  if (url.startsWith('/storage') && API_ASSET_ORIGIN) return `${API_ASSET_ORIGIN}${url}`
+  if (url.startsWith('/')) return url
+
+  return `/${url}`
+}
+
+function normalizeBlockCard(slide, blockNumber) {
+  const title = getFirstString(slide[`block${blockNumber}_title`])
+
+  if (!title) return null
+
+  return {
+    title,
+    text: getFirstString(slide[`block${blockNumber}_description`]),
+    buttonText: getFirstString(slide[`block${blockNumber}_button_text`]),
+    link: getFirstString(slide[`block${blockNumber}_button_link`]),
+  }
+}
+
+function normalizeSidebarCards(slide) {
+  const cards = [
+    normalizeBlockCard(slide, 1),
+    normalizeBlockCard(slide, 2),
+  ].filter(Boolean)
+
+  if (cards.length) return cards
+
+  const fallbackCards = slide.sidebarCards || slide.sidebar_cards || slide.cards || slide.promos || []
+
+  if (!Array.isArray(fallbackCards)) return []
+
+  return fallbackCards
+    .map((card) => ({
+      title: getFirstString(card?.title, card?.name),
+      text: getFirstString(card?.text, card?.description, card?.subtitle),
+      buttonText: getFirstString(card?.buttonText, card?.button_text, card?.button_label, card?.button),
+      link: getFirstString(card?.link, card?.url, card?.href),
+    }))
+    .filter((card) => card.title)
+}
+
+function normalizeSlide(slide) {
+  if (!slide || typeof slide !== 'object') return null
+
+  const desktopImg = normalizeImageUrl(
+    slide.image_url ||
+      slide.desktopImg ||
+      slide.desktop_img ||
+      slide.desktop_image ||
+      slide.image_desktop ||
+      slide.imageDesktop ||
+      slide.image,
+  )
+  const mobileImg = normalizeImageUrl(
+    slide.mobile_image_url ||
+      slide.mobileImg ||
+      slide.mobile_img ||
+      slide.mobile_image ||
+      slide.image_mobile ||
+      slide.imageMobile ||
+      slide.image,
+  )
+
+  return {
+    title: getFirstString(slide.title, slide.name),
+    text: getFirstString(slide.text, slide.description, slide.subtitle),
+    categories: [],
+    desktopImg,
+    mobileImg,
+    img: desktopImg || mobileImg,
+    id: getFirstString(slide.slug, slide.code, String(slide.id ?? '')),
+    sidebarCards: normalizeSidebarCards(slide),
+  }
+}
+
+function getSlidesFromResponse(response) {
+  if (Array.isArray(response)) return response
+  if (Array.isArray(response?.data)) return response.data
+  if (Array.isArray(response?.slides)) return response.slides
+  if (Array.isArray(response?.data?.slides)) return response.data.slides
+
+  return []
+}
+
+async function fetchSlides() {
+  try {
+    const response = await fetchJson('/slides')
+    const slides = getSlidesFromResponse(response)
+      .slice()
+      .sort((a, b) => Number(a?.sort_order ?? 0) - Number(b?.sort_order ?? 0))
+      .map(normalizeSlide)
+      .filter((slide) => slide && (slide.desktopImg || slide.mobileImg || slide.img))
+
+    if (slides.length) {
+      heroCards.value = slides
+      activeSlideIndex.value = 0
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+async function initHeroSwiper() {
+  await nextTick()
+
+  if (!heroContainer.value) return
+
+  if (heroSwiper.value) {
+    heroSwiper.value.destroy(true, true)
+    heroSwiper.value = null
+  }
+
+  heroSwiper.value = new Swiper(heroContainer.value, {
+    spaceBetween: 10,
+    loop: heroCards.value.length > 1,
+    on: {
+      init(swiper) {
+        activeSlideIndex.value = swiper.realIndex
+      },
+      slideChange(swiper) {
+        activeSlideIndex.value = swiper.realIndex
+      },
+    },
+  })
+}
+
+onMounted(async () => {
   window.addEventListener('resize', updateViewport)
 
-  nextTick(() => {
-    if (!heroContainer.value) return
-
-    heroSwiper.value = new Swiper(heroContainer.value, {
-      spaceBetween: 10,
-      loop: true,
-      on: {
-        init(swiper) {
-          activeSlideIndex.value = swiper.realIndex
-        },
-        slideChange(swiper) {
-          activeSlideIndex.value = swiper.realIndex
-        },
-      },
-    })
-  })
+  await fetchSlides()
+  await initHeroSwiper()
 })
 
 onBeforeUnmount(() => {
@@ -456,7 +613,10 @@ onBeforeUnmount(() => {
           <article class="hero__sidebar-card" v-for="(card, index) in activeSidebarCards" :key="index">
             <h3 class="hero__sidebar-title">{{ card.title }}</h3>
             <p class="hero__sidebar-text">{{ card.text }}</p>
-            <router-link v-if="card.link" :to="card.link" class="hero__sidebar-link">
+            <a v-if="card.link && isExternalLink(card.link)" :href="card.link" class="hero__sidebar-link">
+              <Button>{{ card.buttonText || 'Подробнее' }}</Button>
+            </a>
+            <router-link v-else-if="card.link" :to="card.link" class="hero__sidebar-link">
               <Button>{{ card.buttonText || 'Подробнее' }}</Button>
             </router-link>
             <Button v-else>{{ card.buttonText || 'Подробнее' }}</Button>
@@ -468,14 +628,25 @@ onBeforeUnmount(() => {
         <article class="hero__sidebar-card" v-for="(card, index) in activeSidebarCards" :key="index">
           <h3 class="hero__sidebar-title">{{ card.title }}</h3>
           <p class="hero__sidebar-text">{{ card.text }}</p>
-          <router-link v-if="card.link" :to="card.link" class="hero__sidebar-link">
+          <a v-if="card.link && isExternalLink(card.link)" :href="card.link" class="hero__sidebar-link">
+            <Button>{{ card.buttonText || 'Подробнее' }}</Button>
+          </a>
+          <router-link v-else-if="card.link" :to="card.link" class="hero__sidebar-link">
             <Button>{{ card.buttonText || 'Подробнее' }}</Button>
           </router-link>
           <Button v-else>{{ card.buttonText || 'Подробнее' }}</Button>
         </article>
       </div>
 
-      <router-link v-if="isMobile && mobilePromoCard" class="hero__mobile-card"
+      <a v-if="isMobile && mobilePromoCard && isExternalLink(mobilePromoCard.link || '')" class="hero__mobile-card"
+        :href="mobilePromoCard.link">
+        <span class="hero__mobile-title">{{ mobilePromoCard.title }}</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7.5 15L12.5 10L7.5 5" stroke="#212026" stroke-width="1.6" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </a>
+      <router-link v-else-if="isMobile && mobilePromoCard" class="hero__mobile-card"
         :to="mobilePromoCard.link || '/projects'">
         <span class="hero__mobile-title">{{ mobilePromoCard.title }}</span>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
