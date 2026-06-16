@@ -18,7 +18,7 @@ const allProjects = [
   {
     id: 'ogni-kaliningrada',
     params: {
-      src: 'https://smart-catalog.profitbase.ru/eco/catalog/house/91865#/catalog/house/91865/facades?facadeId=60537',
+      src: 'https://smart-catalog.profitbase.ru/eco/catalog/house/91865/facades?facadeId=60537&filter=property.status:AVAILABLE',
       host: 'https://smart-catalog.profitbase.ru/eco',
       pbDomain: 'profitbase.ru',
       accountId: '3667',
@@ -30,7 +30,7 @@ const allProjects = [
   {
     id: 'avrora',
     params: {
-      src: 'https://smart-catalog.profitbase.ru/eco/catalog/house/147836#/catalog/house/147836/facades?facadeId=61280',
+      src: 'https://smart-catalog.profitbase.ru/eco/catalog/house/147836/facades?facadeId=61280&filter=property.status:AVAILABLE',
       host: 'https://smart-catalog.profitbase.ru/eco',
       pbDomain: 'profitbase.ru',
       accountId: '3667',
@@ -42,7 +42,7 @@ const allProjects = [
   {
     id: 'pionerskiy-bereg',
     params: {
-      src: 'https://smart-catalog.profitbase.ru/eco/catalog/house/121896#/catalog/house/121896/facades?facadeId=60898',
+      src: 'https://smart-catalog.profitbase.ru/eco/catalog/house/121896/facades?facadeId=60898&filter=property.status:AVAILABLE',
       host: 'https://smart-catalog.profitbase.ru/eco',
       pbDomain: 'profitbase.ru',
       accountId: '3667',
